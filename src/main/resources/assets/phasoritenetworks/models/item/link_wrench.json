@@ -1,0 +1,6 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "phasoritenetworks:item/link_wrench"
+	}
+}

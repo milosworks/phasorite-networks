@@ -1,0 +1,12 @@
+{
+	"itemGroup.phasoritenetworks": "Phasorite Networks",
+	
+	"block.phasoritenetworks.phasorite_exporter": "Phasorite Exporter",
+	"block.phasoritenetworks.phasorite_importer": "Phasorite Importer",
+	
+	"item.phasoritenetworks.link_wrench": "Link Wrench",
+	
+	"tooltip.bound": "Bound to importer at X: %s, Y: %s, Z: %s",
+	"tooltip.usage": "Click an exporter and then click an importer to bound.",
+	"tooltip.usage.2": "Click an importer to bound."
+}
