@@ -10,7 +10,7 @@ import vyrek.phasoritenetworks.common.networks.NetworksData
 object PhasoriteNetworksEvents {
 	@SubscribeEvent
 	fun onPostServerTick(event: ServerTickEvent.Post) {
-		NetworksData.get().networks.forEach { network ->
+		NetworksData.get().networks.values.forEach { network ->
 			network.onTick()
 		}
 	}

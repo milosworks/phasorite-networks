@@ -11,7 +11,7 @@ import vyrek.phasoritenetworks.block.PhasoriteImporterBlock
 
 //: AutoRegistryContainer<Blocks>
 object PhasoriteNetworksBlocks {
-	val BLOCKS: DeferredRegister<Block> = DeferredRegister.createBlocks(PhasoriteNetworks.ID)
+	private val BLOCKS: DeferredRegister<Block> = DeferredRegister.createBlocks(PhasoriteNetworks.ID)
 
 	val PHASORITE_EXPORTER by
 	BLOCKS.register("phasorite_exporter") { -> PhasoriteExporterBlock(BlockBehaviour.Properties.of()) }

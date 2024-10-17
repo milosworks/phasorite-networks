@@ -1,0 +1,327 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <!-- We use templates for various tabs -->
+
+            <children>
+            </children>
+
+            <horizontal-alignment>center</horizontal-alignment>
+            <vertical-alignment>center</vertical-alignment>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+
+    <templates>
+        <!-- Configuration of the current component -->
+        <template name="component_tab">
+            <flow-layout direction="vertical">
+                <children>
+                    <label>
+                        <text>Name</text>
+
+                        <margins>
+                            <all>2</all>
+                        </margins>
+                    </label>
+                    <text-area id="name">
+                        <max-length>22</max-length>
+                        <max-lines>1</max-lines>
+                        <display-char-count>true</display-char-count>
+
+                        <text>{{name}}</text>
+
+                        <vertical-alignment>center</vertical-alignment>
+
+                        <sizing>
+                            <horizontal method="fixed">150</horizontal>
+                            <vertical method="fixed">30</vertical>
+                        </sizing>
+                    </text-area>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <label>
+                                        <text>Limit</text>
+
+                                        <margins>
+                                            <all>2</all>
+                                        </margins>
+                                    </label>
+                                    <text-area id="limit">
+                                        <max-length>10</max-length>
+                                        <max-lines>1</max-lines>
+
+                                        <text>{{limit}}</text>
+
+                                        <sizing>
+                                            <horizontal method="fixed">78</horizontal>
+                                            <vertical method="fixed">18</vertical>
+                                        </sizing>
+                                    </text-area>
+                                </children>
+                            </flow-layout>
+
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <label>
+                                        <text>Priority</text>
+
+                                        <margins>
+                                            <all>2</all>
+                                        </margins>
+                                    </label>
+                                    <text-area id="priority">
+                                        <max-length>4</max-length>
+                                        <max-lines>1</max-lines>
+
+                                        <text>{{priority}}</text>
+
+                                        <sizing>
+                                            <horizontal method="fixed">50</horizontal>
+                                            <vertical method="fixed">18</vertical>
+                                        </sizing>
+                                    </text-area>
+                                </children>
+
+                                <margins>
+                                    <left>22</left>
+                                </margins>
+                            </flow-layout>
+                        </children>
+
+                        <margins>
+                            <top>5</top>
+                        </margins>
+                    </flow-layout>
+
+                    <checkbox id="override">
+                        <text>Override Mode</text>
+
+                        <margins>
+                            <top>10</top>
+                        </margins>
+                    </checkbox>
+
+                    <checkbox id="limitless">
+                        <text>Limitless Mode</text>
+
+                        <margins>
+                            <top>2</top>
+                            <left>0</left>
+                        </margins>
+                    </checkbox>
+
+                    <flow-layout direction="horizontal" id="block">
+                        <children>
+                            <block state="{{id}}">
+                                <sizing>
+                                    <horizontal method="fixed">40</horizontal>
+                                    <vertical method="fixed">40</vertical>
+                                </sizing>
+                            </block>
+                        </children>
+
+                        <margins>
+                            <top>10</top>
+                        </margins>
+                    </flow-layout>
+                </children>
+
+                <padding>
+                    <all>10</all>
+                </padding>
+
+                <surface>
+                    <panel dark="true"/>
+                </surface>
+            </flow-layout>
+        </template>
+
+        <!-- Tab that shows all the networks of the user -->
+        <template name="network_tab">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <flow-layout direction="vertical" id="name-container">
+                                <children>
+                                    <label id="network_id">
+                                        <text>No Selected Network</text>
+
+                                        <vertical-text-alignment>center</vertical-text-alignment>
+                                        <horizontal-text-alignment>center</horizontal-text-alignment>
+                                    </label>
+                                </children>
+
+                                <padding>
+                                    <all>4</all>
+                                </padding>
+
+                                <vertical-alignment>center</vertical-alignment>
+                                <horizontal-alignment>center</horizontal-alignment>
+                            </flow-layout>
+
+                            <button id="create-button">
+                                <margins>
+                                    <left>10</left>
+                                </margins>
+
+                                <sizing>
+                                    <horizontal method="fixed">16</horizontal>
+                                    <vertical method="fixed">16</vertical>
+                                </sizing>
+
+                                <!--                                    <renderer>-->
+                                <!--                                        <texture-->
+                                <!--                                                texture="owo:textures/gui/buttons"-->
+                                <!--                                                u="0"-->
+                                <!--                                                v="0"-->
+                                <!--                                                texture-width="64"-->
+                                <!--                                                texture-height="192"/>-->
+                                <!--                                    </renderer>-->
+                            </button>
+                        </children>
+
+                        <margins>
+                            <bottom>8</bottom>
+                        </margins>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </flow-layout>
+
+                    <text-area>
+                        <max-lines>1</max-lines>
+                        <max-length>18</max-length>
+
+                        <sizing>
+                            <horizontal method="fixed">125</horizontal>
+                            <vertical method="fixed">18</vertical>
+                        </sizing>
+
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
+                    </text-area>
+
+                    <scroll direction="vertical">
+                        <flow-layout direction="vertical" id="scroll-container">
+                            <children>
+                                <label>
+                                </label>
+                            </children>
+                        </flow-layout>
+
+                        <sizing>
+                            <horizontal method="fixed">160</horizontal>
+                            <vertical method="fixed">130</vertical>
+                        </sizing>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </scroll>
+                </children>
+
+                <padding>
+                    <all>10</all>
+                </padding>
+
+                <sizing>
+                    <horizontal method="fixed">200</horizontal>
+                    <vertical method="fixed">170</vertical>
+                </sizing>
+
+                <surface>
+                    <panel dark="true"/>
+                </surface>
+
+                <horizontal-alignment>center</horizontal-alignment>
+            </flow-layout>
+        </template>
+
+        <template name="network_tab_create">
+            <flow-layout direction="vertical">
+                <children>
+                    <button id="close-create">
+                        <sizing>
+                            <vertical method="fixed">16</vertical>
+                            <horizontal method="fixed">16</horizontal>
+                        </sizing>
+                    </button>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <text-area id="network-name">
+                                <max-lines>1</max-lines>
+                                <max-length>18</max-length>
+                                <display-char-count>true</display-char-count>
+
+                                <sizing>
+                                    <horizontal method="fixed">125</horizontal>
+                                    <vertical method="fixed">30</vertical>
+                                </sizing>
+
+                                <surface>
+                                    <outline>#FF0000</outline>
+                                </surface>
+                            </text-area>
+
+                            <box id="color-box">
+                                <sizing>
+                                    <horizontal method="fixed">124</horizontal>
+                                    <vertical method="fixed">9</vertical>
+                                </sizing>
+
+                                <color>#00000000</color>
+
+                                <margins>
+                                    <top>5</top>
+                                </margins>
+                            </box>
+
+                            <color-picker id="color-picker">
+                                <sizing>
+                                    <horizontal method="fixed">125</horizontal>
+                                    <vertical method="fixed">70</vertical>
+                                </sizing>
+
+                                <margins>
+                                    <top>5</top>
+                                </margins>
+                            </color-picker>
+
+                            <button id="button-create">
+                                <text>Create</text>
+
+                                <margins>
+                                    <top>5</top>
+                                </margins>
+                            </button>
+                        </children>
+
+                        <padding>
+                            <all>10</all>
+                        </padding>
+
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </flow-layout>
+                </children>
+
+                <positioning type="relative">50,50</positioning>
+
+                <horizontal-alignment>right</horizontal-alignment>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>

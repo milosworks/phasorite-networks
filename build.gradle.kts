@@ -2,29 +2,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("java-library")
 	id("idea")
-	id("maven-publish")
+	id("java-library")
 
-	id("net.neoforged.moddev") version "2.0.32-beta"
-
-	kotlin("jvm") version "2.0.0"
+	alias(libs.plugins.mdg)
+	alias(libs.plugins.kotlin.jvm)
+	alias(libs.plugins.kotlin.serialization)
 }
-
-val modVersion: String by project
-version = modVersion
-
-val modId: String by project
-base.archivesName = modId
-
-val javaVersion = JavaVersion.VERSION_21
-val neoVersion: String by project
-//val minecraftVersion: String by project
-val parchmentMappingsVersion: String by project
-val majorMinecraftVersion: String by project
-
-val kotlinNeoVersion: String by project
-val owoVersion: String by project
 
 repositories {
 	mavenLocal()
@@ -41,17 +25,29 @@ repositories {
 }
 
 dependencies {
-	implementation("thedarkcolour", "kotlinforforge-neoforge", kotlinNeoVersion)
-	implementation("io.wispforest", "owo-lib-neoforge", "${owoVersion}+${majorMinecraftVersion}")
+	implementation(rootProject.libs.kotlin.neoforge)
+	implementation(rootProject.libs.owolib)
 }
 
+val modId = project.properties["mod_id"] as String
+base.archivesName = modId
+
 neoForge {
-	version = neoVersion
+	version = rootProject.libs.versions.neoforge.asProvider()
 
 	parchment {
-		mappingsVersion = parchmentMappingsVersion
-		minecraftVersion = majorMinecraftVersion
+		mappingsVersion = rootProject.libs.versions.parchment.asProvider()
+		minecraftVersion = rootProject.libs.versions.parchment.mc
 	}
+
+	mods {
+		create(modId) {
+			sourceSet(sourceSets["main"])
+		}
+	}
+
+	interfaceInjectionData.from("src/main/resources/owo.interfaces.json")
+	accessTransformers.from("src/main/resources/META-INF/owo.accesstransformer.cfg")
 
 	runs {
 		configureEach {
@@ -90,25 +86,42 @@ neoForge {
 			)
 		}
 	}
-
-	mods {
-		create(modId) {
-			sourceSet(sourceSets["main"])
-		}
-	}
 }
+
+// Plugin
+// Cr: https://github.com/kernel-panic-codecave/Archie/blob/1.20.x/plugins/src/main/kotlin/utils/mod-resources.gradle.kts
+interface ModResourcesExtension {
+	val versions: MapProperty<String, String>
+	val properties: MapProperty<String, String>
+}
+
+val extension = extensions.create<ModResourcesExtension>("modResources")
+val versionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+extension.versions.convention(provider {
+	versionCatalog.versionAliases.associate {
+		// both "." and "-" cause issues with expand :/
+		it.replace(".", "_") to versionCatalog.findVersion(it).get().requiredVersion
+	}
+})
+extension.properties.convention(provider {
+	project.properties.mapKeys {
+		it.key.replace(".", "_")
+	}.mapValues { it.value.toString() }
+})
 
 tasks {
 	withType<JavaCompile> {
 		options.encoding = "UTF-8"
-		sourceCompatibility = javaVersion.toString()
-		targetCompatibility = javaVersion.toString()
-		options.release.set(javaVersion.toString().toInt())
+		sourceCompatibility = JavaVersion.VERSION_21.toString()
+		targetCompatibility = JavaVersion.VERSION_21.toString()
+		options.release.set(JavaVersion.VERSION_21.toString().toInt())
 	}
 
 	withType<KotlinCompile> {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
+			
+			optIn.add("kotlin.uuid.ExperimentalUuidApi")
 		}
 	}
 
@@ -118,32 +131,24 @@ tasks {
 
 	java {
 		toolchain {
-			languageVersion.set(JavaLanguageVersion.of(javaVersion.toString()))
+			languageVersion.set(JavaLanguageVersion.of(JavaVersion.VERSION_21.toString()))
 		}
 
-		sourceCompatibility = javaVersion
-		targetCompatibility = javaVersion
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
 
 		withSourcesJar()
 	}
 
 	processResources {
-		inputs.property("mod_version", version)
+		val resourceValues = buildMap {
+			put("versions", extension.versions.get())
+			putAll(extension.properties.get())
+		}
+		inputs.properties(resourceValues)
 
 		filesMatching("META-INF/neoforge.mods.toml") {
-			expand(
-				mutableMapOf(
-					"loader_version_range" to project.properties["loaderVersionRange"],
-					"mod_license" to project.properties["modLicense"],
-					"mod_id" to project.properties["modId"],
-					"mod_version" to version,
-					"mod_name" to project.properties["modName"],
-					"mod_authors" to project.properties["modAuthors"],
-					"mod_description" to project.properties["modDescription"],
-					"neo_version_range" to project.properties["neoVersionRange"],
-					"minecraft_version_range" to project.properties["minecraftVersionRange"],
-				)
-			)
+			expand(resourceValues)
 		}
 	}
 }

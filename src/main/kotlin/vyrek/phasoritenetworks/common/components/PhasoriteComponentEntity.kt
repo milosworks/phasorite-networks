@@ -5,34 +5,47 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.chat.Component
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.capabilities.Capabilities
-import vyrek.phasoritenetworks.common.networks.ComponentType
-import vyrek.phasoritenetworks.common.networks.Network
-import vyrek.phasoritenetworks.common.networks.NetworkConstants
-import vyrek.phasoritenetworks.common.networks.NetworksData
-import vyrek.phasoritenetworks.common.networks.TransferHandler
+import vyrek.phasoritenetworks.common.networks.*
+import kotlin.uuid.Uuid
+import kotlin.uuid.toJavaUuid
+import kotlin.uuid.toKotlinUuid
 
 open class PhasoriteComponentEntity(
 	type: BlockEntityType<*>,
 	pos: BlockPos,
 	state: BlockState
 ) : BlockEntity(type, pos, state), BlockEntityTicker<PhasoriteComponentEntity> {
-	var initialized = false
+	private var initialized = false
 	var name = ""
+		get() {
+			if (field != "") return field
 
-	var priority = NetworkConstants.DEFAULT_PRIORITY
+			return when (componentType) {
+				ComponentType.IMPORTER -> Component.translatable("block.phasoritenetworks.phasorite_importer")
+					.string
+
+				ComponentType.EXPORTER -> Component.translatable("block.phasoritenetworks.phasorite_exporter")
+					.string
+
+				else -> ""
+			}
+		}
+
+	var priority: Int = NetworkConstants.DEFAULT_PRIORITY
 	var overrideMode = false
 	var rawLimit: Int = NetworkConstants.DEFAULT_LIMIT
 	val limit: Int
 		get() = (if (limitlessMode) Int.MAX_VALUE else rawLimit)
 	var limitlessMode = false
 
-	var networkId = NetworkConstants.INVALID_NUM
+	var networkId: Uuid = Uuid.NIL
 	var ownerUuid = Util.NIL_UUID
 
 	var network = Network()
@@ -46,20 +59,28 @@ open class PhasoriteComponentEntity(
 		networkId = conn.id
 	}
 
-	fun handleNetworkConnection(id: Int) {
-		if (id == NetworkConstants.INVALID_NUM) {
-			networkId = NetworkConstants.INVALID_NUM
-			network = Network()
+	fun disconnect() {
+		networkId = Uuid.NIL
+		network = Network()
+	}
+
+	fun handleNetworkConnection(id: Uuid) {
+		if (id == Uuid.NIL) {
+			if (network.isValid) {
+				network.connectionQueue.offer(Connection(ConnectionStatus.Disconnect, this))
+
+				return
+			}
+
+			disconnect()
 
 			return
 		}
 
 		val checkNetwork = NetworksData.get().getNetwork(id)
-		if (checkNetwork == null) {
-			throw IllegalArgumentException("No network found with id: $id")
-		}
+			?: throw IllegalArgumentException("No network found with id: $id")
 
-		checkNetwork.connectionQueue.offer(this)
+		checkNetwork.connectionQueue.offer(Connection(ConnectionStatus.Connect, this))
 	}
 
 	fun updateRequestedLimit() {
@@ -86,29 +107,30 @@ open class PhasoriteComponentEntity(
 	}
 
 	override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-		super.saveAdditional(tag, registries)
-
-		if (networkId != NetworkConstants.INVALID_NUM) tag.putInt(NetworkConstants.ID, networkId)
-		if (name != "") tag.putString(NetworkConstants.NAME, name)
+		tag.putUUID(NetworkConstants.ID, networkId.toJavaUuid())
+		tag.putString(NetworkConstants.NAME, name)
 		tag.putInt(NetworkConstants.PRIORITY, priority)
 		tag.putBoolean(NetworkConstants.OVERRIDE_MODE, overrideMode)
 		tag.putInt(NetworkConstants.RAW_LIMIT, rawLimit)
 		tag.putBoolean(NetworkConstants.LIMITLESS_MODE, limitlessMode)
 		tag.putUUID(NetworkConstants.OWNER, ownerUuid)
+
+		super.saveAdditional(tag, registries)
 	}
 
 	override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-		super.loadAdditional(tag, registries)
-
-		tag.takeIf { it.contains(NetworkConstants.ID) }?.let {
-			networkId = it.getInt(NetworkConstants.ID)
-			handleNetworkConnection(networkId)
+		tag.getUUID(NetworkConstants.ID).toKotlinUuid().takeIf { it != Uuid.NIL }?.let {
+			networkId = it
+			handleNetworkConnection(it)
 		}
+
 		name = tag.getString(NetworkConstants.NAME).takeIf { it.isNotEmpty() } ?: name
 		priority = tag.getInt(NetworkConstants.PRIORITY)
 		overrideMode = tag.getBoolean(NetworkConstants.OVERRIDE_MODE)
 		rawLimit = tag.getInt(NetworkConstants.RAW_LIMIT)
 		limitlessMode = tag.getBoolean(NetworkConstants.LIMITLESS_MODE)
 		ownerUuid = tag.getUUID(NetworkConstants.OWNER)
+
+		super.loadAdditional(tag, registries)
 	}
 }

@@ -1,36 +1,43 @@
 package vyrek.phasoritenetworks.common.networks
 
+import io.wispforest.owo.ui.core.Color
 import net.minecraft.core.HolderLookup
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.world.level.saveddata.SavedData
 import net.neoforged.neoforge.server.ServerLifecycleHooks
+import java.util.*
+import kotlin.uuid.Uuid
 
 class NetworksData : SavedData() {
-	val networks: MutableList<Network> = mutableListOf()
-	var nextId = 0
+	val networks: MutableMap<Uuid, Network> = mutableMapOf()
 
-//	fun createNetwork(): Network {
-//
-//	}
+	fun createNetwork(name: String, owner: UUID, color: Color): Network {
+		val network = Network(name, owner, color)
+		networks[network.id] = network
 
-	fun removeNetwork(id: Int) {
-		networks.removeAll { it.id == id }
+		return network
 	}
 
-	fun getNetwork(id: Int): Network? {
-		return networks.find { it.id == id }
+	fun removeNetwork(id: Uuid) {
+		networks.remove(id)
+	}
+
+	fun getNetwork(id: Uuid): Network? {
+		return networks[id]
+	}
+
+	fun getNetwork(uid: UUID) {
+		networks.filter { (_, v) -> v.owner == uid }
 	}
 
 	override fun save(
 		tag: CompoundTag,
 		provider: HolderLookup.Provider
 	): CompoundTag {
-		tag.putInt(NetworkConstants.NEXT_ID, nextId)
-
 		val networksList = ListTag()
-		for (network in networks) {
+		for (network in networks.values) {
 			val networkTag = CompoundTag()
 			network.saveAdditional(networkTag)
 			networksList.add(networkTag)
@@ -41,14 +48,12 @@ class NetworksData : SavedData() {
 	}
 
 	fun load(tag: CompoundTag) {
-		nextId = tag.getInt(NetworkConstants.NEXT_ID)
-
 		val networksList = tag.getList(NetworkConstants.NETWORKS, Tag.TAG_COMPOUND.toInt())
 		for (i in 0..networksList.size) {
 			val networkTag = networksList.getCompound(i)
 			val network = Network()
 			network.loadAdditional(networkTag)
-			networks.add(network)
+			networks[network.id] = network
 		}
 	}
 
@@ -57,7 +62,7 @@ class NetworksData : SavedData() {
 			return NetworksData()
 		}
 
-		fun load(tag: CompoundTag): NetworksData {
+		private fun load(tag: CompoundTag): NetworksData {
 			val data = NetworksData()
 			data.load(tag)
 			return data

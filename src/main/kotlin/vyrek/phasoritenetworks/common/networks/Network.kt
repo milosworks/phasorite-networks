@@ -1,5 +1,6 @@
 package vyrek.phasoritenetworks.common.networks
 
+import io.wispforest.owo.ui.core.Color
 import net.minecraft.Util
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -7,23 +8,25 @@ import net.minecraft.nbt.Tag
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.entity.PhasoriteExporterEntity
 import vyrek.phasoritenetworks.entity.PhasoriteImporterEntity
-import java.util.LinkedList
-import java.util.Queue
-import java.util.UUID
+import java.util.*
+import kotlin.uuid.Uuid
+import kotlin.uuid.toJavaUuid
+import kotlin.uuid.toKotlinUuid
 
 class Network(
-	var id: Int = NetworkConstants.INVALID_NUM,
 	var name: String = "",
-	var owner: UUID = Util.NIL_UUID
+	var owner: UUID = Util.NIL_UUID,
+	var color: Color = Color.BLACK
 ) {
+	var id: Uuid = Uuid.random()
 	val isValid: Boolean
-		get() = id != NetworkConstants.INVALID_NUM
+		get() = id != Uuid.NIL
 
 	val members: HashMap<UUID, NetworkUser> = HashMap()
 
 	val components: MutableList<PhasoriteComponentEntity> = mutableListOf()
 
-	val connectionQueue: Queue<PhasoriteComponentEntity> = LinkedList()
+	val connectionQueue: Queue<Connection> = LinkedList()
 
 	var requestedEnergy = 0
 
@@ -70,8 +73,16 @@ class Network(
 		}
 
 		connectionQueue.forEach { conn ->
-			conn.connect(this)
-			components.add(conn)
+			when (conn.status) {
+				ConnectionStatus.Connect -> {
+					conn.target.connect(this)
+				}
+
+				ConnectionStatus.Disconnect -> {
+					components.remove(conn.target)
+					conn.target.disconnect()
+				}
+			}
 		}
 
 		importers.forEach { importer ->
@@ -89,9 +100,10 @@ class Network(
 	}
 
 	fun saveAdditional(tag: CompoundTag) {
-		tag.putInt(NetworkConstants.ID, id)
+		tag.putUUID(NetworkConstants.ID, id.toJavaUuid())
 		tag.putString(NetworkConstants.NAME, name)
 		tag.putUUID(NetworkConstants.OWNER, owner)
+		tag.putInt(NetworkConstants.COLOR, color.argb())
 
 		val membersList = ListTag()
 		for ((_, user) in members) {
@@ -103,9 +115,10 @@ class Network(
 	}
 
 	fun loadAdditional(tag: CompoundTag) {
-		id = tag.getInt(NetworkConstants.ID)
+		id = tag.getUUID(NetworkConstants.ID).toKotlinUuid()
 		name = tag.getString(NetworkConstants.NAME)
 		owner = tag.getUUID(NetworkConstants.OWNER)
+		color = Color.ofArgb(tag.getInt(NetworkConstants.COLOR))
 
 		val membersList = tag.getList(NetworkConstants.MEMBERS, Tag.TAG_COMPOUND.toInt())
 		for (i in 0..membersList.size) {
@@ -116,3 +129,9 @@ class Network(
 	}
 }
 
+enum class ConnectionStatus {
+	Connect,
+	Disconnect
+}
+
+data class Connection(val status: ConnectionStatus, val target: PhasoriteComponentEntity)

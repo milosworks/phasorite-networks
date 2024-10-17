@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 package vyrek.phasoritenetworks.init
 
 import net.minecraft.core.registries.BuiltInRegistries
@@ -6,6 +8,7 @@ import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.capabilities.Capabilities
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.registries.DeferredRegister
+import thedarkcolour.kotlinforforge.neoforge.forge.MOD_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 import vyrek.phasoritenetworks.PhasoriteNetworks
 import vyrek.phasoritenetworks.entity.PhasoriteExporterEntity
@@ -13,7 +16,7 @@ import vyrek.phasoritenetworks.entity.PhasoriteImporterEntity
 
 //: AutoRegistryContainer<BlockEntityType<*>>
 object PhasoriteNetworksEntities {
-	val ENTITIES: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(
+	private val ENTITIES: DeferredRegister<BlockEntityType<*>> = DeferredRegister.create(
 		BuiltInRegistries.BLOCK_ENTITY_TYPE,
 		PhasoriteNetworks.ID
 	)
@@ -34,6 +37,7 @@ object PhasoriteNetworksEntities {
 
 	fun init(event: IEventBus) {
 		ENTITIES.register(event)
+		MOD_BUS.addListener<RegisterCapabilitiesEvent>(::registerCapabilities)
 	}
 
 	fun registerCapabilities(event: RegisterCapabilitiesEvent) {

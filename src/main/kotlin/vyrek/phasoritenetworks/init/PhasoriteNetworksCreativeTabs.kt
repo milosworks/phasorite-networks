@@ -42,7 +42,7 @@ object PhasoriteNetworksCreativeTabs {
 //		}
 //	}
 
-	val CREATIVE_TABS: DeferredRegister<CreativeModeTab> = DeferredRegister.create(
+	private val CREATIVE_TABS: DeferredRegister<CreativeModeTab> = DeferredRegister.create(
 		BuiltInRegistries.CREATIVE_MODE_TAB,
 		PhasoriteNetworks.ID
 	)
@@ -50,10 +50,10 @@ object PhasoriteNetworksCreativeTabs {
 	val PHASORITE_NETWORKS_TAB by CREATIVE_TABS.register("phasorite_networks_tab") { ->
 		CreativeModeTab.builder()
 			.title(Component.translatable("itemGroup.${PhasoriteNetworks.ID}.phasorite_networks"))
-			.icon { -> ItemStack(PhasoriteNetworksBlocks.PHASORITE_EXPORTER) }
+			.icon { -> ItemStack(PhasoriteNetworksItems.PHASORITE_IMPORTER) }
 			.displayItems { _, o ->
-				o.accept(PhasoriteNetworksBlocks.PHASORITE_IMPORTER)
-				o.accept(PhasoriteNetworksBlocks.PHASORITE_EXPORTER)
+				o.accept(PhasoriteNetworksItems.PHASORITE_IMPORTER)
+				o.accept(PhasoriteNetworksItems.PHASORITE_EXPORTER)
 			}
 			.build()
 	}
