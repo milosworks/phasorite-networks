@@ -4,9 +4,17 @@
 	"block.phasoritenetworks.phasorite_exporter": "Phasorite Exporter",
 	"block.phasoritenetworks.phasorite_importer": "Phasorite Importer",
 	
-	"item.phasoritenetworks.link_wrench": "Link Wrench",
+	"block.phasoritenetworks.phasorite_block": "Phasorite Block",
+	"block.phasoritenetworks.budding_phasorite": "Budding Phasorite",
+	"block.phasoritenetworks.small_phasorite_bud": "Small Phasorite Bud",
+	"block.phasoritenetworks.medium_phasorite_bud": "Medium Phasorite Bud",
+	"block.phasoritenetworks.large_phasorite_bud": "Large Phasorite Bud",
+	"block.phasoritenetworks.phasorite_cluster": "Phasorite Cluster",
+	"block.phasoritenetworks.charged_phasorite_cluster": "Charged Phasorite Cluster",
 	
-	"tooltip.bound": "Bound to importer at X: %s, Y: %s, Z: %s",
-	"tooltip.usage": "Click an exporter and then click an importer to bound.",
-	"tooltip.usage.2": "Click an importer to bound."
+	"item.phasoritenetworks.charged_phasorite_crystal": "Charged Phasorite Crystal",
+	"item.phasoritenetworks.phasorite_crystal": "Phasorite Crystal",
+	"item.phasoritenetworks.phasorite_dust": "Phasorite Dust",
+	"item.phasoritenetworks.phasorite_lens": "Phasorite Lens",
+	"item.phasoritenetworks.phasorite_core": "Phasorite Core"
 }

@@ -27,6 +27,9 @@ repositories {
 dependencies {
 	implementation(rootProject.libs.kotlin.neoforge)
 	implementation(rootProject.libs.owolib)
+
+	accessTransformers(rootProject.libs.owolib.dev)
+	interfaceInjectionData(rootProject.libs.owolib.dev)
 }
 
 val modId = project.properties["mod_id"] as String
@@ -46,9 +49,6 @@ neoForge {
 		}
 	}
 
-	interfaceInjectionData.from("src/main/resources/owo.interfaces.json")
-	accessTransformers.from("src/main/resources/META-INF/owo.accesstransformer.cfg")
-
 	runs {
 		configureEach {
 			systemProperty("forge.logging.markers", "REGISTRIES")
@@ -59,17 +59,13 @@ neoForge {
 		create("client") {
 			client()
 
-			programArguments.addAll("--username", "Vyrek_", "--quickPlaySingleplayer", "Test")
+			programArguments.addAll("--username", "Vyrek_", "--quickPlaySingleplayer", "test")
 		}
 
 		create("server") {
 			server()
 
 			programArgument("--nogui")
-		}
-
-		create("gameTestServer") {
-			type = "gameTestServer"
 		}
 
 		create("data") {
@@ -120,12 +116,13 @@ tasks {
 	withType<KotlinCompile> {
 		compilerOptions {
 			jvmTarget.set(JvmTarget.JVM_21)
-			
+
 			optIn.add("kotlin.uuid.ExperimentalUuidApi")
 		}
 	}
 
 	jar {
+		archiveFileName.set("${modId}-${project.properties["mod_version"]}.jar")
 		from("LICENSE")
 	}
 
@@ -154,19 +151,6 @@ tasks {
 }
 
 sourceSets["main"].resources.srcDir("src/generated/resources")
-
-//publishing {
-//	publications {
-//		register('mavenJava', MavenPublication) {
-//			from components.java
-//		}
-//	}
-//	repositories {
-//		maven {
-//			url "file://${project.projectDir}/repo"
-//		}
-//	}
-//}
 
 idea {
 	module {

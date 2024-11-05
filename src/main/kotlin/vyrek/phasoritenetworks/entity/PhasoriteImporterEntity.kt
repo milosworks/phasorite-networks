@@ -6,12 +6,13 @@ import net.minecraft.world.level.block.state.BlockState
 import net.neoforged.neoforge.energy.IEnergyStorage
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
-import vyrek.phasoritenetworks.init.PhasoriteNetworksEntities
+import vyrek.phasoritenetworks.common.networks.NetworkStatistics
+import vyrek.phasoritenetworks.init.PNEntities
 
 class PhasoriteImporterEntity(
 	pos: BlockPos,
 	state: BlockState,
-) : PhasoriteComponentEntity(PhasoriteNetworksEntities.PHASORITE_IMPORTER, pos, state) {
+) : PhasoriteComponentEntity(PNEntities.PHASORITE_IMPORTER, pos, state) {
 	val sides: MutableMap<Int, EnergyStorage> = mutableMapOf()
 
 	override var componentType = ComponentType.IMPORTER
@@ -20,7 +21,11 @@ class PhasoriteImporterEntity(
 		override fun receiveEnergy(energy: Int, simulate: Boolean): Int {
 			if (network.isValid) {
 				val maxLimit = minOf(limit, network.requestedEnergy)
-				return transferHandler.receive(energy, maxLimit, side, simulate)
+
+				val toReturn = transferHandler.receive(energy, maxLimit, side, simulate)
+				network.statistics.addEnergyTick(toReturn, NetworkStatistics.EnergyType.IMPORTED)
+
+				return toReturn
 			}
 			return 0
 		}
@@ -42,7 +47,7 @@ class PhasoriteImporterEntity(
 		}
 
 		override fun canReceive(): Boolean {
-			return false
+			return network.isValid
 		}
 	}
 }

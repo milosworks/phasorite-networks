@@ -23,16 +23,14 @@ class TransferHandler {
 		if (simulate) return toReceive
 
 		buffer += toReceive
+//		nodes[side.get3DDataValue()]!!.energyStatistic += toReceive
 
 		return toReceive
-		// We can do statistics and tell the network certain node gave energy to the plug
-
-
-//		val node = nodes[side.get3DDataValue()] ?: return toReceive
-//		node.insert(toReceive, false)
 	}
 
 	fun distribute(limit: Int, mode: DistributionMode): Int {
+		var totalTransfer = 0
+
 		when (mode) {
 			DistributionMode.ROUND_ROBIN -> {
 				var index = 0
@@ -47,6 +45,7 @@ class TransferHandler {
 
 						if (moved > 0) {
 							buffer -= moved
+							totalTransfer += moved
 							energyTransferredInLastLoop = true
 						}
 
@@ -61,17 +60,19 @@ class TransferHandler {
 
 					val energyToTransfer = minOf(buffer, limit)
 					val moved = node.insert(energyToTransfer)
+					totalTransfer += moved
 					buffer -= moved
 				}
 			}
 		}
 
-		return buffer
+		return totalTransfer
 	}
 
 	fun updateRequestedLimit(limit: Int): Int {
 		for (node in nodes.values) {
-			requestedLimit += node.extract(limit, true)
+			val ex = node.insert(limit, true)
+			requestedLimit += ex
 		}
 
 		return requestedLimit
@@ -92,7 +93,6 @@ class TransferHandler {
 	}
 
 	fun reset() {
-//		buffer = 0
 		requestedLimit = 0
 	}
 

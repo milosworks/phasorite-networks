@@ -1,18 +1,32 @@
 package vyrek.phasoritenetworks.common.networks
 
 import net.minecraft.nbt.CompoundTag
-import java.util.UUID
+import vyrek.phasoritenetworks.networking.PNEndecsData
+import java.util.*
 
-class NetworkUser(var uuid: UUID, var name: String) {
-	constructor(tag: CompoundTag) : this(tag.getUUID(NetworkConstants.USER), tag.getString(NetworkConstants.NAME))
+enum class NetworkUserAccess {
+	MEMBER,
+	ADMIN
+}
+
+class NetworkUser(var uuid: UUID, var name: String, var access: NetworkUserAccess = NetworkUserAccess.MEMBER) {
+	constructor(tag: CompoundTag) : this(
+		tag.getUUID(NetworkConstants.USER),
+		tag.getString(NetworkConstants.NAME),
+		NetworkUserAccess.entries[tag.getInt(NetworkConstants.MEMBER_TYPE)]
+	)
 
 	fun saveAdditional(tag: CompoundTag) {
 		tag.putUUID(NetworkConstants.USER, uuid)
 		tag.putString(NetworkConstants.NAME, name)
+		tag.putInt(NetworkConstants.MEMBER_TYPE, access.ordinal)
 	}
 
-	fun loadAdditional(tag: CompoundTag) {
-		uuid = tag.getUUID(NetworkConstants.USER)
-		name = tag.getString(NetworkConstants.NAME)
+	fun toClientData(): PNEndecsData.ClientUserData {
+		return PNEndecsData.ClientUserData(
+			uuid,
+			name,
+			access.ordinal
+		)
 	}
 }

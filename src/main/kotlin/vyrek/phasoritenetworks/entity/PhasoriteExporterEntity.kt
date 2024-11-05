@@ -6,22 +6,26 @@ import net.neoforged.neoforge.energy.IEnergyStorage
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.DistributionMode
-import vyrek.phasoritenetworks.init.PhasoriteNetworksEntities
+import vyrek.phasoritenetworks.common.networks.NetworkStatistics
+import vyrek.phasoritenetworks.init.PNEntities
 
 class PhasoriteExporterEntity(
 	pos: BlockPos,
 	state: BlockState,
-) : PhasoriteComponentEntity(PhasoriteNetworksEntities.PHASORITE_EXPORTER, pos, state) {
+) : PhasoriteComponentEntity(PNEntities.PHASORITE_EXPORTER, pos, state) {
 	val energyStorage = EnergyStorage()
 
-	val distributionMode: DistributionMode = DistributionMode.ROUND_ROBIN
+	private val distributionMode: DistributionMode = DistributionMode.ROUND_ROBIN
 
 	override var componentType = ComponentType.EXPORTER
 
 	fun distributeEnergy(): Int {
 		if (!transferHandler.canDistribute) return 0
 
-		return transferHandler.distribute(limit, distributionMode)
+		val toReturn = transferHandler.distribute(limit, distributionMode)
+		network.statistics.addEnergyTick(toReturn, NetworkStatistics.EnergyType.EXPORTED)
+
+		return toReturn
 	}
 
 	inner class EnergyStorage() : IEnergyStorage {

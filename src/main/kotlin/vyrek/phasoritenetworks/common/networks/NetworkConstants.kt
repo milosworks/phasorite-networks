@@ -1,16 +1,6 @@
 package vyrek.phasoritenetworks.common.networks
 
 object NetworkConstants {
-	const val INVALID_NUM = -1
-
-	const val MAX_NETWORK_NAME_LEN = 18
-	const val MAX_PASSWORD_LEN = 12
-	const val MAX_PRIORITY = 999
-	const val MAX_COMPONENT_NAME_LEN = 24
-	const val MAX_LIMIT = 999_999_999
-
-	const val MIN_PRIORITY = -999
-
 	const val DEFAULT_PRIORITY = 1
 	const val DEFAULT_LIMIT = 100_000
 
@@ -24,9 +14,12 @@ object NetworkConstants {
 	const val USER = "user_uuid"
 	const val COLOR = "color"
 	const val MEMBERS = "members"
+	const val PASSWORD = "password"
+	const val PRIVATE = "private"
 	const val BUFFER = "buffer"
-	const val NEXT_ID = "next_id"
 	const val NETWORKS = "networks"
+	const val MEMBER_TYPE = "member_type"
+	const val TRANSFER = "transfer"
 }
 
 enum class ComponentType {

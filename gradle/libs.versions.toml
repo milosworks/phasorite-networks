@@ -1,8 +1,8 @@
 [versions]
 # Kotlin
-kotlin = "2.0.20"
-kotlin-neoforge = "5.5.0"
-kotlin-neoforge-range = "5"
+kotlin = "2.0.21"
+kotlin-neoforge = "5.6.0"
+kotlin-neoforge-range = "5" # Used in META-INF/neoforge.mods.tml
 
 # Minecraft
 minecraft = { strictly = "1.21.1" }
@@ -11,14 +11,15 @@ parchment = "2024.07.28"
 
 # NeoForge
 neoforge = "21.1.66"
-neoforge-range = "21.1.66"
+neoforge-range = "21.1.66" # Used in META-INF/neoforge.mods.tml
 mdg = "2.0.32-beta"
 
 # Architectury
 #architectury-loom = "1.7.410"
 
 # owo lib
-owolib = "0.12.15-beta.1+1.21"
+owolib = "0.12.15-beta.4+1.21"
+owolib-dev = "0.12.15-beta.4+1.21"
 
 [libraries]
 # Kotlin
@@ -31,6 +32,7 @@ parchment = { module = "org.parchmentmc.data:parchment-1.21", version.ref = "par
 
 # owo lib
 owolib = { module = "io.wispforest:owo-lib-neoforge", version.ref = "owolib" }
+owolib-dev = { module = "io.wispforest:owo-lib-neoforge-dev", version.ref = "owolib-dev" }
 
 # NeoForge
 neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }

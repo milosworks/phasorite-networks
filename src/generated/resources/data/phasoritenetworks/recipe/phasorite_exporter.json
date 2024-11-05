@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "phasoritenetworks:charged_phasorite_crystal"
+    },
+    "G": {
+      "tag": "c:ingots/gold"
+    },
+    "L": {
+      "item": "phasoritenetworks:phasorite_lens"
+    },
+    "O": {
+      "item": "phasoritenetworks:phasorite_core"
+    },
+    "P": {
+      "item": "phasoritenetworks:phasorite_crystal"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "PCP",
+    "ROR",
+    "GLG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "phasoritenetworks:phasorite_exporter"
+  }
+}

@@ -1,24 +1,35 @@
 <owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.21/owo-ui.xsd">
     <components>
-        <flow-layout direction="vertical">
+        <flow-layout direction="horizontal">
             <!-- We use templates for various tabs -->
 
-            <children>
-            </children>
+            <children></children>
 
             <horizontal-alignment>center</horizontal-alignment>
             <vertical-alignment>center</vertical-alignment>
 
             <surface>
-                <vanilla-translucent/>
+                <!--                <vanilla-translucent/>-->
+                <blur quality="10" size="10"/>
             </surface>
         </flow-layout>
     </components>
 
+
+    <!-- Naming conventions: -->
+
+    <!-- Tabs: tab:tab-name:sub-tab-name -->
+    <!-- Ex: tab:network-tab -->
+    <!-- Ex: tab:network-tab:create-network -->
+
+    <!-- Components: type:name -->
+    <!-- Ex: button:close -->
+    <!-- Ex: text-area:network-name -->
+
     <templates>
-        <!-- Configuration of the current component -->
-        <template name="component_tab">
+        <!-- Tab for displaying component configuration -->
+        <template name="tab:component">
             <flow-layout direction="vertical">
                 <children>
                     <label>
@@ -28,7 +39,7 @@
                             <all>2</all>
                         </margins>
                     </label>
-                    <text-area id="name">
+                    <text-area id="text-area:component-name">
                         <max-length>22</max-length>
                         <max-lines>1</max-lines>
                         <display-char-count>true</display-char-count>
@@ -54,7 +65,7 @@
                                             <all>2</all>
                                         </margins>
                                     </label>
-                                    <text-area id="limit">
+                                    <text-area id="text-area:component-limit">
                                         <max-length>10</max-length>
                                         <max-lines>1</max-lines>
 
@@ -77,7 +88,7 @@
                                             <all>2</all>
                                         </margins>
                                     </label>
-                                    <text-area id="priority">
+                                    <text-area id="text-area:component-priority">
                                         <max-length>4</max-length>
                                         <max-lines>1</max-lines>
 
@@ -101,16 +112,20 @@
                         </margins>
                     </flow-layout>
 
-                    <checkbox id="override">
+                    <checkbox id="checkbox:component-override">
                         <text>Override Mode</text>
+
+                        <checked>{{overrideMode}}</checked>
 
                         <margins>
                             <top>10</top>
                         </margins>
                     </checkbox>
 
-                    <checkbox id="limitless">
+                    <checkbox id="checkbox:component-limitless">
                         <text>Limitless Mode</text>
+
+                        <checked>{{limitlessMode}}</checked>
 
                         <margins>
                             <top>2</top>
@@ -118,14 +133,22 @@
                         </margins>
                     </checkbox>
 
-                    <flow-layout direction="horizontal" id="block">
+                    <flow-layout direction="horizontal" id="flow-layout:container-item">
                         <children>
-                            <block state="{{id}}">
+                            <!--                            <block state="{{id}}">-->
+                            <!--                                <sizing>-->
+                            <!--                                    <horizontal method="fixed">40</horizontal>-->
+                            <!--                                    <vertical method="fixed">40</vertical>-->
+                            <!--                                </sizing>-->
+                            <!--                            </block>-->
+
+                            <item>
+                                <stack>{{id}}</stack>
                                 <sizing>
                                     <horizontal method="fixed">40</horizontal>
                                     <vertical method="fixed">40</vertical>
                                 </sizing>
-                            </block>
+                            </item>
                         </children>
 
                         <margins>
@@ -144,149 +167,488 @@
             </flow-layout>
         </template>
 
-        <!-- Tab that shows all the networks of the user -->
-        <template name="network_tab">
+        <!-- Tab for showing all user networks -->
+        <template name="tab:network">
             <flow-layout direction="vertical">
                 <children>
-                    <flow-layout direction="horizontal">
+                    <flow-layout direction="horizontal" id="flow-layout:container-buttons">
                         <children>
-                            <flow-layout direction="vertical" id="name-container">
-                                <children>
-                                    <label id="network_id">
-                                        <text>No Selected Network</text>
+                            <button id="button:network-create">
+                                <text>C</text>
 
-                                        <vertical-text-alignment>center</vertical-text-alignment>
-                                        <horizontal-text-alignment>center</horizontal-text-alignment>
-                                    </label>
-                                </children>
-
-                                <padding>
-                                    <all>4</all>
-                                </padding>
-
-                                <vertical-alignment>center</vertical-alignment>
-                                <horizontal-alignment>center</horizontal-alignment>
-                            </flow-layout>
-
-                            <button id="create-button">
                                 <margins>
-                                    <left>10</left>
+                                    <right>5</right>
                                 </margins>
 
                                 <sizing>
                                     <horizontal method="fixed">16</horizontal>
                                     <vertical method="fixed">16</vertical>
                                 </sizing>
+                            </button>
 
-                                <!--                                    <renderer>-->
-                                <!--                                        <texture-->
-                                <!--                                                texture="owo:textures/gui/buttons"-->
-                                <!--                                                u="0"-->
-                                <!--                                                v="0"-->
-                                <!--                                                texture-width="64"-->
-                                <!--                                                texture-height="192"/>-->
-                                <!--                                    </renderer>-->
+                            <button id="button:network-delete">
+                                <text>DE</text>
+                                <margins>
+                                    <right>5</right>
+                                </margins>
+
+                                <sizing>
+                                    <horizontal method="fixed">16</horizontal>
+                                    <vertical method="fixed">16</vertical>
+                                </sizing>
+                            </button>
+
+                            <button id="button:network-edit">
+                                <text>E</text>
+                                <margins>
+                                    <right>5</right>
+                                </margins>
+
+                                <sizing>
+                                    <horizontal method="fixed">16</horizontal>
+                                    <vertical method="fixed">16</vertical>
+                                </sizing>
+                            </button>
+
+                            <button id="button:network-disconnect">
+                                <text>D</text>
+                                <margins>
+                                    <right>5</right>
+                                </margins>
+
+                                <sizing>
+                                    <horizontal method="fixed">16</horizontal>
+                                    <vertical method="fixed">16</vertical>
+                                </sizing>
                             </button>
                         </children>
 
-                        <margins>
-                            <bottom>8</bottom>
-                        </margins>
+                        <horizontal-alignment>right</horizontal-alignment>
+                    </flow-layout>
 
-                        <vertical-alignment>center</vertical-alignment>
+                    <flow-layout direction="vertical">
+                        <children>
+                            <flow-layout direction="horizontal">
+                                <children>
+                                    <flow-layout direction="vertical" id="flow-layout:container-name">
+                                        <children>
+                                            <label>
+                                                <text>{{name}}</text>
+
+                                                <tooltip-text>{{id}}</tooltip-text>
+
+                                                <vertical-text-alignment>center</vertical-text-alignment>
+                                                <horizontal-text-alignment>center</horizontal-text-alignment>
+                                            </label>
+                                        </children>
+
+                                        <padding>
+                                            <all>4</all>
+                                        </padding>
+
+                                        <surface>
+                                            <outline>{{color}}</outline>
+                                        </surface>
+
+                                        <vertical-alignment>center</vertical-alignment>
+                                        <horizontal-alignment>center</horizontal-alignment>
+                                    </flow-layout>
+                                </children>
+
+                                <margins>
+                                    <bottom>8</bottom>
+                                </margins>
+
+                                <vertical-alignment>center</vertical-alignment>
+                                <horizontal-alignment>center</horizontal-alignment>
+                            </flow-layout>
+
+                            <text-area id="text-area:network-search">
+                                <max-lines>1</max-lines>
+                                <max-length>20</max-length>
+
+                                <sizing>
+                                    <horizontal method="fixed">125</horizontal>
+                                    <vertical method="fixed">18</vertical>
+                                </sizing>
+
+                                <margins>
+                                    <bottom>5</bottom>
+                                </margins>
+                            </text-area>
+
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <flow-layout direction="horizontal">
+                                        <children>
+                                            <label>
+                                                <text>Sorted by:</text>
+
+                                                <margins>
+                                                    <right>5</right>
+                                                </margins>
+                                            </label>
+
+                                            <label id="label:network-sort">
+                                                <text>All</text>
+
+                                                <color>#CBC0C1</color>
+                                            </label>
+
+                                            <label id="label:network-quantity">
+                                                <text>0</text>
+
+                                                <positioning type="relative">100,50</positioning>
+                                            </label>
+                                        </children>
+
+                                        <sizing>
+                                            <horizontal method="expand">100</horizontal>
+                                        </sizing>
+
+                                        <margins>
+                                            <bottom>5</bottom>
+                                        </margins>
+                                    </flow-layout>
+
+                                    <scroll direction="vertical">
+                                        <flow-layout direction="vertical" id="flow-layout:container-scroll">
+                                            <children>
+
+                                            </children>
+
+                                            <padding>
+                                                <all>2</all>
+                                            </padding>
+                                        </flow-layout>
+
+                                        <sizing>
+                                            <horizontal method="expand">100</horizontal>
+                                            <vertical method="fixed">120</vertical>
+                                        </sizing>
+
+                                        <vertical-alignment>center</vertical-alignment>
+                                        <horizontal-alignment>center</horizontal-alignment>
+                                    </scroll>
+                                </children>
+
+                                <sizing>
+                                    <horizontal method="fixed">160</horizontal>
+                                </sizing>
+                            </flow-layout>
+                        </children>
+
+                        <padding>
+                            <all>10</all>
+                        </padding>
+
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+
                         <horizontal-alignment>center</horizontal-alignment>
                     </flow-layout>
 
-                    <text-area>
-                        <max-lines>1</max-lines>
-                        <max-length>18</max-length>
-
+                    <flow-layout direction="horizontal" id="flow-layout:container-empty">
+                        <children>
+                        </children>
                         <sizing>
-                            <horizontal method="fixed">125</horizontal>
-                            <vertical method="fixed">18</vertical>
+                            <vertical method="fixed">16</vertical>
                         </sizing>
-
-                        <margins>
-                            <bottom>5</bottom>
-                        </margins>
-                    </text-area>
-
-                    <scroll direction="vertical">
-                        <flow-layout direction="vertical" id="scroll-container">
-                            <children>
-                                <label>
-                                </label>
-                            </children>
-                        </flow-layout>
-
-                        <sizing>
-                            <horizontal method="fixed">160</horizontal>
-                            <vertical method="fixed">130</vertical>
-                        </sizing>
-
-                        <vertical-alignment>center</vertical-alignment>
-                        <horizontal-alignment>center</horizontal-alignment>
-                    </scroll>
+                    </flow-layout>
                 </children>
 
-                <padding>
-                    <all>10</all>
-                </padding>
-
-                <sizing>
-                    <horizontal method="fixed">200</horizontal>
-                    <vertical method="fixed">170</vertical>
-                </sizing>
-
-                <surface>
-                    <panel dark="true"/>
-                </surface>
-
-                <horizontal-alignment>center</horizontal-alignment>
+                <horizontal-alignment>right</horizontal-alignment>
+                <vertical-alignment>center</vertical-alignment>
             </flow-layout>
         </template>
 
-        <template name="network_tab_create">
+        <!-- Display network data inside the scroll container -->
+        <template name="tab:network:data">
+            <flow-layout direction="horizontal" id="flow-layout:container-{{id}}">
+                <children>
+                    <label>
+                        <text>{{name}}</text>
+                    </label>
+
+                    <button id="button:{{id}}-connect">
+                        <text>C</text>
+
+                        <sizing>
+                            <horizontal method="fixed">15</horizontal>
+                            <vertical method="fixed">15</vertical>
+                        </sizing>
+
+                        <margins>
+                            <left>5</left>
+                        </margins>
+                        <positioning type="relative">100,50</positioning>
+                    </button>
+                </children>
+
+                <padding>
+                    <all>3</all>
+                </padding>
+
+                <margins>
+                    <bottom>2</bottom>
+                </margins>
+
+                <surface>
+                    <outline>{{color}}</outline>
+                </surface>
+
+                <sizing>
+                    <horizontal method="expand">100</horizontal>
+                    <vertical method="fixed">21</vertical>
+                </sizing>
+
+                <vertical-alignment>center</vertical-alignment>
+            </flow-layout>
+        </template>
+
+        <!-- Popup for confirming the deletion of a network -->
+        <template name="tab:network:delete">
             <flow-layout direction="vertical">
                 <children>
-                    <button id="close-create">
+                    <button id="button:close">
+                        <text>X</text>
+
                         <sizing>
                             <vertical method="fixed">16</vertical>
                             <horizontal method="fixed">16</horizontal>
                         </sizing>
+
+                        <margins>
+                            <right>5</right>
+                        </margins>
                     </button>
 
                     <flow-layout direction="vertical">
                         <children>
-                            <text-area id="network-name">
-                                <max-lines>1</max-lines>
-                                <max-length>18</max-length>
-                                <display-char-count>true</display-char-count>
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <label>
+                                        <text>Are you sure you want to</text>
+                                    </label>
+                                    <label>
+                                        <text>delete the network:</text>
+                                    </label>
+                                </children>
 
-                                <sizing>
-                                    <horizontal method="fixed">125</horizontal>
-                                    <vertical method="fixed">30</vertical>
-                                </sizing>
+                                <margins>
+                                    <all>2</all>
+                                </margins>
 
-                                <surface>
-                                    <outline>#FF0000</outline>
-                                </surface>
-                            </text-area>
+                                <vertical-alignment>center</vertical-alignment>
+                                <horizontal-alignment>center</horizontal-alignment>
+                            </flow-layout>
 
-                            <box id="color-box">
+                            <label>
+                                <text>"{{name}}"</text>
+
+                                <color>#C2C2C2</color>
+                            </label>
+
+                            <label>
+                                <text>This action is not reversible</text>
+
+                                <color>#F93131</color>
+
+                                <margins>
+                                    <all>2</all>
+                                    <top>10</top>
+                                </margins>
+                            </label>
+
+                            <button id="button:network-delete">
+                                <text>Delete</text>
+
+                                <margins>
+                                    <top>5</top>
+                                </margins>
+                            </button>
+                        </children>
+
+                        <padding>
+                            <all>10</all>
+                        </padding>
+
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+
+                        <horizontal-alignment>center</horizontal-alignment>
+                        <vertical-alignment>center</vertical-alignment>
+                    </flow-layout>
+                </children>
+
+                <positioning type="relative">50,50</positioning>
+
+                <horizontal-alignment>right</horizontal-alignment>
+
+                <z-index>200</z-index>
+            </flow-layout>
+        </template>
+
+        <!-- Popup for entering the password to connect to a network -->
+        <template name="tab:network:password">
+            <flow-layout direction="vertical">
+                <children>
+                    <button id="button:close">
+                        <text>X</text>
+
+                        <sizing>
+                            <vertical method="fixed">16</vertical>
+                            <horizontal method="fixed">16</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <right>5</right>
+                        </margins>
+                    </button>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <label>
+                                <text>Password</text>
+
+                                <margins>
+                                    <all>2</all>
+                                </margins>
+                            </label>
+
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <text-area id="text-area:network-password">
+                                        <max-length>18</max-length>
+                                        <max-lines>1</max-lines>
+                                        <display-char-count>true</display-char-count>
+
+                                        <sizing>
+                                            <horizontal method="fixed">125</horizontal>
+                                            <vertical method="fixed">30</vertical>
+                                        </sizing>
+                                    </text-area>
+
+                                    <label id="label:error">
+                                        <text></text>
+                                    </label>
+
+                                    <button id="button:network-enter">
+                                        <text>Enter</text>
+
+                                        <margins>
+                                            <top>5</top>
+                                        </margins>
+                                    </button>
+                                </children>
+
+                                <horizontal-alignment>center</horizontal-alignment>
+                                <vertical-alignment>center</vertical-alignment>
+                            </flow-layout>
+                        </children>
+
+                        <padding>
+                            <all>10</all>
+                        </padding>
+
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+                    </flow-layout>
+                </children>
+
+                <positioning type="relative">50,50</positioning>
+
+                <horizontal-alignment>right</horizontal-alignment>
+
+                <z-index>200</z-index>
+            </flow-layout>
+        </template>
+
+        <!-- Popup for creating or editing a network -->
+        <template name="tab:network:form">
+            <flow-layout direction="vertical">
+                <children>
+                    <button id="button:close">
+                        <text>X</text>
+
+                        <sizing>
+                            <vertical method="fixed">16</vertical>
+                            <horizontal method="fixed">16</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <right>5</right>
+                        </margins>
+                    </button>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <text-area id="text-area:network-name">
+                                        <max-lines>1</max-lines>
+                                        <max-length>20</max-length>
+                                        <display-char-count>true</display-char-count>
+
+                                        <text>{{name}}</text>
+
+                                        <sizing>
+                                            <horizontal method="fixed">140</horizontal>
+                                            <vertical method="fixed">30</vertical>
+                                        </sizing>
+
+                                        <surface>
+                                            <outline>#FF0000</outline>
+                                        </surface>
+                                    </text-area>
+
+                                    <checkbox id="checkbox:network-private">
+                                        <text>Private</text>
+                                        <checked>{{private}}</checked>
+                                    </checkbox>
+
+                                    <flow-layout direction="vertical" id="flow-layout:container-password">
+                                        <children>
+                                            <collapsible id="collapsible:container-password">
+                                                <text>Password</text>
+
+                                                <children>
+                                                    <text-area id="text-area:network-password">
+                                                        <max-length>18</max-length>
+                                                        <max-lines>1</max-lines>
+
+                                                        <text>{{password}}</text>
+
+                                                        <sizing>
+                                                            <horizontal method="fixed">125</horizontal>
+                                                            <vertical method="fixed">18</vertical>
+                                                        </sizing>
+                                                    </text-area>
+                                                </children>
+                                            </collapsible>
+                                        </children>
+                                    </flow-layout>
+                                </children>
+                            </flow-layout>
+
+                            <box id="box:network-color">
                                 <sizing>
                                     <horizontal method="fixed">124</horizontal>
                                     <vertical method="fixed">9</vertical>
                                 </sizing>
 
-                                <color>#00000000</color>
+                                <color>{{color}}</color>
+                                <fill>true</fill>
 
                                 <margins>
                                     <top>5</top>
                                 </margins>
                             </box>
 
-                            <color-picker id="color-picker">
+                            <color-picker id="color-picker:network-color">
                                 <sizing>
                                     <horizontal method="fixed">125</horizontal>
                                     <vertical method="fixed">70</vertical>
@@ -297,8 +659,12 @@
                                 </margins>
                             </color-picker>
 
-                            <button id="button-create">
-                                <text>Create</text>
+                            <label id="label:error">
+                                <text></text>
+                            </label>
+
+                            <button id="button:form-type">
+                                <text>{{form_type}}</text>
 
                                 <margins>
                                     <top>5</top>
@@ -321,6 +687,203 @@
                 <positioning type="relative">50,50</positioning>
 
                 <horizontal-alignment>right</horizontal-alignment>
+
+                <z-index>100</z-index>
+            </flow-layout>
+        </template>
+
+        <!-- Tab for displaying network statistics -->
+        <template name="tab:network-statistics">
+            <flow-layout direction="vertical">
+                <children>
+                    <grid-layout rows="1" columns="2">
+                        <children>
+                            <flow-layout direction="vertical" row="0" column="0">
+                                <children>
+                                    <label>
+                                        <text>Importers</text>
+                                    </label>
+
+                                    <block state="phasoritenetworks:phasorite_importer">
+                                        <sizing>
+                                            <horizontal method="fixed">40</horizontal>
+                                            <vertical method="fixed">40</vertical>
+                                        </sizing>
+                                    </block>
+
+                                    <label>
+                                        <text>{{importers}}</text>
+                                    </label>
+                                </children>
+
+                                <horizontal-alignment>center</horizontal-alignment>
+                                <vertical-alignment>center</vertical-alignment>
+                            </flow-layout>
+                            <flow-layout direction="vertical" row="0" column="1">
+                                <children>
+                                    <label>
+                                        <text>Exporters</text>
+                                    </label>
+
+                                    <block state="phasoritenetworks:phasorite_exporter">
+                                        <sizing>
+                                            <horizontal method="fixed">40</horizontal>
+                                            <vertical method="fixed">40</vertical>
+                                        </sizing>
+                                    </block>
+
+                                    <label>
+                                        <text>{{exporters}}</text>
+                                    </label>
+                                </children>
+
+                                <horizontal-alignment>center</horizontal-alignment>
+                                <vertical-alignment>center</vertical-alignment>
+                            </flow-layout>
+                        </children>
+
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <bottom>20</bottom>
+                        </margins>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </grid-layout>
+
+                    <grid-layout rows="1" columns="2">
+                        <children>
+                            <flow-layout direction="vertical" row="0" column="0">
+                                <children>
+                                    <label>
+                                        <text>Input</text>
+
+                                        <margins>
+                                            <bottom>8</bottom>
+                                        </margins>
+                                    </label>
+
+                                    <label>
+                                        <text>{{input}}</text>
+                                    </label>
+                                </children>
+
+                                <horizontal-alignment>center</horizontal-alignment>
+                                <vertical-alignment>center</vertical-alignment>
+                            </flow-layout>
+                            <flow-layout direction="vertical" row="0" column="1">
+                                <children>
+                                    <label>
+                                        <text>Output</text>
+
+                                        <margins>
+                                            <bottom>8</bottom>
+                                        </margins>
+                                    </label>
+
+                                    <label>
+                                        <text>{{output}}</text>
+                                    </label>
+                                </children>
+
+                                <horizontal-alignment>center</horizontal-alignment>
+                                <vertical-alignment>center</vertical-alignment>
+                            </flow-layout>
+                        </children>
+
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                        </sizing>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </grid-layout>
+                </children>
+
+                <padding>
+                    <all>10</all>
+                </padding>
+
+                <surface>
+                    <panel dark="true"/>
+                </surface>
+
+                <sizing>
+                    <horizontal method="expand">45</horizontal>
+                </sizing>
+
+                <vertical-alignment>center</vertical-alignment>
+                <horizontal-alignment>center</horizontal-alignment>
+            </flow-layout>
+        </template>
+
+        <!-- Buttons for switching between tabs -->
+        <template name="side-tabs">
+            <flow-layout direction="vertical" id="flow-layout:side-tabs">
+                <children>
+                    <button id="button:component-tab">
+                        <text>C</text>
+
+                        <sizing>
+                            <horizontal method="fixed">20</horizontal>
+                            <vertical method="fixed">20</vertical>
+                        </sizing>
+                    </button>
+                    <button id="button:network-tab">
+                        <text>N</text>
+
+                        <sizing>
+                            <horizontal method="fixed">20</horizontal>
+                            <vertical method="fixed">20</vertical>
+                        </sizing>
+
+                        <margins>
+                            <top>5</top>
+                        </margins>
+                    </button>
+                    <button id="button:network-statistics-tab">
+                        <text>S</text>
+
+                        <sizing>
+                            <horizontal method="fixed">20</horizontal>
+                            <vertical method="fixed">20</vertical>
+                        </sizing>
+
+                        <margins>
+                            <top>5</top>
+                        </margins>
+                    </button>
+                </children>
+            </flow-layout>
+        </template>
+
+        <!-- Popup with vanilla translucent background -->
+        <template name="background:vanilla-translucent">
+            <flow-layout direction="vertical">
+                <children>
+                    <flow-layout direction="vertical" id="flow-layout:container-background">
+                        <children></children>
+
+                        <sizing>
+                            <vertical method="fill">100</vertical>
+                            <horizontal method="fill">100</horizontal>
+                        </sizing>
+
+                        <horizontal-alignment>center</horizontal-alignment>
+                        <vertical-alignment>center</vertical-alignment>
+                    </flow-layout>
+                </children>
+
+                <surface>
+                    <vanilla-translucent/>
+                </surface>
+
+                <positioning type="relative">50,50</positioning>
+
+                <z-index>200</z-index>
             </flow-layout>
         </template>
     </templates>

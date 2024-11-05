@@ -5,9 +5,11 @@ import net.minecraft.Util
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
+import net.minecraft.server.MinecraftServer
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.entity.PhasoriteExporterEntity
 import vyrek.phasoritenetworks.entity.PhasoriteImporterEntity
+import vyrek.phasoritenetworks.networking.PNEndecsData
 import java.util.*
 import kotlin.uuid.Uuid
 import kotlin.uuid.toJavaUuid
@@ -16,19 +18,23 @@ import kotlin.uuid.toKotlinUuid
 class Network(
 	var name: String = "",
 	var owner: UUID = Util.NIL_UUID,
-	var color: Color = Color.BLACK
+	var color: Int = Color.WHITE.argb(),
+	var private: Boolean = true,
+	var password: String = ""
 ) {
-	var id: Uuid = Uuid.random()
+	var id: Uuid = Uuid.NIL
 	val isValid: Boolean
 		get() = id != Uuid.NIL
 
-	val members: HashMap<UUID, NetworkUser> = HashMap()
+	private val members: MutableMap<UUID, NetworkUser> = mutableMapOf()
 
 	val components: MutableList<PhasoriteComponentEntity> = mutableListOf()
 
 	val connectionQueue: Queue<Connection> = LinkedList()
 
 	var requestedEnergy = 0
+
+	val statistics = NetworkStatistics()
 
 	fun <T : PhasoriteComponentEntity> filterComponents(type: ComponentType): List<T> {
 		@Suppress("UNCHECKED_CAST")
@@ -40,13 +46,13 @@ class Network(
 		)
 	}
 
-	fun calcRequestedEnergy() {
+	private fun calcRequestedEnergy() {
 		for (exporter in filterComponents<PhasoriteExporterEntity>(ComponentType.EXPORTER)) {
 			requestedEnergy += exporter.transferHandler.updateRequestedLimit(exporter.limit)
 		}
 	}
 
-	fun onTick() {
+	fun onTick(server: MinecraftServer) {
 		val importers = filterComponents<PhasoriteImporterEntity>(ComponentType.IMPORTER)
 		val exporters = filterComponents<PhasoriteExporterEntity>(ComponentType.EXPORTER)
 
@@ -75,35 +81,55 @@ class Network(
 		connectionQueue.forEach { conn ->
 			when (conn.status) {
 				ConnectionStatus.Connect -> {
+					components.add(conn.target)
 					conn.target.connect(this)
+
+					if (conn.target.ownerUuid != owner && !members.containsKey(conn.target.ownerUuid)) {
+						val player = server.playerList.getPlayer(conn.target.ownerUuid)!!
+						val member = NetworkUser(
+							conn.target.ownerUuid,
+							player.displayName!!.string
+						)
+
+						members[conn.target.ownerUuid] = member
+					}
+
+					connectionQueue.remove(conn)
 				}
 
 				ConnectionStatus.Disconnect -> {
 					components.remove(conn.target)
 					conn.target.disconnect()
+
+					if (conn.target.ownerUuid != owner && components.find { c -> c.ownerUuid == conn.target.ownerUuid } == null) {
+						members.remove(conn.target.ownerUuid)
+					}
+
+					connectionQueue.remove(conn)
 				}
 			}
 		}
 
-		importers.forEach { importer ->
-			importer.transferHandler.reset()
-			importer.updateRequestedLimit()
+		components.forEach { com ->
+			if (com is PhasoriteExporterEntity) {
+				com.distributeEnergy()
+			}
+
+			com.transferHandler.reset()
 		}
 
-		exporters.forEach { exporter ->
-			exporter.distributeEnergy()
-			exporter.transferHandler.reset()
-			exporter.updateRequestedLimit()
-		}
-
+		requestedEnergy = 0
 		calcRequestedEnergy()
+		statistics.onTick(server.tickCount)
 	}
 
 	fun saveAdditional(tag: CompoundTag) {
 		tag.putUUID(NetworkConstants.ID, id.toJavaUuid())
 		tag.putString(NetworkConstants.NAME, name)
 		tag.putUUID(NetworkConstants.OWNER, owner)
-		tag.putInt(NetworkConstants.COLOR, color.argb())
+		tag.putInt(NetworkConstants.COLOR, color)
+		tag.putString(NetworkConstants.PASSWORD, password)
+		tag.putBoolean(NetworkConstants.PRIVATE, private)
 
 		val membersList = ListTag()
 		for ((_, user) in members) {
@@ -118,14 +144,43 @@ class Network(
 		id = tag.getUUID(NetworkConstants.ID).toKotlinUuid()
 		name = tag.getString(NetworkConstants.NAME)
 		owner = tag.getUUID(NetworkConstants.OWNER)
-		color = Color.ofArgb(tag.getInt(NetworkConstants.COLOR))
+		color = tag.getInt(NetworkConstants.COLOR)
+		password = tag.getString(NetworkConstants.PASSWORD)
+		private = tag.getBoolean(NetworkConstants.PRIVATE)
 
 		val membersList = tag.getList(NetworkConstants.MEMBERS, Tag.TAG_COMPOUND.toInt())
-		for (i in 0..membersList.size) {
+		for (i in 0 until membersList.size) {
 			val memberTag = membersList.getCompound(i)
 			val member = NetworkUser(memberTag)
-			members.put(member.uuid, member)
+			members[member.uuid] = member
 		}
+	}
+
+	fun discoverable(uuid: UUID): Boolean {
+		return when {
+			uuid == owner -> true
+			private && members.containsKey(uuid) -> true
+			!private -> true
+			else -> false
+		}
+	}
+
+	fun toClientData(includeExtra: Boolean = false): PNEndecsData.ClientNetworkData {
+		return PNEndecsData.ClientNetworkData(
+			id,
+			name,
+			color,
+			owner,
+			private,
+			password,
+			members.mapValues { it.value.toClientData() },
+			if (includeExtra) PNEndecsData.ExtraNetworkData(
+				filterComponents<PhasoriteImporterEntity>(ComponentType.IMPORTER).size,
+				filterComponents<PhasoriteExporterEntity>(ComponentType.EXPORTER).size,
+				statistics.getTransferredEnergy(NetworkStatistics.EnergyType.IMPORTED),
+				statistics.getTransferredEnergy(NetworkStatistics.EnergyType.EXPORTED)
+			) else null
+		)
 	}
 }
 

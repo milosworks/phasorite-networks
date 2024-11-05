@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "phasoritenetworks:charged_phasorite_crystal"
+    },
+    "D": {
+      "item": "phasoritenetworks:phasorite_dust"
+    },
+    "G": {
+      "tag": "c:glass_blocks"
+    },
+    "I": {
+      "tag": "c:ingots/iron"
+    },
+    "P": {
+      "item": "phasoritenetworks:phasorite_crystal"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "IDI",
+    "PCP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "phasoritenetworks:phasorite_lens"
+  }
+}
