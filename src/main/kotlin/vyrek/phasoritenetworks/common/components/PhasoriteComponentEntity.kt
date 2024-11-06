@@ -1,5 +1,6 @@
 package vyrek.phasoritenetworks.common.components
 
+import dev.technici4n.grandpower.api.ILongEnergyStorage
 import net.minecraft.Util
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -50,8 +51,8 @@ open class PhasoriteComponentEntity(
 	var priority: Int = NetworkConstants.DEFAULT_PRIORITY
 	var overrideMode = false
 	var rawLimit: Int = NetworkConstants.DEFAULT_LIMIT
-	val limit: Int
-		get() = (if (limitlessMode) Int.MAX_VALUE else rawLimit)
+	val limit: Long
+		get() = (if (limitlessMode) Long.MAX_VALUE else rawLimit.toLong())
 	var limitlessMode = false
 
 	var networkId: Uuid = Uuid.NIL
@@ -110,7 +111,14 @@ open class PhasoriteComponentEntity(
 			for (direction in Direction.entries) {
 				val target = level.getBlockEntity(worldPosition.relative(direction)) ?: continue
 				if (target is PhasoriteImporterEntity || target is PhasoriteExporterEntity) continue
+				// TODO: Long capability
 				val storage = level.getCapability(
+					ILongEnergyStorage.BLOCK,
+					target.blockPos,
+					target.blockState,
+					target,
+					direction.opposite
+				) ?: level.getCapability(
 					Capabilities.EnergyStorage.BLOCK,
 					target.blockPos,
 					target.blockState,
@@ -128,7 +136,7 @@ open class PhasoriteComponentEntity(
 		}
 	}
 
-	override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+	private fun saveTag(tag: CompoundTag) {
 		tag.putUUID(NetworkConstants.OWNER, ownerUuid)
 		tag.putUUID(NetworkConstants.ID, networkId.toJavaUuid())
 		tag.putString(NetworkConstants.NAME, name)
@@ -139,10 +147,15 @@ open class PhasoriteComponentEntity(
 
 		tag.put(NetworkConstants.TRANSFER, CompoundTag().also { transferHandler.saveAdditional(it) })
 
+	}
+
+	override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+		saveTag(tag)
+
 		super.saveAdditional(tag, registries)
 	}
 
-	override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+	private fun loadTag(tag: CompoundTag) {
 		ownerUuid = tag.getUUID(NetworkConstants.OWNER)
 		name = tag.getString(NetworkConstants.NAME).takeIf { it.isNotEmpty() } ?: ""
 		priority = tag.getInt(NetworkConstants.PRIORITY)
@@ -150,15 +163,19 @@ open class PhasoriteComponentEntity(
 		rawLimit = tag.getInt(NetworkConstants.RAW_LIMIT)
 		limitlessMode = tag.getBoolean(NetworkConstants.LIMITLESS_MODE)
 
+		tag.getCompound(NetworkConstants.TRANSFER).let {
+			transferHandler.loadAdditional(it)
+		}
+	}
+
+	override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
+		loadTag(tag)
+
 		tag.getUUID(NetworkConstants.ID).toKotlinUuid()
 			.takeIf { it != Uuid.NIL && ownerUuid.toKotlinUuid() != Uuid.NIL }?.let {
 				networkId = it
 				handleNetworkConnection(it)
 			}
-
-		tag.getCompound(NetworkConstants.TRANSFER).let {
-			transferHandler.loadAdditional(it)
-		}
 
 		super.loadAdditional(tag, registries)
 	}
@@ -201,7 +218,7 @@ open class PhasoriteComponentEntity(
 
 	override fun getUpdateTag(registries: HolderLookup.Provider): CompoundTag {
 		return CompoundTag().also {
-			it.putUUID(NetworkConstants.ID, networkId.toJavaUuid())
+			saveTag(it)
 			it.putInt(NetworkConstants.COLOR, network.color)
 		}
 	}
@@ -211,6 +228,8 @@ open class PhasoriteComponentEntity(
 	}
 
 	override fun handleUpdateTag(tag: CompoundTag, lookupProvider: HolderLookup.Provider) {
+		loadTag(tag)
+
 		network.id = tag.getUUID(NetworkConstants.ID).toKotlinUuid()
 		network.color = tag.getInt(NetworkConstants.COLOR)
 
@@ -223,6 +242,8 @@ open class PhasoriteComponentEntity(
 		lookupProvider: HolderLookup.Provider
 	) {
 		val tag = pkt.tag
+
+		loadTag(tag)
 
 		network.id = tag.getUUID(NetworkConstants.ID).toKotlinUuid()
 		network.color = tag.getInt(NetworkConstants.COLOR)

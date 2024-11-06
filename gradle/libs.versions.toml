@@ -18,8 +18,11 @@ mdg = "2.0.32-beta"
 #architectury-loom = "1.7.410"
 
 # owo lib
-owolib = "0.12.15-beta.4+1.21"
-owolib-dev = "0.12.15-beta.4+1.21"
+owolib = "0.12.15-beta.9+1.21"
+owolib-dev = "0.12.15-beta.5+1.21"
+
+# Grand power
+grandpower = "3.0.0"
 
 [libraries]
 # Kotlin
@@ -36,6 +39,9 @@ owolib-dev = { module = "io.wispforest:owo-lib-neoforge-dev", version.ref = "owo
 
 # NeoForge
 neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
+
+# GrandPower
+grandpower = { module = "dev.technici4n:GrandPower", version.ref = "grandpower" }
 
 [plugins]
 # Kotlin

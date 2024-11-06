@@ -55,12 +55,11 @@ class PNLootTableProvider(output: PackOutput, provider: CompletableFuture<Holder
 			phasoriteBud(PNBlocks.MEDIUM_PHASORITE_BUD)
 			phasoriteBud(PNBlocks.LARGE_PHASORITE_BUD)
 
-			clusterDrop(PNBlocks.PHASORITE_CLUSTER, PNItems.PHASORITE_CRYSTAL, 2f, UniformGenerator.between(3f, 7f))
+			clusterDrop(PNBlocks.PHASORITE_CLUSTER, PNItems.PHASORITE_CRYSTAL, UniformGenerator.between(2f, 5f))
 			clusterDrop(
 				PNBlocks.CHARGED_PHASORITE_CLUSTER,
 				PNItems.CHARGED_PHASORITE_CRYSTAL,
-				1f,
-				UniformGenerator.between(2f, 5f)
+				UniformGenerator.between(1f, 3f)
 			)
 
 //			add(PNBlocks.BUDDING_PHASORITE_BLOCK) { b ->
@@ -80,19 +79,39 @@ class PNLootTableProvider(output: PackOutput, provider: CompletableFuture<Holder
 				block,
 				LootTable.lootTable().withPool(
 					LootPool.lootPool().setRolls(ConstantValue.exactly(1f))
-						.add(LootItem.lootTableItem(PNItems.PHASORITE_DUST))
+						.add(
+							LootItem.lootTableItem(PNItems.PHASORITE_DUST)
+								.apply(SetItemCountFunction.setCount(UniformGenerator.between(0f, 2f)))
+								.apply(
+									ApplyBonusCount.addUniformBonusCount(
+										registries.lookupOrThrow(Registries.ENCHANTMENT)
+											.getOrThrow(Enchantments.FORTUNE)
+									)
+								)
+								.apply(ApplyExplosionDecay.explosionDecay())
+						)
 				)
 			)
 		}
 
-		private fun clusterDrop(block: Block, item: ItemLike, rolls: Float, quantity: UniformGenerator) {
+		private fun clusterDrop(block: Block, item: ItemLike, quantity: UniformGenerator) {
 			add(
 				block,
 				LootTable.lootTable().withPool(
-					LootPool.lootPool().setRolls(ConstantValue.exactly(rolls))
+					LootPool.lootPool().setRolls(ConstantValue.exactly(1f))
 						.add(
 							LootItem.lootTableItem(item)
 								.apply(SetItemCountFunction.setCount(quantity))
+								.apply(
+									ApplyBonusCount.addUniformBonusCount(
+										registries.lookupOrThrow(Registries.ENCHANTMENT)
+											.getOrThrow(Enchantments.FORTUNE)
+									)
+								)
+								.apply(ApplyExplosionDecay.explosionDecay())
+						).add(
+							LootItem.lootTableItem(PNItems.PHASORITE_DUST)
+								.apply(SetItemCountFunction.setCount(UniformGenerator.between(0f, 2f)))
 								.apply(
 									ApplyBonusCount.addUniformBonusCount(
 										registries.lookupOrThrow(Registries.ENCHANTMENT)

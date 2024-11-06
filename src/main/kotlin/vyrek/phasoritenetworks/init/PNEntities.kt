@@ -2,6 +2,7 @@
 
 package vyrek.phasoritenetworks.init
 
+import dev.technici4n.grandpower.api.ILongEnergyStorage
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.level.block.entity.BlockEntityType
 import net.neoforged.bus.api.IEventBus
@@ -43,6 +44,9 @@ object PNEntities {
 		event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, PHASORITE_EXPORTER) { be, _ ->
 			be.energyStorage
 		}
+		event.registerBlockEntity(ILongEnergyStorage.BLOCK, PHASORITE_EXPORTER) { be, _ ->
+			be.energyStorage
+		}
 
 		event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, PHASORITE_IMPORTER) { be, dir ->
 			if (dir == null) return@registerBlockEntity null
@@ -51,5 +55,13 @@ object PNEntities {
 				be.EnergyStorage(dir)
 			}
 		}
+		event.registerBlockEntity(ILongEnergyStorage.BLOCK, PHASORITE_IMPORTER) { be, dir ->
+			if (dir == null) return@registerBlockEntity null
+
+			be.sides.getOrPut(dir.get3DDataValue()) {
+				be.EnergyStorage(dir)
+			}
+		}
 	}
+
 }

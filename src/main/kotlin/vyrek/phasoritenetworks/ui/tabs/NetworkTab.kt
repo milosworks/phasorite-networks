@@ -179,8 +179,7 @@ class NetworkTab(private val screen: UIScreen) : BaseTab(screen) {
 				)
 			)
 
-
-			root.button("button:${n.id}-connect").onPress {
+			container.button("button:${n.id}-connect").onPress {
 				if (n.password != "") {
 					buildNetworkTabPassword(root, n)
 				} else {
@@ -237,7 +236,7 @@ class NetworkTab(private val screen: UIScreen) : BaseTab(screen) {
 			}
 
 			screen.buildNetworkTab(component)
-			
+
 			menu.connectNetwork(data.id, pwd.value)
 		}
 	}

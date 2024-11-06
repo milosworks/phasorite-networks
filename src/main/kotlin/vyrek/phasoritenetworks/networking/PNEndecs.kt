@@ -41,14 +41,15 @@ object PNEndecsData {
 		val private: Boolean,
 		val password: String,
 		val members: Map<UUID, ClientUserData>,
+		val components: List<BlockPos>,
 		val extra: ExtraNetworkData?
 	)
 
 	data class ExtraNetworkData(
 		val importers: Int,
 		val exporters: Int,
-		val importedEnergy: Int,
-		val exportedEnergy: Int
+		val importedEnergy: Long,
+		val exportedEnergy: Long
 	)
 
 	data class ClientUserData(
@@ -90,8 +91,8 @@ object PNEndecs {
 	val EXTRA_NETWORK_ENDEC: StructEndec<PNEndecsData.ExtraNetworkData> = StructEndecBuilder.of(
 		Endec.INT.fieldOf("importers", PNEndecsData.ExtraNetworkData::importers),
 		Endec.INT.fieldOf("exporters", PNEndecsData.ExtraNetworkData::exporters),
-		Endec.INT.fieldOf("importedEnergy", PNEndecsData.ExtraNetworkData::importedEnergy),
-		Endec.INT.fieldOf("exportedEnergy", PNEndecsData.ExtraNetworkData::exportedEnergy),
+		Endec.LONG.fieldOf("importedEnergy", PNEndecsData.ExtraNetworkData::importedEnergy),
+		Endec.LONG.fieldOf("exportedEnergy", PNEndecsData.ExtraNetworkData::exportedEnergy),
 		PNEndecsData::ExtraNetworkData
 	)
 
@@ -104,6 +105,7 @@ object PNEndecs {
 		Endec.STRING.fieldOf("password", PNEndecsData.ClientNetworkData::password),
 		Endec.map(BuiltInEndecs.UUID, CLIENT_USER_ENDEC)
 			.fieldOf("members", PNEndecsData.ClientNetworkData::members),
+		MinecraftEndecs.BLOCK_POS.listOf().fieldOf("components", PNEndecsData.ClientNetworkData::components),
 		EXTRA_NETWORK_ENDEC.optionalFieldOf("extra", PNEndecsData.ClientNetworkData::extra) { null },
 		PNEndecsData::ClientNetworkData
 	)

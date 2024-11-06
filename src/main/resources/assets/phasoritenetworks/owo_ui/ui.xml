@@ -27,6 +27,11 @@
     <!-- Ex: button:close -->
     <!-- Ex: text-area:network-name -->
 
+    <!-- UI Conventions -->
+
+    <!-- Margins: When using margins and trying to declare space between components, the FIRST component -->
+    <!-- should be the one to make space for the second, not the other way around -->
+
     <templates>
         <!-- Tab for displaying component configuration -->
         <template name="tab:component">
@@ -52,6 +57,10 @@
                             <horizontal method="fixed">150</horizontal>
                             <vertical method="fixed">30</vertical>
                         </sizing>
+
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
                     </text-area>
 
                     <flow-layout direction="horizontal">
@@ -108,7 +117,7 @@
                         </children>
 
                         <margins>
-                            <top>5</top>
+                            <bottom>10</bottom>
                         </margins>
                     </flow-layout>
 
@@ -118,7 +127,7 @@
                         <checked>{{overrideMode}}</checked>
 
                         <margins>
-                            <top>10</top>
+                            <bottom>2</bottom>
                         </margins>
                     </checkbox>
 
@@ -128,32 +137,18 @@
                         <checked>{{limitlessMode}}</checked>
 
                         <margins>
-                            <top>2</top>
                             <left>0</left>
+                            <bottom>10</bottom>
                         </margins>
                     </checkbox>
 
                     <flow-layout direction="horizontal" id="flow-layout:container-item">
-                        <children>
-                            <!--                            <block state="{{id}}">-->
-                            <!--                                <sizing>-->
-                            <!--                                    <horizontal method="fixed">40</horizontal>-->
-                            <!--                                    <vertical method="fixed">40</vertical>-->
-                            <!--                                </sizing>-->
-                            <!--                            </block>-->
+                        <children></children>
 
-                            <item>
-                                <stack>{{id}}</stack>
-                                <sizing>
-                                    <horizontal method="fixed">40</horizontal>
-                                    <vertical method="fixed">40</vertical>
-                                </sizing>
-                            </item>
-                        </children>
-
-                        <margins>
-                            <top>10</top>
-                        </margins>
+                        <sizing>
+                            <horizontal method="fixed">40</horizontal>
+                            <vertical method="fixed">40</vertical>
+                        </sizing>
                     </flow-layout>
                 </children>
 
@@ -448,6 +443,10 @@
                                 <text>"{{name}}"</text>
 
                                 <color>#C2C2C2</color>
+
+                                <margins>
+                                    <bottom>10</bottom>
+                                </margins>
                             </label>
 
                             <label>
@@ -457,16 +456,13 @@
 
                                 <margins>
                                     <all>2</all>
-                                    <top>10</top>
+                                    <bottom>5</bottom>
                                 </margins>
                             </label>
 
                             <button id="button:network-delete">
                                 <text>Delete</text>
 
-                                <margins>
-                                    <top>5</top>
-                                </margins>
                             </button>
                         </children>
 
@@ -538,6 +534,7 @@
                                     <button id="button:network-enter">
                                         <text>Enter</text>
 
+                                        <!-- Convention exception as label:error can be empty -->
                                         <margins>
                                             <top>5</top>
                                         </margins>
@@ -632,6 +629,10 @@
                                         </children>
                                     </flow-layout>
                                 </children>
+
+                                <margins>
+                                    <bottom>5</bottom>
+                                </margins>
                             </flow-layout>
 
                             <box id="box:network-color">
@@ -644,7 +645,7 @@
                                 <fill>true</fill>
 
                                 <margins>
-                                    <top>5</top>
+                                    <bottom>5</bottom>
                                 </margins>
                             </box>
 
@@ -653,10 +654,6 @@
                                     <horizontal method="fixed">125</horizontal>
                                     <vertical method="fixed">70</vertical>
                                 </sizing>
-
-                                <margins>
-                                    <top>5</top>
-                                </margins>
                             </color-picker>
 
                             <label id="label:error">
@@ -666,6 +663,7 @@
                             <button id="button:form-type">
                                 <text>{{form_type}}</text>
 
+                                <!-- Convention exception as label:error can be empty -->
                                 <margins>
                                     <top>5</top>
                                 </margins>
@@ -704,15 +702,23 @@
                                         <text>Importers</text>
                                     </label>
 
-                                    <block state="phasoritenetworks:phasorite_importer">
+                                    <flow-layout direction="vertical" id="flow-layout:container-importer">
+                                        <children></children>
+
                                         <sizing>
                                             <horizontal method="fixed">40</horizontal>
                                             <vertical method="fixed">40</vertical>
                                         </sizing>
-                                    </block>
+
+                                        <margins>
+                                            <all>2</all>
+                                        </margins>
+                                    </flow-layout>
 
                                     <label>
                                         <text>{{importers}}</text>
+
+                                        <color>#CBC0C1</color>
                                     </label>
                                 </children>
 
@@ -725,15 +731,23 @@
                                         <text>Exporters</text>
                                     </label>
 
-                                    <block state="phasoritenetworks:phasorite_exporter">
+                                    <flow-layout direction="vertical" id="flow-layout:container-exporter">
+                                        <children></children>
+
                                         <sizing>
                                             <horizontal method="fixed">40</horizontal>
                                             <vertical method="fixed">40</vertical>
                                         </sizing>
-                                    </block>
+
+                                        <margins>
+                                            <all>2</all>
+                                        </margins>
+                                    </flow-layout>
 
                                     <label>
                                         <text>{{exporters}}</text>
+
+                                        <color>#CBC0C1</color>
                                     </label>
                                 </children>
 
@@ -768,6 +782,8 @@
 
                                     <label>
                                         <text>{{input}}</text>
+
+                                        <color>#CBC0C1</color>
                                     </label>
                                 </children>
 
@@ -786,6 +802,8 @@
 
                                     <label>
                                         <text>{{output}}</text>
+
+                                        <color>#CBC0C1</color>
                                     </label>
                                 </children>
 
@@ -820,6 +838,143 @@
             </flow-layout>
         </template>
 
+        <!-- Tab for displaying every component in the network -->
+        <template name="tab:network-components">
+            <flow-layout direction="vertical">
+                <children>
+                    <text-area id="text-area:network-search">
+                        <max-lines>1</max-lines>
+                        <max-length>20</max-length>
+
+                        <sizing>
+                            <horizontal method="fixed">125</horizontal>
+                            <vertical method="fixed">18</vertical>
+                        </sizing>
+
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
+                    </text-area>
+
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <label>
+                                <text>Sorted by:</text>
+
+                                <margins>
+                                    <right>5</right>
+                                </margins>
+                            </label>
+
+                            <label id="label:component-sort">
+                                <text>All</text>
+
+                                <color>#CBC0C1</color>
+                            </label>
+
+                            <label id="label:component-quantity">
+                                <text>0</text>
+
+                                <positioning type="relative">100,50</positioning>
+                            </label>
+                        </children>
+
+                        <sizing>
+                            <horizontal method="expand">100</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
+                    </flow-layout>
+
+                    <scroll direction="vertical">
+                        <flow-layout direction="vertical" id="flow-layout:container-scroll">
+                            <children>
+
+                            </children>
+
+                            <padding>
+                                <all>2</all>
+                            </padding>
+                        </flow-layout>
+
+                        <sizing>
+                            <horizontal method="expand">100</horizontal>
+                            <vertical method="fixed">120</vertical>
+                        </sizing>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </scroll>
+                </children>
+
+                <sizing>
+                    <horizontal method="fixed">160</horizontal>
+                </sizing>
+
+                <padding>
+                    <all>10</all>
+                </padding>
+
+                <surface>
+                    <panel dark="true"/>
+                </surface>
+
+                <vertical-alignment>center</vertical-alignment>
+                <horizontal-alignment>center</horizontal-alignment>
+            </flow-layout>
+        </template>
+
+        <!-- Display component data inside the scroll container -->
+        <template name="tab:network-components:data">
+            <flow-layout direction="horizontal" id="flow-layout:container-{{i}}">
+                <children>
+                    <flow-layout direction="vertical" id="flow-layout:container-item-{{i}}">
+                        <children></children>
+
+                        <sizing>
+                            <vertical method="fixed">20</vertical>
+                            <horizontal method="fixed">20</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <right>5</right>
+                        </margins>
+                    </flow-layout>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <label>
+                                <text>{{name}}</text>
+
+                                <line-height>6</line-height>
+                            </label>
+                        </children>
+                    </flow-layout>
+                </children>
+
+                <padding>
+                    <all>2</all>
+                </padding>
+
+                <margins>
+                    <bottom>2</bottom>
+                </margins>
+
+                <surface>
+                    <outline>{{color}}</outline>
+                </surface>
+
+                <sizing>
+                    <horizontal method="expand">100</horizontal>
+                    <vertical method="fixed">30</vertical>
+                </sizing>
+
+                <vertical-alignment>center</vertical-alignment>
+            </flow-layout>
+        </template>
+
         <!-- Buttons for switching between tabs -->
         <template name="side-tabs">
             <flow-layout direction="vertical" id="flow-layout:side-tabs">
@@ -831,6 +986,10 @@
                             <horizontal method="fixed">20</horizontal>
                             <vertical method="fixed">20</vertical>
                         </sizing>
+
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
                     </button>
                     <button id="button:network-tab">
                         <text>N</text>
@@ -841,7 +1000,7 @@
                         </sizing>
 
                         <margins>
-                            <top>5</top>
+                            <bottom>5</bottom>
                         </margins>
                     </button>
                     <button id="button:network-statistics-tab">
@@ -853,8 +1012,28 @@
                         </sizing>
 
                         <margins>
-                            <top>5</top>
+                            <bottom>5</bottom>
                         </margins>
+                    </button>
+                    <button id="button:network-components">
+                        <text>C</text>
+
+                        <sizing>
+                            <horizontal method="fixed">20</horizontal>
+                            <vertical method="fixed">20</vertical>
+                        </sizing>
+
+                        <margins>
+                            <bottom>5</bottom>
+                        </margins>
+                    </button>
+                    <button id="button:network-members">
+                        <text>M</text>
+
+                        <sizing>
+                            <horizontal method="fixed">20</horizontal>
+                            <vertical method="fixed">20</vertical>
+                        </sizing>
                     </button>
                 </children>
             </flow-layout>

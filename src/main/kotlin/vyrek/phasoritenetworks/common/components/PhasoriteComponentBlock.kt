@@ -1,6 +1,7 @@
 package vyrek.phasoritenetworks.common.components
 
 import com.mojang.serialization.MapCodec
+import dev.technici4n.grandpower.api.ILongEnergyStorage
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -105,7 +106,7 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 			if (entity.network.isValid) entity.network.toClientData(true) else null,
 			NetworksData.get().networks
 				.filter { it.value.discoverable(player.uuid) }
-				.map { it.value.toClientData() }
+				.map { it.value.toClientData().apply { components.filter { cpos -> cpos != pos } } }
 				.toList(),
 		)
 
@@ -194,6 +195,12 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 			return
 		}
 		val storage = level.getCapability(
+			ILongEnergyStorage.BLOCK,
+			neighborPos,
+			neighborState,
+			neighbor,
+			directionToNeighbor.opposite
+		) ?: level.getCapability(
 			Capabilities.EnergyStorage.BLOCK,
 			neighborPos,
 			neighborState,
@@ -208,7 +215,6 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 			entity.transferHandler.removeNode(directionToNeighbor)
 			return
 		}
-
 
 		entity.transferHandler.updateNodes(directionToNeighbor, neighbor, storage)
 		level.setBlock(

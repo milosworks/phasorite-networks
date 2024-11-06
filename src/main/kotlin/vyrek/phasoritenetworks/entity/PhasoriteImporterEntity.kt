@@ -1,9 +1,9 @@
 package vyrek.phasoritenetworks.entity
 
+import dev.technici4n.grandpower.api.ILongEnergyStorage
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.level.block.state.BlockState
-import net.neoforged.neoforge.energy.IEnergyStorage
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.NetworkStatistics
@@ -17,28 +17,31 @@ class PhasoriteImporterEntity(
 
 	override var componentType = ComponentType.IMPORTER
 
-	inner class EnergyStorage(val side: Direction) : IEnergyStorage {
-		override fun receiveEnergy(energy: Int, simulate: Boolean): Int {
+	inner class EnergyStorage(private val side: Direction) : ILongEnergyStorage {
+		override fun receive(energy: Long, simulate: Boolean): Long {
 			if (network.isValid) {
 				val maxLimit = minOf(limit, network.requestedEnergy)
 
 				val toReturn = transferHandler.receive(energy, maxLimit, side, simulate)
 				network.statistics.addEnergyTick(toReturn, NetworkStatistics.EnergyType.IMPORTED)
 
+				level?.sendBlockUpdated(blockPos, blockState, blockState, 0)
+
 				return toReturn
 			}
+
 			return 0
 		}
 
-		override fun extractEnergy(energy: Int, simulate: Boolean): Int {
+		override fun extract(maxExtract: Long, simulate: Boolean): Long {
 			return 0
 		}
 
-		override fun getEnergyStored(): Int {
+		override fun getAmount(): Long {
 			return 0
 		}
 
-		override fun getMaxEnergyStored(): Int {
+		override fun getCapacity(): Long {
 			return 0
 		}
 

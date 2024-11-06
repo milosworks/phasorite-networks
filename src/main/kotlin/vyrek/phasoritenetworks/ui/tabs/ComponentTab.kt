@@ -87,8 +87,7 @@ class ComponentTab(screen: UIScreen) : BaseTab(screen) {
 
 		// It wasnt working (syncing) but it does now idk, no touchy.
 		root.flowLayout("flow-layout:container-item").apply {
-			clearChildren()
-			child(Components.item(item).sizing(Sizing.fixed(40), Sizing.fixed(40)))
+			child(Components.item(item).sizing(Sizing.fill(), Sizing.fill()))
 		}
 	}
 }

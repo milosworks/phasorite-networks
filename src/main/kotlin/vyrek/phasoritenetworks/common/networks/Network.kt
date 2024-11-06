@@ -32,11 +32,11 @@ class Network(
 
 	val connectionQueue: Queue<Connection> = LinkedList()
 
-	var requestedEnergy = 0
+	var requestedEnergy = 0L
 
 	val statistics = NetworkStatistics()
 
-	fun <T : PhasoriteComponentEntity> filterComponents(type: ComponentType): List<T> {
+	private fun <T : PhasoriteComponentEntity> filterComponents(type: ComponentType): List<T> {
 		@Suppress("UNCHECKED_CAST")
 		return (components.filter { c ->
 			c.componentType == type
@@ -174,6 +174,10 @@ class Network(
 			private,
 			password,
 			members.mapValues { it.value.toClientData() },
+			components.sortedWith(
+				compareByDescending<PhasoriteComponentEntity> { it.overrideMode }
+					.thenByDescending { it.priority }
+			).map { it.blockPos },
 			if (includeExtra) PNEndecsData.ExtraNetworkData(
 				filterComponents<PhasoriteImporterEntity>(ComponentType.IMPORTER).size,
 				filterComponents<PhasoriteExporterEntity>(ComponentType.EXPORTER).size,

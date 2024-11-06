@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import vyrek.phasoritenetworks.PhasoriteNetworks
 import vyrek.phasoritenetworks.ui.tabs.ComponentTab
+import vyrek.phasoritenetworks.ui.tabs.ComponentsTab
 import vyrek.phasoritenetworks.ui.tabs.NetworkTab
 import vyrek.phasoritenetworks.ui.tabs.StatisticsTab
 import java.text.NumberFormat
@@ -58,7 +59,9 @@ enum class Tabs {
 	NETWORK_CREATE,
 	NETWORK_EDIT,
 	NETWORK_PASSWORD,
-	NETWORK_STATISTICS;
+	STATISTICS,
+	COMPONENTS,
+	MEMBERS;
 
 	fun isNetworkSubtab(): Boolean {
 		return this == NETWORK_CREATE || this == NETWORK_EDIT || this == NETWORK_PASSWORD || this == NETWORK_DELETE
@@ -125,7 +128,7 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 	}
 
 	private fun buildNetworkStatisticsTab(root: FlowLayout) {
-		activeTab = Tabs.NETWORK_STATISTICS
+		activeTab = Tabs.STATISTICS
 
 		val network = menu.network ?: return
 		val extra = network.extra ?: return
@@ -143,6 +146,29 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 			)
 		)
 		buildEmptySideTabs(root)
+
+		StatisticsTab(this).build(root)
+	}
+
+	private fun buildNetworkComponentsTab(root: FlowLayout) {
+		activeTab = Tabs.COMPONENTS
+
+		if (menu.network == null) return
+
+		root.clearChildren()
+		buildSideTabs(root, ComponentsTab.HEIGHT)
+		root.child(
+			model.expandTemplate(
+				FlowLayout::class, "tab:network-components"
+			)
+		)
+		buildEmptySideTabs(root)
+
+		ComponentsTab(this).build(root)
+	}
+
+	private fun buildNetworkMembersTab(root: FlowLayout) {
+
 	}
 
 	private fun buildSideTabs(component: FlowLayout, vertical: Int) {
@@ -168,6 +194,28 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 				if (activeTab.isNetworkSubtab()) return@onPress
 
 				buildNetworkStatisticsTab(component)
+			}
+
+			if (menu.network == null)
+				component.childById(FlowLayout::class, "flow-layout:side-tabs").removeChild(this)
+		}
+
+		component.childById(ButtonComponent::class, "button:network-components").run {
+			onPress {
+				if (activeTab.isNetworkSubtab()) return@onPress
+
+				buildNetworkComponentsTab(component)
+			}
+
+			if (menu.network == null)
+				component.childById(FlowLayout::class, "flow-layout:side-tabs").removeChild(this)
+		}
+
+		component.childById(ButtonComponent::class, "button:network-members").run {
+			onPress {
+				if (activeTab.isNetworkSubtab()) return@onPress
+
+				buildNetworkMembersTab(component)
 			}
 
 			if (menu.network == null)

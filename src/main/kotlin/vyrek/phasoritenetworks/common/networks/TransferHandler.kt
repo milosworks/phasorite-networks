@@ -8,15 +8,15 @@ import net.neoforged.neoforge.energy.IEnergyStorage
 class TransferHandler {
 	val nodes: HashMap<Int, Node> = HashMap()
 
-	var buffer = 0
-	var requestedLimit = 0
+	var buffer = 0L
+	var requestedLimit = 0L
 
 	val canDistribute: Boolean
 		get() = nodes.isNotEmpty()
 	val canExtract: Boolean
-		get() = buffer != 0
+		get() = buffer != 0L
 
-	fun receive(energy: Int, limit: Int, side: Direction, simulate: Boolean): Int {
+	fun receive(energy: Long, limit: Long, side: Direction, simulate: Boolean): Long {
 		val availableSpace = limit - buffer
 		val toReceive = minOf(availableSpace, energy)
 		if (toReceive <= 0) return 0
@@ -28,22 +28,22 @@ class TransferHandler {
 		return toReceive
 	}
 
-	fun distribute(limit: Int, mode: DistributionMode): Int {
-		var totalTransfer = 0
+	fun distribute(limit: Long, mode: DistributionMode): Long {
+		var totalTransfer = 0L
 
 		when (mode) {
 			DistributionMode.ROUND_ROBIN -> {
 				var index = 0
 				var energyTransferredInLastLoop = true
 
-				while (buffer > 0 && energyTransferredInLastLoop) {
+				while (buffer > 0L && energyTransferredInLastLoop) {
 					energyTransferredInLastLoop = false
 
 					for (node in nodes.values) {
 						val energyToTransfer = minOf(buffer, limit)
 						val moved = node.insert(energyToTransfer)
 
-						if (moved > 0) {
+						if (moved > 0L) {
 							buffer -= moved
 							totalTransfer += moved
 							energyTransferredInLastLoop = true
@@ -56,7 +56,7 @@ class TransferHandler {
 
 			DistributionMode.FILL_FIRST -> {
 				for (node in nodes.values) {
-					if (buffer <= 0) break
+					if (buffer <= 0L) break
 
 					val energyToTransfer = minOf(buffer, limit)
 					val moved = node.insert(energyToTransfer)
@@ -69,7 +69,7 @@ class TransferHandler {
 		return totalTransfer
 	}
 
-	fun updateRequestedLimit(limit: Int): Int {
+	fun updateRequestedLimit(limit: Long): Long {
 		for (node in nodes.values) {
 			val ex = node.insert(limit, true)
 			requestedLimit += ex
@@ -93,14 +93,14 @@ class TransferHandler {
 	}
 
 	fun reset() {
-		requestedLimit = 0
+		requestedLimit = 0L
 	}
 
 	fun saveAdditional(tag: CompoundTag) {
-		tag.putInt(NetworkConstants.BUFFER, buffer)
+		tag.putLong(NetworkConstants.BUFFER, buffer)
 	}
 
 	fun loadAdditional(tag: CompoundTag) {
-		buffer = tag.getInt(NetworkConstants.BUFFER)
+		buffer = tag.getLong(NetworkConstants.BUFFER)
 	}
 }

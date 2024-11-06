@@ -13,6 +13,12 @@ plugins {
 repositories {
 	mavenLocal()
 
+	maven("https://modmaven.dev/") {
+		name = "ModMaven"
+		content {
+			includeGroup("dev.technici4n")
+		}
+	}
 	maven("https://maven.parchmentmc.org") { name = "ParchmentMC" }
 	maven("https://thedarkcolour.github.io/KotlinForForge/") {
 		name = "Kotlin for Forge"
@@ -25,11 +31,13 @@ repositories {
 }
 
 dependencies {
-	implementation(rootProject.libs.kotlin.neoforge)
-	implementation(rootProject.libs.owolib)
+	implementation(libs.kotlin.neoforge)
+	implementation(libs.owolib)
 
-	accessTransformers(rootProject.libs.owolib.dev)
-	interfaceInjectionData(rootProject.libs.owolib.dev)
+	accessTransformers(libs.owolib.dev)
+	interfaceInjectionData(libs.owolib.dev)
+
+	api(jarJar(libs.grandpower.get().toString())!!)
 }
 
 val modId = project.properties["mod_id"] as String
