@@ -19,11 +19,11 @@ import net.minecraft.world.phys.shapes.VoxelShape
 open class PhasoriteClusterBlock(height: Double, offset: Double, props: Properties) : PhasoriteBlock(props),
 	SimpleWaterloggedBlock {
 	private val upAabb = box(offset, 0.0, offset, (16 - offset), height, (16 - offset))
-	private val downAabb = box(offset, (16 - height), offset, (16 - offset), 16.0, (16 - offset));
-	private val northAabb = box(offset, offset, (16 - height), (16 - offset), (16 - offset), 16.0);
-	private val southAabb = box(offset, offset, 0.0, (16 - offset), (16 - offset), height);
-	private val eastAabb = box(0.0, offset, offset, height, (16 - offset), (16 - offset));
-	private val westAabb = box((16 - height), offset, offset, 16.0, (16 - offset), (16 - offset));
+	private val downAabb = box(offset, (16 - height), offset, (16 - offset), 16.0, (16 - offset))
+	private val northAabb = box(offset, offset, (16 - height), (16 - offset), (16 - offset), 16.0)
+	private val southAabb = box(offset, offset, 0.0, (16 - offset), (16 - offset), height)
+	private val eastAabb = box(0.0, offset, offset, height, (16 - offset), (16 - offset))
+	private val westAabb = box((16 - height), offset, offset, 16.0, (16 - offset), (16 - offset))
 
 	init {
 		registerDefaultState(
@@ -88,6 +88,7 @@ open class PhasoriteClusterBlock(height: Double, offset: Double, props: Properti
 	}
 
 	override fun mirror(state: BlockState, mirror: Mirror): BlockState {
+		@Suppress("DEPRECATION")
 		return state.rotate(mirror.getRotation(state.getValue(AmethystClusterBlock.FACING)))
 	}
 

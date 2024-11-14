@@ -1,6 +1,8 @@
 package vyrek.phasoritenetworks.networking
 
 import net.minecraft.core.BlockPos
+import net.minecraft.core.GlobalPos
+import vyrek.phasoritenetworks.common.networks.NetworkUserAccess
 import java.util.*
 import kotlin.uuid.Uuid
 
@@ -8,9 +10,16 @@ interface PosRecord {
 	val pos: BlockPos
 }
 
+enum class ManageType {
+	KICK,
+	PASS_OWNERSHIP,
+	SET_ACCESS
+}
+
 enum class ActionType {
 	DISCONNECT_NETWORK,
-	DELETE_NETWORK
+	DELETE_NETWORK,
+	CLOSE_MENU
 }
 
 enum class PutType {
@@ -53,6 +62,20 @@ object PNPackets {
 		val networkId: Uuid,
 		val userId: UUID,
 		val password: String
+	) : PosRecord
+
+	@JvmRecord
+	data class DisconnectComponents(
+		override val pos: BlockPos,
+		val positions: List<GlobalPos>
+	) : PosRecord
+
+	@JvmRecord
+	data class ManagePlayer(
+		override val pos: BlockPos,
+		val uuid: UUID,
+		val type: ManageType,
+		val access: NetworkUserAccess
 	) : PosRecord
 
 	@JvmRecord

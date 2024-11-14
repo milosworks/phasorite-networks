@@ -1,16 +1,14 @@
-package vyrek.phasoritenetworks.ui.tabs
+package vyrek.phasoritenetworks.client.ui.tabs
 
 import io.wispforest.owo.ui.component.Components
 import io.wispforest.owo.ui.container.FlowLayout
 import io.wispforest.owo.ui.core.Sizing
+import vyrek.phasoritenetworks.client.ui.UIScreen
+import vyrek.phasoritenetworks.client.ui.flowLayout
 import vyrek.phasoritenetworks.init.PNBlocks
-import vyrek.phasoritenetworks.ui.UIScreen
-import vyrek.phasoritenetworks.ui.flowLayout
 
 class StatisticsTab(screen: UIScreen) : BaseTab(screen) {
-	companion object {
-		const val HEIGHT = 124
-	}
+	override var height = 140
 
 	override fun build(root: FlowLayout) {
 		val currentEntity = menu.player.level().getBlockEntity(menu.pos)!!

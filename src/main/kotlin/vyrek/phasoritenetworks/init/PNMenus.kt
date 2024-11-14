@@ -5,7 +5,7 @@ import net.neoforged.bus.api.IEventBus
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension
 import net.neoforged.neoforge.registries.DeferredRegister
 import vyrek.phasoritenetworks.PhasoriteNetworks
-import vyrek.phasoritenetworks.ui.UIMenu
+import vyrek.phasoritenetworks.client.ui.UIMenu
 
 object PNMenus {
 	private val MENUS = DeferredRegister.create(BuiltInRegistries.MENU, PhasoriteNetworks.ID)

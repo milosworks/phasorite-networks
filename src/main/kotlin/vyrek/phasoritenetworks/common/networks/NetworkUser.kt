@@ -9,7 +9,7 @@ enum class NetworkUserAccess {
 	ADMIN
 }
 
-class NetworkUser(var uuid: UUID, var name: String, var access: NetworkUserAccess = NetworkUserAccess.MEMBER) {
+class NetworkUser(var uuid: UUID, val name: String, var access: NetworkUserAccess = NetworkUserAccess.MEMBER) {
 	constructor(tag: CompoundTag) : this(
 		tag.getUUID(NetworkConstants.USER),
 		tag.getString(NetworkConstants.NAME),

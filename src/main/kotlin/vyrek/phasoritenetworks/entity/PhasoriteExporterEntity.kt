@@ -7,6 +7,7 @@ import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.DistributionMode
 import vyrek.phasoritenetworks.common.networks.NetworkStatistics
+import vyrek.phasoritenetworks.common.networks.TransferHandler
 import vyrek.phasoritenetworks.init.PNEntities
 
 class PhasoriteExporterEntity(
@@ -14,20 +15,94 @@ class PhasoriteExporterEntity(
 	state: BlockState,
 ) : PhasoriteComponentEntity(PNEntities.PHASORITE_EXPORTER, pos, state) {
 	val energyStorage = EnergyStorage()
+	override val transferHandler = ExporterTransferHandler()
 
 	private val distributionMode: DistributionMode = DistributionMode.ROUND_ROBIN
 
 	override var componentType = ComponentType.EXPORTER
 
-	fun distributeEnergy(): Long {
-		if (!transferHandler.canDistribute) return 0L
+	inner class ExporterTransferHandler : TransferHandler() {
+		override fun start() {
+			super.start()
 
-		val toReturn = transferHandler.distribute(limit, distributionMode)
-		network.statistics.addEnergyTick(toReturn, NetworkStatistics.EnergyType.EXPORTED)
+			requestedLimit = updateRequestedLimit()
+		}
 
-		level?.sendBlockUpdated(blockPos, blockState, blockState, 0)
+		override fun stop() {
+			throughput = distribute()
 
-		return toReturn
+			level?.sendBlockUpdated(blockPos, blockState, blockState, 0)
+		}
+
+		fun bufferLimiter(): Long {
+			return maxOf(requestedLimit - buffer, 0)
+		}
+
+		private fun updateRequestedLimit(): Long {
+			var req = 0L
+
+			for (node in nodes.values) {
+				val ex = node.insert(limit, true)
+				req += ex
+			}
+
+			return req
+		}
+
+		private fun distribute(): Long {
+			if (!transferHandler.canDistribute) return 0L
+
+			val distributed = when (distributionMode) {
+				DistributionMode.ROUND_ROBIN -> {
+					distributeRoundRobin()
+				}
+
+				DistributionMode.FILL_FIRST -> {
+					distributeFillFirst()
+				}
+			}
+			network.statistics.addEnergyTick(distributed, NetworkStatistics.EnergyType.EXPORTED)
+
+			return distributed
+		}
+
+		private fun distributeRoundRobin(): Long {
+			var totalTransferred = 0L
+			var energyTransferredInThisLoop: Boolean
+
+			do {
+				energyTransferredInThisLoop = false
+
+				for (node in nodes.values) {
+					val energyToTransfer = minOf(buffer, limit)
+					val transferred = node.insert(energyToTransfer)
+
+					if (transferred > 0L) {
+						buffer -= transferred
+						totalTransferred += transferred
+						energyTransferredInThisLoop = true
+					}
+				}
+			} while (buffer > 0L && energyTransferredInThisLoop)
+
+			return totalTransferred
+		}
+
+		private fun distributeFillFirst(): Long {
+			var totalTransferred = 0L
+
+			for (node in nodes.values) {
+				if (buffer <= 0L) break
+
+				val energyToTransfer = minOf(buffer, limit)
+				val transferred = node.insert(energyToTransfer)
+
+				totalTransferred += transferred
+				buffer -= transferred
+			}
+
+			return totalTransferred
+		}
 	}
 
 	inner class EnergyStorage() : ILongEnergyStorage {

@@ -6,7 +6,11 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.neoforged.neoforge.energy.IEnergyStorage
 
 class Node(val direction: Direction, val entity: BlockEntity, private val storage: IEnergyStorage) {
-//	var energyStatistic: Int = 0
+	var throughput = 0L
+
+	fun start() {
+		throughput = 0L
+	}
 
 	fun insert(amount: Long, simulated: Boolean = false): Long {
 		if (entity.isRemoved) return 0
@@ -14,6 +18,9 @@ class Node(val direction: Direction, val entity: BlockEntity, private val storag
 //		if (!simulated) energyStatistic += amount
 
 		return if (storage is ILongEnergyStorage) storage.receive(amount, simulated)
-		else storage.receiveEnergy(amount.toInt(), simulated).toLong()
+		else storage.receiveEnergy(
+			amount.coerceIn(Int.MIN_VALUE.toLong(), Int.MAX_VALUE.toLong()).toInt(),
+			simulated
+		).toLong()
 	}
 }

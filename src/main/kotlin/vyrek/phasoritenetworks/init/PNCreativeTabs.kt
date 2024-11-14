@@ -32,6 +32,7 @@ object PNCreativeTabs {
 				o.accept(PNItems.PHASORITE_DUST)
 				o.accept(PNItems.PHASORITE_LENS)
 				o.accept(PNItems.PHASORITE_CORE)
+				o.accept(PNItems.PHASORITE_SEED)
 			}
 			.build()
 	}

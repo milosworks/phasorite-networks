@@ -1,6 +1,7 @@
 package vyrek.phasoritenetworks.init
 
 import io.wispforest.owo.ui.core.Color
+import net.minecraft.client.Minecraft
 import net.neoforged.api.distmarker.Dist
 import net.neoforged.api.distmarker.OnlyIn
 import net.neoforged.bus.api.SubscribeEvent
@@ -10,21 +11,31 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent
 import net.neoforged.neoforge.event.tick.ServerTickEvent
 import vyrek.phasoritenetworks.PhasoriteNetworks
 import vyrek.phasoritenetworks.PhasoriteNetworks.LOGGER
+import vyrek.phasoritenetworks.client.render.Highlight
+import vyrek.phasoritenetworks.client.ui.UIScreen
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.NetworksData
 import vyrek.phasoritenetworks.networking.PNChannels
-import vyrek.phasoritenetworks.ui.UIScreen
 
 @EventBusSubscriber(modid = PhasoriteNetworks.ID, bus = EventBusSubscriber.Bus.GAME)
 object PNGameEvents {
 	@SubscribeEvent
 	fun onPostServerTick(event: ServerTickEvent.Post) {
 		NetworksData.get().networks.values.forEach { network ->
-			network.onTick(event.server)
+			network.onPostTick(event.server)
 		}
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@SubscribeEvent
+	fun renderLevelStage(event: RenderLevelStageEvent) {
+		if (event.stage != RenderLevelStageEvent.Stage.AFTER_PARTICLES) return
+
+		Highlight.handler.onTick(event.poseStack, Minecraft.getInstance().renderBuffers().bufferSource(), event.camera)
 	}
 }
 

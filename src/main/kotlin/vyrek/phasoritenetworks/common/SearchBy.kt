@@ -1,10 +1,10 @@
 package vyrek.phasoritenetworks.common
 
-fun <T> List<T>.searchBy(input: String, selector: (T) -> String): List<T> {
+fun <T> List<T>.searchBy(input: String, predicate: (T) -> String): List<T> {
 	val cleanedInput = input.trim().lowercase()
 
 	return this.filter {
-		val targetValue = selector(it).lowercase()
+		val targetValue = predicate(it).lowercase()
 		targetValue.equals(cleanedInput, ignoreCase = true) || targetValue.contains(cleanedInput)
 	}
 }

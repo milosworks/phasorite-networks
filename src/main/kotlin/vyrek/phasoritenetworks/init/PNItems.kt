@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredItem
 import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 import vyrek.phasoritenetworks.PhasoriteNetworks
+import vyrek.phasoritenetworks.item.PhasoriteSeedItem
 
 object PNItems {
 	val ITEMS: DeferredRegister.Items = DeferredRegister.createItems(PhasoriteNetworks.ID)
@@ -17,10 +18,10 @@ object PNItems {
 	val PHASORITE_CRYSTAL by item("phasorite_crystal")
 	val PHASORITE_DUST by item("phasorite_dust")
 
-	val PHASORITE_SEED by item("phasorite_seed")
+	val PHASORITE_SEED by item("phasorite_seed", ::PhasoriteSeedItem)
 
-	fun item(id: String): DeferredItem<Item> {
-		return ITEMS.registerItem(id) { Item(Item.Properties()) }
+	fun item(id: String, supplier: (Item.Properties) -> Item = { props -> Item(props) }): DeferredItem<Item> {
+		return ITEMS.registerItem(id) { supplier(Item.Properties()) }
 	}
 
 	fun init(event: IEventBus) {

@@ -142,14 +142,52 @@
                         </margins>
                     </checkbox>
 
-                    <flow-layout direction="horizontal" id="flow-layout:container-item">
-                        <children></children>
+                    <flow-layout direction="horizontal">
+                        <children>
+                            <flow-layout direction="horizontal" id="flow-layout:container-item">
+                                <children></children>
 
-                        <sizing>
-                            <horizontal method="fixed">40</horizontal>
-                            <vertical method="fixed">40</vertical>
-                        </sizing>
+                                <sizing>
+                                    <horizontal method="fixed">40</horizontal>
+                                    <vertical method="fixed">40</vertical>
+                                </sizing>
+
+                                <margins>
+                                    <right>10</right>
+                                </margins>
+                            </flow-layout>
+
+                            <flow-layout direction="vertical">
+                                <children>
+                                    <label>
+                                        <text>Throughput:</text>
+
+                                        <margins>
+                                            <bottom>5</bottom>
+                                        </margins>
+                                    </label>
+
+                                    <label id="label:throughput">
+                                        <text>{{throughput}}</text>
+                                        <color>{{throughputColor}}</color>
+                                        <tooltip-text>{{rawThroughput}} FE/t</tooltip-text>
+                                    </label>
+                                </children>
+                            </flow-layout>
+                        </children>
+
+                        <vertical-alignment>center</vertical-alignment>
                     </flow-layout>
+
+                    <!--                    <texture texture="diamond_block">-->
+                    <!--                        <margins>-->
+                    <!--                            <top>10</top>-->
+                    <!--                        </margins>-->
+                    <!--                        <sizing>-->
+                    <!--                            <vertical method="fixed">40</vertical>-->
+                    <!--                            <horizontal method="fixed">40</horizontal>-->
+                    <!--                        </sizing>-->
+                    <!--                    </texture>-->
                 </children>
 
                 <padding>
@@ -258,7 +296,7 @@
                                 <horizontal-alignment>center</horizontal-alignment>
                             </flow-layout>
 
-                            <text-area id="text-area:network-search">
+                            <text-area id="text-area:search">
                                 <max-lines>1</max-lines>
                                 <max-length>20</max-length>
 
@@ -284,13 +322,13 @@
                                                 </margins>
                                             </label>
 
-                                            <label id="label:network-sort">
-                                                <text>All</text>
+                                            <label id="label:sort">
+                                                <text>§nAll</text>
 
                                                 <color>#CBC0C1</color>
                                             </label>
 
-                                            <label id="label:network-quantity">
+                                            <label id="label:quantity">
                                                 <text>0</text>
 
                                                 <positioning type="relative">100,50</positioning>
@@ -344,9 +382,8 @@
                         <horizontal-alignment>center</horizontal-alignment>
                     </flow-layout>
 
-                    <flow-layout direction="horizontal" id="flow-layout:container-empty">
-                        <children>
-                        </children>
+                    <flow-layout direction="horizontal">
+                        <children></children>
                         <sizing>
                             <vertical method="fixed">16</vertical>
                         </sizing>
@@ -364,21 +401,8 @@
                 <children>
                     <label>
                         <text>{{name}}</text>
+                        <tooltip-text>Network ID: {{id}}</tooltip-text>
                     </label>
-
-                    <button id="button:{{id}}-connect">
-                        <text>C</text>
-
-                        <sizing>
-                            <horizontal method="fixed">15</horizontal>
-                            <vertical method="fixed">15</vertical>
-                        </sizing>
-
-                        <margins>
-                            <left>5</left>
-                        </margins>
-                        <positioning type="relative">100,50</positioning>
-                    </button>
                 </children>
 
                 <padding>
@@ -462,7 +486,6 @@
 
                             <button id="button:network-delete">
                                 <text>Delete</text>
-
                             </button>
                         </children>
 
@@ -661,7 +684,7 @@
                             </label>
 
                             <button id="button:form-type">
-                                <text>{{form_type}}</text>
+                                <text>{{formType}}</text>
 
                                 <!-- Convention exception as label:error can be empty -->
                                 <margins>
@@ -691,7 +714,7 @@
         </template>
 
         <!-- Tab for displaying network statistics -->
-        <template name="tab:network-statistics">
+        <template name="tab:statistics">
             <flow-layout direction="vertical">
                 <children>
                     <grid-layout rows="1" columns="2">
@@ -717,7 +740,6 @@
 
                                     <label>
                                         <text>{{importers}}</text>
-
                                         <color>#CBC0C1</color>
                                     </label>
                                 </children>
@@ -782,6 +804,7 @@
 
                                     <label>
                                         <text>{{input}}</text>
+                                        <tooltip-text>{{rawInput}} FE/t</tooltip-text>
 
                                         <color>#CBC0C1</color>
                                     </label>
@@ -802,6 +825,7 @@
 
                                     <label>
                                         <text>{{output}}</text>
+                                        <tooltip-text>{{rawOutput}} FE/t</tooltip-text>
 
                                         <color>#CBC0C1</color>
                                     </label>
@@ -830,7 +854,8 @@
                 </surface>
 
                 <sizing>
-                    <horizontal method="expand">45</horizontal>
+                    <horizontal method="fixed">190</horizontal>
+                    <vertical method="fixed">140</vertical>
                 </sizing>
 
                 <vertical-alignment>center</vertical-alignment>
@@ -839,10 +864,206 @@
         </template>
 
         <!-- Tab for displaying every component in the network -->
-        <template name="tab:network-components">
+        <template name="tab:components">
             <flow-layout direction="vertical">
                 <children>
-                    <text-area id="text-area:network-search">
+                    <flow-layout direction="horizontal" id="flow-layout:container-buttons">
+                        <children>
+                            <button id="button:selection-cancel">
+                                <text>X</text>
+
+                                <margins>
+                                    <right>5</right>
+                                </margins>
+
+                                <sizing>
+                                    <horizontal method="fixed">16</horizontal>
+                                    <vertical method="fixed">16</vertical>
+                                </sizing>
+                            </button>
+
+                            <button id="button:selection-disconnect">
+                                <text>D</text>
+
+                                <sizing>
+                                    <horizontal method="fixed">16</horizontal>
+                                    <vertical method="fixed">16</vertical>
+                                </sizing>
+
+                                <margins>
+                                    <right>5</right>
+                                </margins>
+                            </button>
+                        </children>
+
+                        <horizontal-alignment>right</horizontal-alignment>
+                    </flow-layout>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <text-area id="text-area:search">
+                                <max-lines>1</max-lines>
+                                <max-length>20</max-length>
+
+                                <sizing>
+                                    <horizontal method="fixed">125</horizontal>
+                                    <vertical method="fixed">18</vertical>
+                                </sizing>
+
+                                <margins>
+                                    <bottom>5</bottom>
+                                </margins>
+                            </text-area>
+
+                            <flow-layout direction="horizontal">
+                                <children>
+                                    <label>
+                                        <text>Sorted by:</text>
+
+                                        <margins>
+                                            <right>5</right>
+                                        </margins>
+                                    </label>
+
+                                    <label id="label:sort">
+                                        <text>§nAll</text>
+
+                                        <color>#CBC0C1</color>
+                                    </label>
+
+                                    <label id="label:quantity">
+                                        <text>0</text>
+
+                                        <positioning type="relative">100,50</positioning>
+                                    </label>
+                                </children>
+
+                                <sizing>
+                                    <horizontal method="expand">100</horizontal>
+                                </sizing>
+
+                                <margins>
+                                    <bottom>5</bottom>
+                                </margins>
+                            </flow-layout>
+
+                            <scroll direction="vertical">
+                                <flow-layout direction="vertical" id="flow-layout:container-scroll">
+                                    <children>
+
+                                    </children>
+
+                                    <padding>
+                                        <all>2</all>
+                                    </padding>
+                                </flow-layout>
+
+                                <sizing>
+                                    <horizontal method="expand">100</horizontal>
+                                    <vertical method="fixed">120</vertical>
+                                </sizing>
+
+                                <vertical-alignment>center</vertical-alignment>
+                                <horizontal-alignment>center</horizontal-alignment>
+                            </scroll>
+                        </children>
+
+                        <sizing>
+                            <horizontal method="fixed">200</horizontal>
+                        </sizing>
+
+                        <padding>
+                            <all>10</all>
+                        </padding>
+
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>center</horizontal-alignment>
+                    </flow-layout>
+
+                    <flow-layout direction="horizontal" id="flow-layout:container-empty">
+                        <children></children>
+                    </flow-layout>
+                </children>
+
+                <horizontal-alignment>right</horizontal-alignment>
+                <vertical-alignment>center</vertical-alignment>
+            </flow-layout>
+        </template>
+
+        <!-- Display component data inside the scroll container -->
+        <template name="tab:components:data">
+            <flow-layout direction="horizontal" id="flow-layout:container-data-{{i}}">
+                <children>
+                    <flow-layout direction="vertical" id="flow-layout:container-item-{{i}}">
+                        <children></children>
+
+                        <sizing>
+                            <vertical method="fixed">20</vertical>
+                            <horizontal method="fixed">20</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <right>5</right>
+                        </margins>
+                    </flow-layout>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <label>
+                                <text>{{name}}</text>
+                            </label>
+
+                            <flow-layout direction="horizontal">
+                                <children>
+                                    <label>
+                                        <text>Throughput:</text>
+
+                                        <margins>
+                                            <right>2</right>
+                                        </margins>
+                                    </label>
+                                    <label>
+                                        <text>{{energy}}</text>
+                                        <tooltip-text>{{rawEnergy}} FE/t</tooltip-text>
+
+                                        <color>#CBC0C1</color>
+                                    </label>
+                                </children>
+                            </flow-layout>
+                        </children>
+                    </flow-layout>
+                </children>
+
+                <padding>
+                    <all>2</all>
+                </padding>
+
+                <margins>
+                    <bottom>2</bottom>
+                </margins>
+
+                <surface>
+                    <outline>{{color}}</outline>
+                </surface>
+
+                <sizing>
+                    <horizontal method="expand">100</horizontal>
+                    <vertical method="fixed">30</vertical>
+                </sizing>
+
+                <vertical-alignment>center</vertical-alignment>
+            </flow-layout>
+        </template>
+
+        <!-- Tab for displaying every member in the network (except owner) -->
+        <template name="tab:members">
+            <flow-layout direction="vertical">
+                <children>
+                    <text-area id="text-area:search">
                         <max-lines>1</max-lines>
                         <max-length>20</max-length>
 
@@ -866,13 +1087,13 @@
                                 </margins>
                             </label>
 
-                            <label id="label:component-sort">
-                                <text>All</text>
+                            <label id="label:sort">
+                                <text>§nAll</text>
 
                                 <color>#CBC0C1</color>
                             </label>
 
-                            <label id="label:component-quantity">
+                            <label id="label:quantity">
                                 <text>0</text>
 
                                 <positioning type="relative">100,50</positioning>
@@ -910,7 +1131,7 @@
                 </children>
 
                 <sizing>
-                    <horizontal method="fixed">160</horizontal>
+                    <horizontal method="fixed">200</horizontal>
                 </sizing>
 
                 <padding>
@@ -926,32 +1147,28 @@
             </flow-layout>
         </template>
 
-        <!-- Display component data inside the scroll container -->
-        <template name="tab:network-components:data">
-            <flow-layout direction="horizontal" id="flow-layout:container-{{i}}">
+        <!-- Display member data inside the scroll container -->
+        <template name="tab:members:data">
+            <flow-layout direction="vertical" id="flow-layout:container-data-{{i}}">
                 <children>
-                    <flow-layout direction="vertical" id="flow-layout:container-item-{{i}}">
-                        <children></children>
-
-                        <sizing>
-                            <vertical method="fixed">20</vertical>
-                            <horizontal method="fixed">20</horizontal>
-                        </sizing>
+                    <label>
+                        <text>{{username}}</text>
+                        <tooltip-text>{{uuid}}</tooltip-text>
 
                         <margins>
-                            <right>5</right>
+                            <bottom>5</bottom>
+                            <left>5</left>
                         </margins>
-                    </flow-layout>
+                    </label>
 
-                    <flow-layout direction="vertical">
-                        <children>
-                            <label>
-                                <text>{{name}}</text>
+                    <label>
+                        <text>{{access}}</text>
+                        <color>{{accessColor}}</color>
 
-                                <line-height>6</line-height>
-                            </label>
-                        </children>
-                    </flow-layout>
+                        <margins>
+                            <left>5</left>
+                        </margins>
+                    </label>
                 </children>
 
                 <padding>
@@ -963,7 +1180,7 @@
                 </margins>
 
                 <surface>
-                    <outline>{{color}}</outline>
+                    <outline>{{accessColor}}</outline>
                 </surface>
 
                 <sizing>
@@ -975,11 +1192,106 @@
             </flow-layout>
         </template>
 
+        <!-- Popup for managing a members access or to kick them -->
+        <template name="tab:members:manage">
+            <flow-layout direction="vertical">
+                <children>
+                    <button id="button:close">
+                        <text>X</text>
+
+                        <sizing>
+                            <vertical method="fixed">16</vertical>
+                            <horizontal method="fixed">16</horizontal>
+                        </sizing>
+
+                        <margins>
+                            <right>5</right>
+                        </margins>
+                    </button>
+
+                    <flow-layout direction="vertical">
+                        <children>
+                            <label>
+                                <text>{{username}}</text>
+
+                                <color>#AB3428</color>
+
+                                <margins>
+                                    <bottom>5</bottom>
+                                </margins>
+                            </label>
+
+                            <label>
+                                <text>{{access}}</text>
+
+                                <color>{{accessColor}}</color>
+
+                                <margins>
+                                    <bottom>5</bottom>
+                                </margins>
+                            </label>
+
+                            <label>
+                                <text>{{uuid}}</text>
+
+                                <color>#CBC0C1</color>
+
+                                <margins>
+                                    <bottom>15</bottom>
+                                </margins>
+                            </label>
+
+                            <flow-layout direction="horizontal">
+                                <children>
+                                    <button id="button:kick">
+                                        <text>Kick</text>
+
+                                        <margins>
+                                            <right>10</right>
+                                        </margins>
+                                    </button>
+
+                                    <button id="button:ownership">
+                                        <text>Pass Ownership</text>
+
+                                        <margins>
+                                            <right>10</right>
+                                        </margins>
+                                    </button>
+
+                                    <button id="button:access">
+                                        <text>Make {{nextAccess}}</text>
+                                    </button>
+                                </children>
+                            </flow-layout>
+                        </children>
+
+                        <padding>
+                            <all>10</all>
+                        </padding>
+
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+
+                        <horizontal-alignment>center</horizontal-alignment>
+                        <vertical-alignment>center</vertical-alignment>
+                    </flow-layout>
+                </children>
+
+                <positioning type="relative">50,50</positioning>
+
+                <horizontal-alignment>right</horizontal-alignment>
+
+                <z-index>200</z-index>
+            </flow-layout>
+        </template>
+
         <!-- Buttons for switching between tabs -->
         <template name="side-tabs">
             <flow-layout direction="vertical" id="flow-layout:side-tabs">
                 <children>
-                    <button id="button:component-tab">
+                    <button id="button:component">
                         <text>C</text>
 
                         <sizing>
@@ -991,7 +1303,7 @@
                             <bottom>5</bottom>
                         </margins>
                     </button>
-                    <button id="button:network-tab">
+                    <button id="button:network">
                         <text>N</text>
 
                         <sizing>
@@ -1003,7 +1315,7 @@
                             <bottom>5</bottom>
                         </margins>
                     </button>
-                    <button id="button:network-statistics-tab">
+                    <button id="button:statistics">
                         <text>S</text>
 
                         <sizing>
@@ -1015,7 +1327,7 @@
                             <bottom>5</bottom>
                         </margins>
                     </button>
-                    <button id="button:network-components">
+                    <button id="button:components">
                         <text>C</text>
 
                         <sizing>
@@ -1027,7 +1339,7 @@
                             <bottom>5</bottom>
                         </margins>
                     </button>
-                    <button id="button:network-members">
+                    <button id="button:members">
                         <text>M</text>
 
                         <sizing>

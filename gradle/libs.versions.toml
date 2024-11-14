@@ -14,15 +14,12 @@ neoforge = "21.1.66"
 neoforge-range = "21.1.66" # Used in META-INF/neoforge.mods.tml
 mdg = "2.0.32-beta"
 
-# Architectury
-#architectury-loom = "1.7.410"
-
 # owo lib
-owolib = "0.12.15-beta.9+1.21"
+owolib = "0.12.15-beta.10+1.21"
 owolib-dev = "0.12.15-beta.5+1.21"
 
 # Grand power
-grandpower = "3.0.0"
+grandpower = "3.0.2"
 
 [libraries]
 # Kotlin
@@ -50,6 +47,3 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 # NeoForge
 mdg = { id = "net.neoforged.moddev", version.ref = "mdg" }
-
-# Architectury
-#architectury-loom = { id = "dev.architectury.loom", version.ref = "architectury-loom" }

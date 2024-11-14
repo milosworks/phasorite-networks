@@ -2,13 +2,9 @@
 	"credit": "MilosWorks",
 	"ambientocclusion": false,
 	"render_type": "cutout",
-	"texture_size": [
-		32,
-		32
-	],
 	"textures": {
-		"0": "phasoritenetworks:block/phasorite_importer",
-		"particle": "phasoritenetworks:block/phasorite_importer"
+		"0": "phasoritenetworks:block/phasorite_exporter",
+		"particle": "phasoritenetworks:block/phasorite_exporter"
 	},
 	"elements": [
 		{
@@ -1154,9 +1150,9 @@
 				},
 				"east": {
 					"uv": [
-						10.5,
+						14,
 						0,
-						12.5,
+						16,
 						2
 					],
 					"texture": "#0",
@@ -3440,7 +3436,7 @@
 				0
 			],
 			"translation": [
-				0,
+				0.25,
 				0,
 				0
 			],

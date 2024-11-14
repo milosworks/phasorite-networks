@@ -61,11 +61,14 @@ neoForge {
 		configureEach {
 			systemProperty("forge.logging.markers", "REGISTRIES")
 			systemProperty("neoforge.enabledGameTestNamespaces", modId)
+
 			logLevel = org.slf4j.event.Level.DEBUG
 		}
 
 		create("client") {
 			client()
+//			systemProperty("owo.debug", "false")
+//			systemProperty("owo.forceDisableDebug", "true")
 
 			programArguments.addAll("--username", "Vyrek_", "--quickPlaySingleplayer", "test")
 		}

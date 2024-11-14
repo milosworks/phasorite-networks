@@ -15,5 +15,7 @@ class PNItemModelProvider(output: PackOutput, fileHelper: ExistingFileHelper) :
 
 		basicItem(PNItems.PHASORITE_LENS)
 		basicItem(PNItems.PHASORITE_CORE)
+		
+		basicItem(PNItems.PHASORITE_SEED)
 	}
 }

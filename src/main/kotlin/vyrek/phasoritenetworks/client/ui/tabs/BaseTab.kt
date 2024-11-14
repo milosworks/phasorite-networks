@@ -1,18 +1,20 @@
-package vyrek.phasoritenetworks.ui.tabs
+package vyrek.phasoritenetworks.client.ui.tabs
 
 import io.wispforest.owo.ui.component.LabelComponent
 import io.wispforest.owo.ui.container.FlowLayout
 import io.wispforest.owo.ui.core.Insets
 import net.minecraft.network.chat.Component
-import vyrek.phasoritenetworks.ui.*
+import vyrek.phasoritenetworks.client.ui.*
+import vyrek.phasoritenetworks.common.networks.NetworkUserAccess
 
-abstract class BaseTab(private val screen: UIScreen) {
+abstract class BaseTab(val screen: UIScreen) {
 	val menu: UIMenu get() = screen.menu
 	var activeTab
 		get() = screen.activeTab
 		set(value) {
 			screen.activeTab = value
 		}
+	abstract val height: Int
 
 	abstract fun build(root: FlowLayout)
 
@@ -33,5 +35,13 @@ abstract class BaseTab(private val screen: UIScreen) {
 		component.childById(LabelComponent::class, "label:error")
 			.text(Component.empty())
 			.margins(Insets.none())
+	}
+
+	fun canPlayerEdit(): Boolean {
+		return menu.network!!.owner == menu.player.uuid || menu.network!!.members[menu.player.uuid]?.access == NetworkUserAccess.ADMIN.ordinal
+	}
+
+	fun isBlockOwner(): Boolean {
+		return menu.clientEntity.ownerUuid == menu.player.uuid
 	}
 }

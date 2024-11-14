@@ -2,6 +2,7 @@ package vyrek.phasoritenetworks.common.components
 
 import com.mojang.serialization.MapCodec
 import dev.technici4n.grandpower.api.ILongEnergyStorage
+import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -30,11 +31,11 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import net.neoforged.neoforge.capabilities.Capabilities
 import vyrek.phasoritenetworks.block.PhasoriteExporterBlock
 import vyrek.phasoritenetworks.block.PhasoriteImporterBlock
+import vyrek.phasoritenetworks.client.ui.UIMenu
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.NetworksData
 import vyrek.phasoritenetworks.networking.PNEndecs
 import vyrek.phasoritenetworks.networking.PNEndecsData
-import vyrek.phasoritenetworks.ui.UIMenu
 import kotlin.uuid.Uuid
 
 open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properties) :
@@ -74,6 +75,7 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 		entity.ownerUuid = placer.uuid
 
 		entity.setChanged()
+		level.sendBlockUpdated(pos, state, state, 0)
 	}
 
 	override fun useWithoutItem(
@@ -83,11 +85,31 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 		player: Player,
 		hitResult: BlockHitResult
 	): InteractionResult {
-		if (level.isClientSide || player !is ServerPlayer) return InteractionResult.SUCCESS_NO_ITEM_USED
+		if (level.isClientSide || player !is ServerPlayer) return InteractionResult.PASS
 
 		val entity =
-			level.getBlockEntity(pos) as? PhasoriteComponentEntity ?: return InteractionResult.SUCCESS_NO_ITEM_USED
-
+			level.getBlockEntity(pos) as? PhasoriteComponentEntity ?: return InteractionResult.PASS
+		if (entity.isGuiOpen) {
+			player.displayClientMessage(
+				Component.literal("A player is already using this component.")
+					.withStyle(ChatFormatting.BOLD)
+					.withStyle(ChatFormatting.RED),
+				true
+			)
+			return InteractionResult.SUCCESS
+		}
+		if (
+			(!entity.network.isValid && entity.ownerUuid != player.uuid) ||
+			(entity.network.isValid && entity.network.private == true && entity.network.members[player.uuid] == null && player.uuid != entity.network.owner)
+		) {
+			player.displayClientMessage(
+				Component.literal("You don't have access to this component.")
+					.withStyle(ChatFormatting.BOLD)
+					.withStyle(ChatFormatting.RED),
+				true
+			);
+			return InteractionResult.SUCCESS;
+		}
 		val id = when (entity.componentType) {
 			ComponentType.IMPORTER -> "phasoritenetworks:phasorite_importer"
 			ComponentType.EXPORTER -> "phasoritenetworks:phasorite_exporter"
@@ -103,18 +125,23 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 			entity.limitlessMode,
 			entity.priority,
 			entity.overrideMode,
-			if (entity.network.isValid) entity.network.toClientData(true) else null,
+			entity.network.takeIf { it.isValid }
+				?.toClientData(true)
+				?.let { data ->
+					data.copy(components = data.components.filterNot { it.globalPos == entity.globalPos })
+				},
 			NetworksData.get().networks
 				.filter { it.value.discoverable(player.uuid) }
-				.map { it.value.toClientData().apply { components.filter { cpos -> cpos != pos } } }
-				.toList(),
+				.map { it.value.toClientData() }
 		)
 
 		player.openMenu(
-			SimpleMenuProvider({ containerId, _, player -> UIMenu(containerId, data, player) }, Component.literal(""))
+			SimpleMenuProvider({ containerId, _, ply -> UIMenu(containerId, data, ply) }, Component.literal(""))
 		) { buf ->
 			buf.write(PNEndecs.COMPONENT_SCREEN_ENDEC, data)
 		}
+
+		entity.isGuiOpen = true
 
 		return InteractionResult.SUCCESS_NO_ITEM_USED
 	}
@@ -127,13 +154,13 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 		movedByPiston: Boolean
 	) {
 		if (state.block != newState.block) {
-			(level.getBlockEntity(pos) as? PhasoriteComponentEntity)?.let { entity ->
-				entity.transferHandler.run {
+			(level.getBlockEntity(pos) as? PhasoriteComponentEntity)?.run {
+				transferHandler.run {
 					nodes.clear()
 					buffer = 0
 				}
 
-				entity.handleNetworkConnection(Uuid.NIL)
+				handleNetworkConnection(Uuid.NIL)
 			}
 		}
 
@@ -194,6 +221,7 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 			entity.transferHandler.removeNode(directionToNeighbor)
 			return
 		}
+
 		val storage = level.getCapability(
 			ILongEnergyStorage.BLOCK,
 			neighborPos,

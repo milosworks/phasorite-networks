@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.state.BlockState
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.NetworkStatistics
+import vyrek.phasoritenetworks.common.networks.TransferHandler
 import vyrek.phasoritenetworks.init.PNEntities
 
 class PhasoriteImporterEntity(
@@ -14,17 +15,63 @@ class PhasoriteImporterEntity(
 	state: BlockState,
 ) : PhasoriteComponentEntity(PNEntities.PHASORITE_IMPORTER, pos, state) {
 	val sides: MutableMap<Int, EnergyStorage> = mutableMapOf()
+	override val transferHandler = ImporterTransferHandler()
 
 	override var componentType = ComponentType.IMPORTER
+
+	inner class ImporterTransferHandler : TransferHandler() {
+		val canExtract: Boolean
+			get() = buffer != 0L
+
+		/**
+		 * Energy that this importer received
+		 */
+		private var networkInput = 0L
+
+		/**
+		 * Energy that was removed when distributing energy from the network
+		 */
+		private var networkOutput = 0L
+
+		override fun stop() {
+			throughput = networkInput
+			networkInput = 0L
+			networkOutput = 0L
+
+			level?.sendBlockUpdated(blockPos, blockState, blockState, 0)
+		}
+
+		fun extractFromBuffer(energy: Long): Long {
+			val taken = minOf(minOf(energy, buffer), limit - networkOutput)
+			require(taken >= 0) { "Taken should never be negative" }
+
+			buffer -= taken
+			networkOutput += taken
+
+			return taken
+		}
+
+		fun receive(energy: Long, side: Direction, simulate: Boolean): Long {
+			val maxLimit = minOf(limit, network.requestedEnergy)
+			val availableSpace = maxLimit - buffer
+			val toReceive = minOf(availableSpace, energy)
+			if (toReceive <= 0) return 0
+			if (simulate) return toReceive
+
+			networkInput += toReceive
+			buffer += toReceive
+			// Node that gave the energy (this is why we don't support null side)
+			nodes[side.get3DDataValue()]!!.throughput += toReceive
+			network.statistics.addEnergyTick(toReceive, NetworkStatistics.EnergyType.IMPORTED)
+
+			return toReceive
+		}
+	}
 
 	inner class EnergyStorage(private val side: Direction) : ILongEnergyStorage {
 		override fun receive(energy: Long, simulate: Boolean): Long {
 			if (network.isValid) {
-				val maxLimit = minOf(limit, network.requestedEnergy)
-
-				val toReturn = transferHandler.receive(energy, maxLimit, side, simulate)
-				network.statistics.addEnergyTick(toReturn, NetworkStatistics.EnergyType.IMPORTED)
-
+				val toReturn = transferHandler.receive(energy, side, simulate)
 				level?.sendBlockUpdated(blockPos, blockState, blockState, 0)
 
 				return toReturn

@@ -1,10 +1,13 @@
-package vyrek.phasoritenetworks.ui
+package vyrek.phasoritenetworks.client.ui
 
 import io.wispforest.owo.ui.core.Color
+import net.minecraft.core.GlobalPos
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
+import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
+import vyrek.phasoritenetworks.common.networks.NetworkUserAccess
 import vyrek.phasoritenetworks.init.PNMenus
 import vyrek.phasoritenetworks.networking.*
 import java.util.*
@@ -31,6 +34,9 @@ class UIMenu(containerId: Int, data: PNEndecsData.ComponentScreenData, val playe
 
 	var accessibleNetworks = data.accessibleNetworks
 	var network: PNEndecsData.ClientNetworkData? = data.network
+
+	val clientEntity = player.level().getBlockEntity(data.pos) as PhasoriteComponentEntity
+	val throughput get() = clientEntity.transferHandler.throughput
 
 	fun updateComponentData() {
 		PNChannels.CHANNEL.clientHandle().send(
@@ -95,6 +101,61 @@ class UIMenu(containerId: Int, data: PNEndecsData.ComponentScreenData, val playe
 				password
 			)
 		)
+	}
+
+	fun disconnectComponents(positions: List<GlobalPos>) {
+		PNChannels.CHANNEL.clientHandle().send(
+			PNPackets.DisconnectComponents(
+				pos,
+				positions
+			)
+		)
+	}
+
+	fun kickFromNetwork(id: UUID) {
+		PNChannels.CHANNEL.clientHandle().send(
+			PNPackets.ManagePlayer(
+				pos,
+				id,
+				ManageType.KICK,
+				// TODO: Fix owo so it allows nullable fields in packets so i can put null here
+				NetworkUserAccess.MEMBER
+			)
+		)
+	}
+
+	fun passOwnership(id: UUID) {
+		PNChannels.CHANNEL.clientHandle().send(
+			PNPackets.ManagePlayer(
+				pos,
+				id,
+				ManageType.PASS_OWNERSHIP,
+				// TODO: Fix owo so it allows nullable fields in packets so i can put null here
+				NetworkUserAccess.MEMBER
+			)
+		)
+	}
+
+	fun setAccess(id: UUID, access: NetworkUserAccess) {
+		PNChannels.CHANNEL.clientHandle().send(
+			PNPackets.ManagePlayer(
+				pos,
+				id,
+				ManageType.SET_ACCESS,
+				access
+			)
+		)
+	}
+
+	override fun removed(player: Player) {
+
+		PNChannels.CHANNEL.clientHandle().send(
+			PNPackets.CommandPacket(
+				pos,
+				ActionType.CLOSE_MENU
+			)
+		)
+		super.removed(player)
 	}
 
 	override fun quickMoveStack(player: Player, index: Int): ItemStack {
