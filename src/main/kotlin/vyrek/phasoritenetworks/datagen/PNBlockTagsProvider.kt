@@ -1,8 +1,12 @@
 package vyrek.phasoritenetworks.datagen
 
 import net.minecraft.core.HolderLookup
+import net.minecraft.core.registries.Registries
 import net.minecraft.data.PackOutput
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.tags.BlockTags
+import net.minecraft.tags.TagKey
+import net.minecraft.world.level.block.Block
 import net.neoforged.neoforge.common.Tags
 import net.neoforged.neoforge.common.data.BlockTagsProvider
 import net.neoforged.neoforge.common.data.ExistingFileHelper
@@ -43,5 +47,13 @@ class PNBlockTagsProvider(
 		tag(Tags.Blocks.BUDDING_BLOCKS).add(
 			PNBlocks.BUDDING_PHASORITE_BLOCK
 		)
+
+		tag(blockTag("ae2:growth_acceleratable")).add(
+			PNBlocks.BUDDING_PHASORITE_BLOCK
+		)
+	}
+
+	fun blockTag(tagName: String): TagKey<Block> {
+		return TagKey.create(Registries.BLOCK, ResourceLocation.parse(tagName))
 	}
 }
