@@ -165,7 +165,7 @@ object PNChannels {
 				ManageType.SET_ACCESS -> {
 					val member = network.members[msg.uuid] ?: return@serverboundWithEntity
 
-					member.access = msg.access!!
+					member.access = msg.access
 
 					updateScreenData(entity, access.player, network, false)
 				}
@@ -251,13 +251,13 @@ object PNChannels {
 			when (msg.action) {
 				ActionType.DISCONNECT_NETWORK -> {
 					menu.network = null
-					screen.buildTab(screen.rootComponent, screen.activeTab, ::NetworkTab)
+					screen.buildTab(screen.rootComponent, Tabs.NETWORK, ::NetworkTab)
 				}
 
 				ActionType.DELETE_NETWORK -> {
 					menu.accessibleNetworks = menu.accessibleNetworks.filter { it.id != menu.network?.id }
 					menu.network = null
-					screen.buildTab(screen.rootComponent, screen.activeTab, ::NetworkTab)
+					screen.buildTab(screen.rootComponent, Tabs.NETWORK, ::NetworkTab)
 				}
 
 				else -> {}

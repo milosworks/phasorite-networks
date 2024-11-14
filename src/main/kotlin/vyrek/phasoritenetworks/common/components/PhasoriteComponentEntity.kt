@@ -218,6 +218,7 @@ open class PhasoriteComponentEntity(
 	}
 
 	override fun removeComponentsFromTag(tag: CompoundTag) {
+		tag.remove(UUID_KEY.key())
 		tag.remove(NetworkConstants.NAME)
 		tag.remove(NetworkConstants.PRIORITY)
 		tag.remove(NetworkConstants.OVERRIDE_MODE)
