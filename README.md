@@ -1,32 +1,28 @@
 <div align="center">
     <img src="/media/logo.png" alt="Phasorite Networks">
 </div>
-
 <br>
-<h1>
-    Phasorite Networks
-    <img src="https://raw.githubusercontent.com/intergrav/devins-badges/8494ec1ac495cfb481dc7e458356325510933eb0/assets/cozy/supported/neoforge_vector.svg" alt="Available For NeoForge" align="right" height="40"></img>
-</h1>
-
-<div align="center">
+<div align="left">
     <!-- All in one line is actually a bug fix -->
-    <a href="https://www.curseforge.com/minecraft/search?page=1&pageSize=20&sortBy=relevancy&class=mc-mods&search=phasorite+networks&version=1.21.1&gameVersionTypeId=6"><img src="https://img.shields.io/badge/Available%20For-1.21.1 NeoForge-F16436?logo=curseforge&colorA=2D2D2D"></img></a>
-    <a href="https://discord.gg/YsAhwENUuJ"><img src="https://img.shields.io/discord/1272334441720844370?logo=discord&colorB=7289DA&link=https%3A%2F%2Fdiscord.gg%2FYsAhwENUuJ" alt="discord invite"></img></a>
-    <a href="https://ko-fi.com/milosworks"><img src="https://shields.io/badge/kofi-Buy_a_coffee-ff5f5f?logo=ko-fi&style=for-the-badgeKofi" alt="kofi"></img></a>
+    <img alt="Available For NeoForge" height="56" src="https://raw.githubusercontent.com/intergrav/devins-badges/8494ec1ac495cfb481dc7e458356325510933eb0/assets/cozy/supported/neoforge_vector.svg">
+    <a href="https://modrinth.com/mods?q=phasorite+networks&g=categories:neoforge&v=1.21.1"><img alt="Available For Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
+    <a href="https://www.curseforge.com/minecraft/search?page=1&pageSize=20&sortBy=relevancy&class=mc-mods&search=phasorite+networks&version=1.21.1&gameVersionTypeId=6"><img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
+    <a href="https://discord.gg/YsAhwENUuJ"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
 </div>
+
+# Phasorite Networks
 
 ## Table of Contents
 
--   [Guide](#guide)
--   -   [Networks](#networks)
--   -   [Blocks](#blocks)
--   -   -   [Importer](#phasorite-importer)
--   -   -   [Exporter](#phasorite-exporter)
+-   [About](#about)
+-   [Networks](#networks)
+-   -   [Importer](#phasorite-importer)
+-   -   [Exporter](#phasorite-exporter)
 -   [License](#license)
 -   [Issues](#issues)
 -   [Contribution](#contribution)
 
-## Guide
+## About
 
 Phasorite Networks is a modern (WIP, Alpha) mod for transferring energy wirelessly.
 
@@ -39,15 +35,14 @@ throughput of energy across the network.
 Using a network reduces the lag that a huge **cable** network could cause, also reducing the time for building the
 infrastructure for the cables.
 
-### Blocks
 
 #### Phasorite Importer
 
 The phasorite importer is probably the first component you'll need to craft, this component receives energy to transfer it to all the exporters in the network.
 
 <div align="center">
-    <img height="256" src="/media/importer.png"></img>
-    <img height="256" src="/media/importer_recipe.png"></img>
+    <img height="256" src="/media/importer.png">
+    <img height="256" src="/media/importer_recipe.png">
 </div>
 
 #### Phasorite Exporter
@@ -55,8 +50,8 @@ The phasorite importer is probably the first component you'll need to craft, thi
 The phasorite exporter is the second component you'll craft, this component exports the energy that the importers received.
 
 <div align="center">
-    <img height="256" src="/media/exporter.png"></img>
-    <img height="256" src="/media/exporter_recipe.png"></img>
+    <img height="256" src="/media/exporter.png">
+    <img height="256" src="/media/exporter_recipe.png">
 </div>
 
 ## License
