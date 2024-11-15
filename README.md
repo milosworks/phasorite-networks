@@ -81,6 +81,8 @@ The phasorite exporter is the second component you'll craft, this component expo
 -   To contribute to Phasorite Networks, fork and create a [Pull-Request](https://help.github.com/articles/creating-a-pull-request)
 -   You might want to discuss with us in the [Phasorite Networks Discord](https://discord.gg/YsAhwENUuJ) before making a PR
 
+---
+
 <a href="https://ko-fi.com/milosworks">
     <img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg">
 </a>
