@@ -123,7 +123,7 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 
 		val name = component.textArea("text-area:network-name").apply {
 			onChanged().subscribe { t ->
-				if (t.length > 4) clearError(component)
+				if (t.length > 3) clearError(component)
 			}
 		}
 
@@ -154,8 +154,8 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 		if (network != null) colorPicker.selectedColor(Color.ofArgb(network.color))
 
 		component.button("button:form-type").onPress {
-			if (name.value.length <= 4) {
-				displayError(component, "Name shouldn't be less or equal than 4.")
+			if (name.value.length <= 3) {
+				displayError(component, "The name must be at least 3 characters long.")
 				return@onPress
 			}
 
