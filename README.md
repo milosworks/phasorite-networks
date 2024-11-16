@@ -128,6 +128,7 @@ Converts Budding Amethyst into Budding Phasorite
 
 - [Textures](src/main/resources/assets/phasoritenetworks/textures)
   and [Models](src/main/resources/assets/phasoritenetworks/models)
+
     - (c) 2024 Milosworks
     - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 
