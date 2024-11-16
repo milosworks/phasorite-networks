@@ -8,6 +8,7 @@ plugins {
 	alias(libs.plugins.mdg)
 	alias(libs.plugins.kotlin.jvm)
 	alias(libs.plugins.kotlin.serialization)
+	alias(libs.plugins.maven.publish)
 }
 
 repositories {
@@ -41,6 +42,7 @@ dependencies {
 }
 
 val modId = project.properties["mod_id"] as String
+val modVersion = project.properties["mod_version"] as String
 base.archivesName = modId
 
 neoForge {
@@ -133,7 +135,7 @@ tasks {
 	}
 
 	jar {
-		archiveFileName.set("${modId}-${project.properties["mod_version"]}.jar")
+		archiveFileName.set("${modId}-${modVersion}.jar")
 		from("LICENSE")
 	}
 
@@ -167,5 +169,22 @@ idea {
 	module {
 		isDownloadSources = true
 		isDownloadJavadoc = true
+	}
+}
+
+publishing {
+	publications {
+		create<MavenPublication>("mavenJava") {
+			groupId = project.properties["mod_group_id"] as String
+			artifactId = modId
+			version = modVersion
+
+			from(components["java"])
+		}
+	}
+	repositories {
+		maven {
+			url = uri("file://${project.projectDir}/repo")
+		}
 	}
 }

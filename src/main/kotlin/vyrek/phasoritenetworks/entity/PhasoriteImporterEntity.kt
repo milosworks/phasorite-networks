@@ -6,7 +6,6 @@ import net.minecraft.core.Direction
 import net.minecraft.world.level.block.state.BlockState
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
-import vyrek.phasoritenetworks.common.networks.NetworkStatistics
 import vyrek.phasoritenetworks.common.networks.TransferHandler
 import vyrek.phasoritenetworks.init.PNEntities
 
@@ -62,7 +61,6 @@ class PhasoriteImporterEntity(
 			buffer += toReceive
 			// Node that gave the energy (this is why we don't support null side)
 			nodes[side.get3DDataValue()]!!.throughput += toReceive
-			network.statistics.addEnergyTick(toReceive, NetworkStatistics.EnergyType.IMPORTED)
 
 			return toReceive
 		}

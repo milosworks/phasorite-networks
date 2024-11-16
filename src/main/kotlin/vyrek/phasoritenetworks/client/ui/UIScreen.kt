@@ -152,7 +152,8 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 				"priority" to formatStr(menu.priority),
 				"overrideMode" to menu.overrideMode.toString(),
 				"id" to menu.blockId,
-				"throughput" to parseLong(menu.throughput),
+				"throughput" to if (menu.clientEntity.componentType == ComponentType.EXPORTER) "-" else "+" +
+						parseLong(menu.throughput),
 				"rawThroughput" to formatStr(menu.throughput),
 				"throughputColor" to Color.ofArgb((if (menu.clientEntity.componentType == ComponentType.EXPORTER) ComponentsTab.EXPORTER_COLOR else ComponentsTab.IMPORTER_COLOR).toInt())
 					.asHexString(false)
@@ -230,7 +231,15 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 		when (activeTab) {
 			Tabs.COMPONENT -> {
 				rootComponent.label("label:throughput")
-					.text(Component.literal(parseLong(menu.throughput)))
+					.text(
+						Component.literal(
+							"${if (menu.clientEntity.componentType == ComponentType.EXPORTER) "-" else "+"}${
+								parseLong(
+									menu.throughput
+								)
+							}"
+						)
+					)
 					.tooltip(Component.literal("${formatStr(menu.throughput)} FE/t"))
 			}
 

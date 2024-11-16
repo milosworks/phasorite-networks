@@ -37,9 +37,9 @@ class Network(
 
 	var requestedEnergy = 0L
 
-	val statistics = NetworkStatistics()
+	val statistics = NetworkStatistics(this)
 
-	private fun <T : PhasoriteComponentEntity> filterComponents(type: ComponentType): List<T> {
+	fun <T : PhasoriteComponentEntity> filterComponents(type: ComponentType): List<T> {
 		@Suppress("UNCHECKED_CAST")
 		return (components.filter { c ->
 			c.componentType == type
@@ -62,29 +62,26 @@ class Network(
 			val eligibleExporters =
 				exporters.filter { it.transferHandler.canDistribute && it.transferHandler.buffer < it.transferHandler.requestedLimit }
 
-			while (imp.transferHandler.canExtract && eligibleExporters.isNotEmpty()) {
-				var distributed = false
+			for (exp in eligibleExporters) {
+				if (!imp.transferHandler.canExtract) break
 
-				for (exp in eligibleExporters) {
-					if (!imp.transferHandler.canExtract) break
-
-					val lim = exp.transferHandler.bufferLimiter()
-					val taken = imp.transferHandler.extractFromBuffer(lim)
-					if (taken > 0) {
-						exp.transferHandler.buffer += taken
-						distributed = true
-					}
+				val lim = exp.transferHandler.bufferLimiter()
+				val taken = imp.transferHandler.extractFromBuffer(lim)
+				if (taken > 0) {
+					exp.transferHandler.buffer += taken
 				}
-
-				if (!distributed) break
 			}
 		}
 
 		requestedEnergy = 0
-		components.forEach { com ->
+		for (com in components) {
 			com.transferHandler.stop()
 
-			if (com is PhasoriteExporterEntity) requestedEnergy += com.transferHandler.requestedLimit
+			if (com is PhasoriteExporterEntity) {
+				if (requestedEnergy == Long.MAX_VALUE) continue
+				if (com.transferHandler.requestedLimit == Long.MAX_VALUE) requestedEnergy = Long.MAX_VALUE
+				else requestedEnergy += com.transferHandler.requestedLimit
+			}
 		}
 
 		statistics.onTick(server.tickCount)
@@ -178,8 +175,8 @@ class Network(
 			if (includeExtra) PNEndecsData.ExtraNetworkData(
 				filterComponents<PhasoriteImporterEntity>(ComponentType.IMPORTER).size,
 				filterComponents<PhasoriteExporterEntity>(ComponentType.EXPORTER).size,
-				statistics.getTransferredEnergy(NetworkStatistics.EnergyType.IMPORTED),
-				statistics.getTransferredEnergy(NetworkStatistics.EnergyType.EXPORTED)
+				statistics.inputEnergy,
+				statistics.exportEnergy
 			) else null
 		)
 	}

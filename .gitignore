@@ -1,4 +1,4 @@
-# eclipse
+# Eclipse
 bin
 *.launch
 .settings
@@ -6,21 +6,31 @@ bin
 .classpath
 .project
 
-# idea
+# Idea
 out
 *.ipr
 *.iws
 *.iml
 .idea
 
-# vscode
+# VScode
 /.vscode/
 
-# gradle
-build
+# Gradle
 .gradle
+build/
+**/build/
 
-# other
+# Other
 eclipse
 run
 runs
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Generated Sources
+/src/*/generated/

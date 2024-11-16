@@ -47,3 +47,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 # NeoForge
 mdg = { id = "net.neoforged.moddev", version.ref = "mdg" }
+
+# Maven Publish
+maven-publish = { id = "maven-publish" }

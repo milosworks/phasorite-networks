@@ -1,0 +1,44 @@
+name: Bug Report
+description: File a new bug report
+labels: [ bug ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For questions please go to the discord: https://discord.gg/dVPqq2U4xy
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: |
+        Describe the issue in as much detail as possible.
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files into it.
+      placeholder: |
+        Steps to reproduce the bug, example steps:
+        1. Place block
+        2. Open block
+        3. Observe behavior
+        4. See error logs below
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Mod Version
+      description: In which version of the mod is this bug occurring?
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority this issue should have
+      description: Please be realistic. If you need to elaborate on your reasoning, please use the Issue Description field above.
+      options:
+        - Low (slightly annoying)
+        - Medium (should be fixed soon)
+        - High (immediate attention needed)
+  - type: input
+    id: logs
+    attributes:
+      label: Your latest.log
+      description: Please share your 'latest.log' file, located in the /instance_name/logs/ directory. Upload it to https://mclo.gs/ and provide the link here.
+      placeholder: https://mclo.gs/

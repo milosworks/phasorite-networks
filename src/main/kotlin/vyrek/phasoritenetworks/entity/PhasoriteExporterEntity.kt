@@ -6,7 +6,6 @@ import net.minecraft.world.level.block.state.BlockState
 import vyrek.phasoritenetworks.common.components.PhasoriteComponentEntity
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.DistributionMode
-import vyrek.phasoritenetworks.common.networks.NetworkStatistics
 import vyrek.phasoritenetworks.common.networks.TransferHandler
 import vyrek.phasoritenetworks.init.PNEntities
 
@@ -61,7 +60,6 @@ class PhasoriteExporterEntity(
 					distributeFillFirst()
 				}
 			}
-			network.statistics.addEnergyTick(distributed, NetworkStatistics.EnergyType.EXPORTED)
 
 			return distributed
 		}
