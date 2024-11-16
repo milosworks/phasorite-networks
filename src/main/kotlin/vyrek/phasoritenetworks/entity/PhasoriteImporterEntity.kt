@@ -69,6 +69,8 @@ class PhasoriteImporterEntity(
 	inner class EnergyStorage(private val side: Direction) : ILongEnergyStorage {
 		override fun receive(energy: Long, simulate: Boolean): Long {
 			if (network.isValid) {
+				if (transferHandler.nodes[side.get3DDataValue()] = null) return 0
+
 				val toReturn = transferHandler.receive(energy, side, simulate)
 				level?.sendBlockUpdated(blockPos, blockState, blockState, 0)
 
