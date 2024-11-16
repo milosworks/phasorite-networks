@@ -45,7 +45,7 @@ The phasorite importer is probably the first component you'll need to craft, thi
 it to all the exporters in the network.
 
 <div align="center">
-    <img height="256" src="https://i.imgur.com/O6Y6QqZ.png">
+    <img height="256" src="https://i.imgur.com/lSL0ff8.png">
     <img height="128" src="https://i.imgur.com/df8TAbU.png">
 </div>
 
@@ -55,7 +55,7 @@ The phasorite exporter is the second component you'll craft, this component expo
 received.
 
 <div align="center">
-    <img height="256" src="https://i.imgur.com/gSLeB2Y.png">
+    <img height="256" src="https://i.imgur.com/T37rarI.png">
     <img height="128" src="https://i.imgur.com/wx7ySAP.png">
 </div>
 
@@ -71,7 +71,7 @@ It produces [Phasorite Clusters](#phasorite-clusters-and-buds), these clusters w
 Crystals or Charged Phasorite Crystals
 
 <div align="center">
-  <img height="256" src="https://i.imgur.com/gf8tPHH.png">
+  <img height="256" src="https://i.imgur.com/4rAG8M5.png">
 </div>
 
 #### Phasorite Clusters And Buds
@@ -98,7 +98,7 @@ These materials are just craftable and needed to make components, etc.
 Needed in every component.
 
 <div align="center">
-  <img height="128" src="https://i.imgur.com/2DujnvY.png">
+  <img height="128" src="https://i.imgur.com/BWqW1Lj.png">
   <img height="128" src="https://i.imgur.com/N52GcJZ.png">
 </div>
 
@@ -107,7 +107,7 @@ Needed in every component.
 Needed in every component.
 
 <div align="center">
-  <img height="128" src="https://i.imgur.com/uVdiSRf.png">
+  <img height="128" src="https://i.imgur.com/3xDPYsR.png">
   <img height="128" src="https://i.imgur.com/Zp6OU2F.png">
 </div>
 
@@ -116,20 +116,18 @@ Needed in every component.
 Converts Budding Amethyst into Budding Phasorite
 
 <div align="center">
-  <img height="128" src="https://i.imgur.com/aTPfcgJ.png">
+  <img height="128" src="https://i.imgur.com/apafoOA.png">
   <img height="128" src="https://i.imgur.com/3VhnoyF.png">
 </div>
 
 ## License
 
 - Phasorite Networks
-
     - (c) 2024 Milosworks
     - [![License: LGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 
 - [Textures](src/main/resources/assets/phasoritenetworks/textures)
   and [Models](src/main/resources/assets/phasoritenetworks/models)
-
     - (c) 2024 Milosworks
     - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0)
 
