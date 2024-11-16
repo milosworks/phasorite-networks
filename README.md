@@ -8,7 +8,7 @@
     <a href="https://modrinth.com/mod/phasorite-networks"><img alt="Available For Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
     <a href="https://www.curseforge.com/minecraft/search?page=1&pageSize=20&sortBy=relevancy&class=mc-mods&search=phasorite+networks&version=1.21.1&gameVersionTypeId=6"><img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
     <br>    
-    <a href="https://discord.gg/YsAhwENUuJ"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
+    <a href="https://discord.gg/dVPqq2U4xy"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
     <a href="https://ko-fi.com/milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
 </div>
 
@@ -144,6 +144,6 @@ Converts Budding Amethyst into Budding Phasorite
 
 - To contribute to Phasorite Networks, fork and create
   a [Pull-Request](https://help.github.com/articles/creating-a-pull-request)
-- You might want to discuss with us in the [Phasorite Networks Discord](https://discord.gg/YsAhwENUuJ) before making a
+- You might want to discuss with us in the [Phasorite Networks Discord](https://discord.gg/dVPqq2U4xy) before making a
   PR
 
