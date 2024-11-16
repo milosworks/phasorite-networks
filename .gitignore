@@ -33,4 +33,4 @@ runs
 $RECYCLE.BIN/
 
 # Generated Sources
-/src/generated/
+src/generated/
