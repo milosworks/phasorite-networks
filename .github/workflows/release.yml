@@ -78,7 +78,7 @@ jobs:
 
           loaders: neoforge
           java: 21
-          version: "$TAG"
+          version: ${{env.TAG}}
           changelog-file: CHANGELOG.md
           game-versions: 1.21.1
 
