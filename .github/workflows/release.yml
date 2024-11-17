@@ -78,7 +78,7 @@ jobs:
 
           loaders: neoforge
           java: 21
-          version: ${{env.TAG}}
+          version: ${{ env.TAG }}
           changelog-file: CHANGELOG.md
           game-versions: 1.21.1
           dependencies: |
@@ -91,4 +91,4 @@ jobs:
           modrinth-id: ZEvlCeIH
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 
-          files: download/!(*-@(sources)).jar
+          files: download/*.jar
