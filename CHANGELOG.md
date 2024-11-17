@@ -22,3 +22,5 @@
 * added component info on tooltips.
 * fixed a bug when a player does not place a component it doesn't let you open it.
 * added full translation support
+
+**Full Changelog**: https://github.com/milosworks/phasorite-networks/compare/v0.0.1...0.0.1-beta
