@@ -72,7 +72,7 @@ jobs:
           echo "TAG=${TAG#v}" >> $GITHUB_ENV
           echo "$TAG"
 
-      - uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659
+      - uses: Kir-Antipov/mc-publish@v3.3
         with:
           name: Phasorite Networks ${{ github.event.release.tag_name }}
 
@@ -81,17 +81,14 @@ jobs:
           version: ${{env.TAG}}
           changelog-file: CHANGELOG.md
           game-versions: 1.21.1
+          dependencies: |
+            owo-lib | depends
+            kotlin-for-forge | depends
 
           curseforge-id: 1140963
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          curseforge-dependencies: |
-            owo-lib | depends
-            kotlin-for-forge | depends
 
           modrinth-id: ZEvlCeIH
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          modrinth-dependencies: |
-            owo-lib | depends
-            kotlin-for-forge | depends
 
           files: download/!(*-@(sources)).jar
