@@ -29,11 +29,23 @@ repositories {
 	}
 	maven("https://maven.wispforest.io") { name = "owolib" }
 	maven("https://maven.su5ed.dev/releases") { name = "Syntra Forgified Fabric Api" }
+	repositories {
+		exclusiveContent {
+			forRepository {
+				maven("https://cursemaven.com") { name = "CurseMaven" }
+			}
+			filter {
+				includeGroup("curse.maven")
+			}
+		}
+	}
 }
 
 dependencies {
 	implementation(libs.kotlin.neoforge)
 	implementation(libs.owolib)
+	implementation(libs.ae2)
+	implementation(libs.jade)
 
 	accessTransformers(libs.owolib.dev)
 	interfaceInjectionData(libs.owolib.dev)
@@ -42,7 +54,7 @@ dependencies {
 }
 
 val modId = project.properties["mod_id"] as String
-val modVersion = project.properties["mod_version"] as String
+val modVersion = System.getenv("TAG") ?: project.properties["mod_version"] as String
 base.archivesName = modId
 
 neoForge {

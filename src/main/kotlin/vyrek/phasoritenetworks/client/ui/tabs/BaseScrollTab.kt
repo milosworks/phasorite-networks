@@ -6,7 +6,8 @@ import net.minecraft.network.chat.Component
 import vyrek.phasoritenetworks.client.ui.UIScreen
 import vyrek.phasoritenetworks.client.ui.flowLayout
 import vyrek.phasoritenetworks.client.ui.label
-import vyrek.phasoritenetworks.client.ui.textArea
+import vyrek.phasoritenetworks.client.ui.textBox
+import vyrek.phasoritenetworks.common.Translations
 
 fun <E : Enum<E>> E.next(): E {
 	val entries = this.declaringJavaClass.enumConstants
@@ -34,14 +35,14 @@ abstract class BaseScrollTab<E : Enum<E>, T>(screen: UIScreen) : BaseTab(screen)
 				scroll.clearChildren()
 				sortedBy = sortedBy.next()
 
-				text(Component.literal("§n${sortedBy.name}"))
+				text(Component.literal("§n${Translations.relative(sortedBy.name).string}"))
 
 				buildScroll()
 
 				return@textClickHandler true
 			}
 		}
-		root.textArea("text-area:search").apply {
+		root.textBox("text-box:search").apply {
 			onChanged().subscribe { v ->
 				scroll.clearChildren()
 

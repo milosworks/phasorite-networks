@@ -6,6 +6,7 @@ import io.wispforest.owo.ui.container.CollapsibleContainer
 import io.wispforest.owo.ui.container.FlowLayout
 import io.wispforest.owo.ui.core.Color
 import vyrek.phasoritenetworks.client.ui.*
+import vyrek.phasoritenetworks.common.Translations
 import vyrek.phasoritenetworks.common.networks.NetworkUserAccess
 import vyrek.phasoritenetworks.common.searchBy
 import vyrek.phasoritenetworks.networking.PNEndecsData
@@ -85,6 +86,7 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			screen.uiModel.expandTemplate(
 				FlowLayout::class, "tab:network:data", mutableMapOf(
 					"id" to data.id.toString(),
+					"tooltip" to Translations.NETWORK_ID(data.id).string,
 					"name" to data.name,
 					"color" to Color.ofArgb(data.color).asHexString(true)
 				)
@@ -121,7 +123,7 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
 		}
 
-		val name = component.textArea("text-area:network-name").apply {
+		val name = component.textBox("text-box:network-name").apply {
 			onChanged().subscribe { t ->
 				if (t.length > 3) clearError(component)
 			}
@@ -131,7 +133,7 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 		val collapsible = component.childById(CollapsibleContainer::class, "collapsible:container-password").apply {
 			onToggled().subscribe { toggle ->
 				if (network != null && network.password != "" && toggle) {
-					component.textArea("text-area:network-password").apply {
+					component.textBox("text-box:network-password").apply {
 						text(network.password)
 					}
 				}
@@ -162,7 +164,7 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			if (!collapsible.expanded()) collapsible.toggleExpansion()
 
 			val private = component.checkbox("checkbox:network-private")
-			val pwd = if (private.selected()) "" else component.textArea("text-area:network-password").value
+			val pwd = if (private.selected()) "" else component.textBox("text-box:network-password").value
 
 			menu.putNetwork(
 				if (activeTab == Tabs.NETWORK_CREATE) PutType.CREATE else PutType.UPDATE,
@@ -213,7 +215,7 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
 		}
 
-		val pwd = component.textArea("text-area:network-password")
+		val pwd = component.textBox("text-box:network-password")
 
 		component.button("button:network-enter").onPress {
 			if (tries >= 3) return@onPress screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)

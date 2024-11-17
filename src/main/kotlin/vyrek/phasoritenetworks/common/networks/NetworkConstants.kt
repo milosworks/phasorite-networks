@@ -6,6 +6,7 @@ object NetworkConstants {
 
 	const val ID = "network_id"
 	const val NAME = "name"
+	const val COMPONENT_NAME = "component_name"
 	const val PRIORITY = "priority"
 	const val OVERRIDE_MODE = "override_mode"
 	const val RAW_LIMIT = "raw_limit"

@@ -1,0 +1,28 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "advanced_ae"
+    }
+  ],
+  "type": "advanced_ae:reaction",
+  "input_energy": 1300000,
+  "input_fluid": {
+    "amount": 1000,
+    "ingredient": {
+      "fluid": "minecraft:water"
+    }
+  },
+  "input_items": [
+    {
+      "ingredient": {
+        "item": "phasoritenetworks:phasorite_crystal"
+      }
+    }
+  ],
+  "output": {
+    "#": 64,
+    "#t": "ae2:i",
+    "id": "phasoritenetworks:charged_phasorite_crystal"
+  }
+}

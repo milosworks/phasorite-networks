@@ -16,7 +16,7 @@ class ComponentTab(screen: UIScreen) : BaseTab(screen) {
 	override var height = 201
 
 	override fun build(root: FlowLayout) {
-		root.textArea("text-area:component-name")
+		root.textBox("text-box:component-name")
 			.apply {
 				focusGained().subscribe {
 					if (!isBlockOwner()) return@subscribe
@@ -46,7 +46,7 @@ class ComponentTab(screen: UIScreen) : BaseTab(screen) {
 				}
 			}
 
-		root.textArea("text-area:component-limit").apply {
+		root.textBox("text-box:component-limit").apply {
 			onChanged().subscribe {
 				if (!canPlayerEdit()) {
 					text(formatStr(menu.limit))
@@ -65,7 +65,7 @@ class ComponentTab(screen: UIScreen) : BaseTab(screen) {
 			}
 		}
 
-		root.textArea("text-area:component-priority").apply {
+		root.textBox("text-box:component-priority").apply {
 			onChanged().subscribe { preValue ->
 				if (!canPlayerEdit()) {
 					text(formatStr(menu.priority))

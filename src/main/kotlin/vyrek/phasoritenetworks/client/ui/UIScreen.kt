@@ -1,22 +1,25 @@
 package vyrek.phasoritenetworks.client.ui
 
+import com.mojang.blaze3d.platform.InputConstants
 import io.wispforest.owo.ui.base.BaseUIModelHandledScreen
 import io.wispforest.owo.ui.base.BaseUIModelScreen.DataSource
 import io.wispforest.owo.ui.component.ButtonComponent
 import io.wispforest.owo.ui.component.CheckboxComponent
 import io.wispforest.owo.ui.component.LabelComponent
-import io.wispforest.owo.ui.component.TextAreaComponent
+import io.wispforest.owo.ui.component.TextBoxComponent
 import io.wispforest.owo.ui.container.Containers
 import io.wispforest.owo.ui.container.FlowLayout
 import io.wispforest.owo.ui.core.Color
 import io.wispforest.owo.ui.core.ParentComponent
 import io.wispforest.owo.ui.core.Sizing
+import io.wispforest.owo.ui.core.Surface
 import io.wispforest.owo.ui.parsing.UIModel
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 import net.minecraft.world.entity.player.Inventory
 import vyrek.phasoritenetworks.PhasoriteNetworks
 import vyrek.phasoritenetworks.client.ui.tabs.*
+import vyrek.phasoritenetworks.common.Translations
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import java.text.NumberFormat
 import kotlin.math.abs
@@ -33,7 +36,7 @@ fun <T : OwoComponent> UIModel.expandTemplate(
 	parameters: Map<String, String> = mutableMapOf()
 ): T = this.expandTemplate(expectedClass.java, name, parameters)
 
-fun ParentComponent.textArea(id: String): TextAreaComponent = this.childById(TextAreaComponent::class, id)
+fun ParentComponent.textBox(id: String): TextBoxComponent = this.childById(TextBoxComponent::class, id)
 fun ParentComponent.checkbox(id: String): CheckboxComponent = this.childById(CheckboxComponent::class, id)
 fun ParentComponent.flowLayout(id: String): FlowLayout = this.childById(FlowLayout::class, id)
 fun ParentComponent.button(id: String): ButtonComponent = this.childById(ButtonComponent::class, id)
@@ -108,6 +111,10 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 	 * The tab that is shown when you open the screen
 	 */
 	override fun build(root: FlowLayout) {
+		rootComponent.surface(
+			Surface.blur(10f, minecraft?.options?.menuBackgroundBlurriness?.toFloat() ?: 10f)
+		)
+
 		buildTab(root, Tabs.COMPONENT, ::ComponentTab)
 	}
 
@@ -174,8 +181,9 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 					"private" to (network?.private?.toString() ?: "true"),
 					"password" to (network?.password ?: ""),
 					"color" to (network?.color?.let { Color.ofArgb(it).asHexString(true) } ?: "#00000000"),
-					"formType" to activeTab.name.split("_")[1].lowercase()
-						.replaceFirstChar { c -> c.uppercase() }
+					"formType" to Translations.relative(
+						activeTab.name.split("_")[1].lowercase()
+							.replaceFirstChar { c -> c.uppercase() }).string
 				)
 			}
 
@@ -231,25 +239,26 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 		when (activeTab) {
 			Tabs.COMPONENT -> {
 				rootComponent.label("label:throughput")
-					.text(
-						Component.literal(
-							"${if (menu.clientEntity.componentType == ComponentType.EXPORTER) "-" else "+"}${
-								parseLong(
-									menu.throughput
-								)
-							}"
-						)
-					)
-					.tooltip(Component.literal("${formatStr(menu.throughput)} FE/t"))
+					.text(Translations.readableEnergy(menu.clientEntity.componentType, menu.throughput))
+					.tooltip(Translations.energySuffix(formatStr(menu.throughput)))
 			}
 
 			else -> {}
 		}
 	}
 
+	/**
+	 * Handle this key to not close the inventory while in a textbox, not ideal.
+	 */
 	override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-		if (keyCode == 69) return false
+		val mouseKey = InputConstants.getKey(keyCode, scanCode)
+		if (minecraft?.options?.keyInventory?.isActiveAndMatches(mouseKey) != false) return true
 
 		return super.keyPressed(keyCode, scanCode, modifiers)
 	}
+
+	/**
+	 * So the "Inventory" label doesn't appear on top of my screen.
+	 */
+	override fun renderLabels(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {}
 }

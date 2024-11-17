@@ -2,6 +2,7 @@ package vyrek.phasoritenetworks.client.ui.tabs
 
 import io.wispforest.owo.ui.container.FlowLayout
 import vyrek.phasoritenetworks.client.ui.*
+import vyrek.phasoritenetworks.common.Translations
 import vyrek.phasoritenetworks.common.networks.NetworkUserAccess
 import vyrek.phasoritenetworks.networking.PNEndecsData
 
@@ -29,8 +30,12 @@ class MembersTab(screen: UIScreen) : BaseScrollTab<MembersSortMethod, PNEndecsDa
 					"i" to data.uuid.toString(),
 					"username" to data.name,
 					"uuid" to data.uuid.toString(),
-					"access" to NetworkUserAccess.entries[data.access].name.lowercase()
-						.replaceFirstChar { it.uppercaseChar() },
+					"access" to Translations.MAKE(
+						Translations.relative(
+							NetworkUserAccess.entries[data.access].name.lowercase()
+								.replaceFirstChar { it.uppercaseChar() }
+						)
+					).string,
 					"accessColor" to when (NetworkUserAccess.entries[data.access]) {
 						NetworkUserAccess.ADMIN -> ADMIN_COLOR
 						NetworkUserAccess.MEMBER -> MEMBER_COLOR
@@ -51,7 +56,7 @@ class MembersTab(screen: UIScreen) : BaseScrollTab<MembersSortMethod, PNEndecsDa
 		)
 	}
 
-	fun buildManageTab(data: PNEndecsData.ClientUserData) {
+	private fun buildManageTab(data: PNEndecsData.ClientUserData) {
 		val nextAccess = NetworkUserAccess.entries[data.access].next()
 
 		screen.rootComponent.child(

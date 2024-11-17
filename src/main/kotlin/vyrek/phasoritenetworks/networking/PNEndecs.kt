@@ -90,6 +90,18 @@ object PNEndecsData {
 		val color: Int
 	)
 
+	// Represents the data of a component (e.g., block entity) on the network used for data components.
+	data class ItemComponentData(
+		val name: String,
+		val priority: Int,
+		val overrideMode: Boolean,
+		val rawLimit: Int,
+		val limitlessMode: Boolean,
+		val networkId: Uuid,
+		val networkName: String,
+		val color: Int
+	)
+
 	// Represents raw data of components on the network, including their name, position, and type
 	data class RawComponentData(
 		val name: String,
@@ -111,15 +123,16 @@ object PNEndecs {
 		PNEndecsData::RawComponentData
 	)
 
-	val COMPONENT_ENDEC: StructEndec<PNEndecsData.ComponentData> = StructEndecBuilder.of(
-		stringField("name", PNEndecsData.ComponentData::name),
-		intField("priority", PNEndecsData.ComponentData::priority),
-		booleanField("overrideMode", PNEndecsData.ComponentData::overrideMode),
-		intField("rawLimit", PNEndecsData.ComponentData::rawLimit),
-		booleanField("limitlessMode", PNEndecsData.ComponentData::limitlessMode),
-		Endecs.UUID.fieldOf("networkId", PNEndecsData.ComponentData::networkId),
-		intField("color", PNEndecsData.ComponentData::color),
-		PNEndecsData::ComponentData
+	val COMPONENT_ENDEC: StructEndec<PNEndecsData.ItemComponentData> = StructEndecBuilder.of(
+		stringField("name", PNEndecsData.ItemComponentData::name),
+		intField("priority", PNEndecsData.ItemComponentData::priority),
+		booleanField("overrideMode", PNEndecsData.ItemComponentData::overrideMode),
+		intField("rawLimit", PNEndecsData.ItemComponentData::rawLimit),
+		booleanField("limitlessMode", PNEndecsData.ItemComponentData::limitlessMode),
+		Endecs.UUID.fieldOf("networkId", PNEndecsData.ItemComponentData::networkId),
+		stringField("networkName", PNEndecsData.ItemComponentData::networkName),
+		intField("color", PNEndecsData.ItemComponentData::color),
+		PNEndecsData::ItemComponentData
 	)
 
 	val CLIENT_USER_ENDEC: StructEndec<PNEndecsData.ClientUserData> = StructEndecBuilder.of(

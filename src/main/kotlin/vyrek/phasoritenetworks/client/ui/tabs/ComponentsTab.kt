@@ -8,6 +8,7 @@ import io.wispforest.owo.ui.core.Surface
 import net.minecraft.network.chat.Component
 import vyrek.phasoritenetworks.client.render.Highlight
 import vyrek.phasoritenetworks.client.ui.*
+import vyrek.phasoritenetworks.common.Translations
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.searchBy
 import vyrek.phasoritenetworks.init.PNBlocks
@@ -129,17 +130,19 @@ class ComponentsTab(screen: UIScreen) :
 					return@subscribe true
 				}
 
-				val tooltipMessage = if (data.globalPos.dimension == menu.player.level().dimension()) {
-					listOf(
-						Component.literal("X: §7${data.globalPos.pos.x}§r | Y: §7${data.globalPos.pos.y}§r | Z: §7${data.globalPos.pos.z}§r"),
-						Component.literal("§7Click to outline block")
+				val tooltipMessage = mutableListOf<Component>(
+					Translations.COORDINATES(
+						data.globalPos.pos.x,
+						data.globalPos.pos.y,
+						data.globalPos.pos.z
 					)
-				} else {
-					listOf(
-						Component.literal("X: §7${data.globalPos.pos.x}§r | Y: §7${data.globalPos.pos.y}§r | Z: §7${data.globalPos.pos.z}§r"),
-						Component.literal("Dimension: ${capitalizeSentence(data.globalPos.dimension.location().path)}")
+				).apply {
+					add(
+						if (data.globalPos.dimension == menu.player.level().dimension()) Translations.OUTLINE
+						else Translations.DIMENSION(capitalizeSentence(data.globalPos.dimension.location().path))
 					)
 				}
+
 
 				tooltip(tooltipMessage)
 			}

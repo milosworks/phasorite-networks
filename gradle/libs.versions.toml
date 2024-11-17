@@ -21,6 +21,12 @@ owolib-dev = "0.12.15-beta.5+1.21"
 # Grand power
 grandpower = "3.0.2"
 
+# AE2
+ae2 = "5662490"
+
+# Jade
+jade = "5884231"
+
 [libraries]
 # Kotlin
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
@@ -39,6 +45,12 @@ neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
 
 # GrandPower
 grandpower = { module = "dev.technici4n:GrandPower", version.ref = "grandpower" }
+
+# AE2
+ae2 = { module = "curse.maven:applied-energistics-2-223794", version.ref = "ae2" }
+
+# Jade
+jade = { module = "curse.maven:jade-324717", version.ref = "jade" }
 
 [plugins]
 # Kotlin

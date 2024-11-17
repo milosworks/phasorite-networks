@@ -10,7 +10,6 @@
             <vertical-alignment>center</vertical-alignment>
 
             <surface>
-                <!--                <vanilla-translucent/>-->
                 <blur quality="10" size="10"/>
             </surface>
         </flow-layout>
@@ -25,7 +24,7 @@
 
     <!-- Components: type:name -->
     <!-- Ex: button:close -->
-    <!-- Ex: text-area:network-name -->
+    <!-- Ex: text-box:network-name -->
 
     <!-- UI Conventions -->
 
@@ -38,45 +37,41 @@
             <flow-layout direction="vertical">
                 <children>
                     <label>
-                        <text>Name</text>
+                        <text translate="true">gui.phasoritenetworks.name</text>
 
                         <margins>
                             <all>2</all>
                         </margins>
                     </label>
-                    <text-area id="text-area:component-name">
+                    <text-box id="text-box:component-name">
                         <max-length>22</max-length>
-                        <max-lines>1</max-lines>
-                        <display-char-count>true</display-char-count>
-
                         <text>{{name}}</text>
 
                         <vertical-alignment>center</vertical-alignment>
 
                         <sizing>
                             <horizontal method="fixed">150</horizontal>
-                            <vertical method="fixed">30</vertical>
+                            <vertical method="fixed">18</vertical>
                         </sizing>
 
                         <margins>
                             <bottom>5</bottom>
                         </margins>
-                    </text-area>
+                    </text-box>
 
                     <flow-layout direction="horizontal">
                         <children>
                             <flow-layout direction="vertical">
                                 <children>
                                     <label>
-                                        <text>Limit</text>
+                                        <text translate="true">gui.phasoritenetworks.network.limit</text>
 
                                         <margins>
                                             <all>2</all>
                                         </margins>
                                     </label>
-                                    <text-area id="text-area:component-limit">
+                                    <text-box id="text-box:component-limit">
                                         <max-length>10</max-length>
-                                        <max-lines>1</max-lines>
 
                                         <text>{{limit}}</text>
 
@@ -84,22 +79,21 @@
                                             <horizontal method="fixed">78</horizontal>
                                             <vertical method="fixed">18</vertical>
                                         </sizing>
-                                    </text-area>
+                                    </text-box>
                                 </children>
                             </flow-layout>
 
                             <flow-layout direction="vertical">
                                 <children>
                                     <label>
-                                        <text>Priority</text>
+                                        <text translate="true">gui.phasoritenetworks.network.priority</text>
 
                                         <margins>
                                             <all>2</all>
                                         </margins>
                                     </label>
-                                    <text-area id="text-area:component-priority">
+                                    <text-box id="text-box:component-priority">
                                         <max-length>4</max-length>
-                                        <max-lines>1</max-lines>
 
                                         <text>{{priority}}</text>
 
@@ -107,7 +101,7 @@
                                             <horizontal method="fixed">50</horizontal>
                                             <vertical method="fixed">18</vertical>
                                         </sizing>
-                                    </text-area>
+                                    </text-box>
                                 </children>
 
                                 <margins>
@@ -122,7 +116,7 @@
                     </flow-layout>
 
                     <checkbox id="checkbox:component-override">
-                        <text>Override Mode</text>
+                        <text translate="true">gui.phasoritenetworks.network.override</text>
 
                         <checked>{{overrideMode}}</checked>
 
@@ -132,7 +126,7 @@
                     </checkbox>
 
                     <checkbox id="checkbox:component-limitless">
-                        <text>Limitless Mode</text>
+                        <text translate="true">gui.phasoritenetworks.network.limitless</text>
 
                         <checked>{{limitlessMode}}</checked>
 
@@ -160,7 +154,7 @@
                             <flow-layout direction="vertical">
                                 <children>
                                     <label>
-                                        <text>Throughput:</text>
+                                        <text translate="true">gui.phasoritenetworks.network.throughput</text>
 
                                         <margins>
                                             <bottom>5</bottom>
@@ -178,16 +172,6 @@
 
                         <vertical-alignment>center</vertical-alignment>
                     </flow-layout>
-
-                    <!--                    <texture texture="diamond_block">-->
-                    <!--                        <margins>-->
-                    <!--                            <top>10</top>-->
-                    <!--                        </margins>-->
-                    <!--                        <sizing>-->
-                    <!--                            <vertical method="fixed">40</vertical>-->
-                    <!--                            <horizontal method="fixed">40</horizontal>-->
-                    <!--                        </sizing>-->
-                    <!--                    </texture>-->
                 </children>
 
                 <padding>
@@ -296,8 +280,7 @@
                                 <horizontal-alignment>center</horizontal-alignment>
                             </flow-layout>
 
-                            <text-area id="text-area:search">
-                                <max-lines>1</max-lines>
+                            <text-box id="text-box:search">
                                 <max-length>20</max-length>
 
                                 <sizing>
@@ -308,14 +291,14 @@
                                 <margins>
                                     <bottom>5</bottom>
                                 </margins>
-                            </text-area>
+                            </text-box>
 
                             <flow-layout direction="vertical">
                                 <children>
                                     <flow-layout direction="horizontal">
                                         <children>
                                             <label>
-                                                <text>Sorted by:</text>
+                                                <text translate="true">gui.phasoritenetworks.sorted</text>
 
                                                 <margins>
                                                     <right>5</right>
@@ -323,7 +306,7 @@
                                             </label>
 
                                             <label id="label:sort">
-                                                <text>§nAll</text>
+                                                <text translate="true">gui.phasoritenetworks.All</text>
 
                                                 <color>#CBC0C1</color>
                                             </label>
@@ -401,7 +384,7 @@
                 <children>
                     <label>
                         <text>{{name}}</text>
-                        <tooltip-text>Network ID: {{id}}</tooltip-text>
+                        <tooltip-text>{{tooltip}}</tooltip-text>
                     </label>
                 </children>
 
@@ -448,10 +431,9 @@
                             <flow-layout direction="vertical">
                                 <children>
                                     <label>
-                                        <text>Are you sure you want to</text>
-                                    </label>
-                                    <label>
-                                        <text>delete the network:</text>
+                                        <text translate="true">gui.phasoritenetworks.confirm</text>
+                                        <horizontal-text-alignment>center</horizontal-text-alignment>
+                                        <vertical-text-alignment>center</vertical-text-alignment>
                                     </label>
                                 </children>
 
@@ -474,7 +456,7 @@
                             </label>
 
                             <label>
-                                <text>This action is not reversible</text>
+                                <text translate="true">gui.phasoritenetworks.warning</text>
 
                                 <color>#F93131</color>
 
@@ -485,7 +467,7 @@
                             </label>
 
                             <button id="button:network-delete">
-                                <text>Delete</text>
+                                <text translate="true">gui.phasoritenetworks.delete</text>
                             </button>
                         </children>
 
@@ -530,7 +512,7 @@
                     <flow-layout direction="vertical">
                         <children>
                             <label>
-                                <text>Password</text>
+                                <text translate="true">gui.phasoritenetworks.password</text>
 
                                 <margins>
                                     <all>2</all>
@@ -539,23 +521,21 @@
 
                             <flow-layout direction="vertical">
                                 <children>
-                                    <text-area id="text-area:network-password">
+                                    <text-box id="text-box:network-password">
                                         <max-length>18</max-length>
-                                        <max-lines>1</max-lines>
-                                        <display-char-count>true</display-char-count>
 
                                         <sizing>
                                             <horizontal method="fixed">125</horizontal>
-                                            <vertical method="fixed">30</vertical>
+                                            <vertical method="fixed">18</vertical>
                                         </sizing>
-                                    </text-area>
+                                    </text-box>
 
                                     <label id="label:error">
                                         <text></text>
                                     </label>
 
                                     <button id="button:network-enter">
-                                        <text>Enter</text>
+                                        <text translate="true">gui.phasoritenetworks.enter</text>
 
                                         <!-- Convention exception as label:error can be empty -->
                                         <margins>
@@ -608,37 +588,34 @@
                         <children>
                             <flow-layout direction="vertical">
                                 <children>
-                                    <text-area id="text-area:network-name">
-                                        <max-lines>1</max-lines>
+                                    <text-box id="text-box:network-name">
                                         <max-length>20</max-length>
-                                        <display-char-count>true</display-char-count>
 
                                         <text>{{name}}</text>
 
                                         <sizing>
                                             <horizontal method="fixed">140</horizontal>
-                                            <vertical method="fixed">30</vertical>
+                                            <vertical method="fixed">18</vertical>
                                         </sizing>
 
                                         <surface>
                                             <outline>#FF0000</outline>
                                         </surface>
-                                    </text-area>
+                                    </text-box>
 
                                     <checkbox id="checkbox:network-private">
-                                        <text>Private</text>
+                                        <text translate="true">gui.phasoritenetworks.private</text>
                                         <checked>{{private}}</checked>
                                     </checkbox>
 
                                     <flow-layout direction="vertical" id="flow-layout:container-password">
                                         <children>
                                             <collapsible id="collapsible:container-password">
-                                                <text>Password</text>
+                                                <text translate="true">gui.phasoritenetworks.password</text>
 
                                                 <children>
-                                                    <text-area id="text-area:network-password">
+                                                    <text-box id="text-box:network-password">
                                                         <max-length>18</max-length>
-                                                        <max-lines>1</max-lines>
 
                                                         <text>{{password}}</text>
 
@@ -646,7 +623,7 @@
                                                             <horizontal method="fixed">125</horizontal>
                                                             <vertical method="fixed">18</vertical>
                                                         </sizing>
-                                                    </text-area>
+                                                    </text-box>
                                                 </children>
                                             </collapsible>
                                         </children>
@@ -722,7 +699,7 @@
                             <flow-layout direction="vertical" row="0" column="0">
                                 <children>
                                     <label>
-                                        <text>Importers</text>
+                                        <text translate="true">gui.phasoritenetworks.Importers</text>
                                     </label>
 
                                     <flow-layout direction="vertical" id="flow-layout:container-importer">
@@ -750,7 +727,7 @@
                             <flow-layout direction="vertical" row="0" column="1">
                                 <children>
                                     <label>
-                                        <text>Exporters</text>
+                                        <text translate="true">gui.phasoritenetworks.Exporters</text>
                                     </label>
 
                                     <flow-layout direction="vertical" id="flow-layout:container-exporter">
@@ -795,7 +772,7 @@
                             <flow-layout direction="vertical" row="0" column="0">
                                 <children>
                                     <label>
-                                        <text>Input</text>
+                                        <text translate="true">gui.phasoritenetworks.input</text>
 
                                         <margins>
                                             <bottom>8</bottom>
@@ -901,8 +878,7 @@
 
                     <flow-layout direction="vertical">
                         <children>
-                            <text-area id="text-area:search">
-                                <max-lines>1</max-lines>
+                            <text-box id="text-box:search">
                                 <max-length>20</max-length>
 
                                 <sizing>
@@ -913,12 +889,12 @@
                                 <margins>
                                     <bottom>5</bottom>
                                 </margins>
-                            </text-area>
+                            </text-box>
 
                             <flow-layout direction="horizontal">
                                 <children>
                                     <label>
-                                        <text>Sorted by:</text>
+                                        <text translate="true">gui.phasoritenetworks.sorted</text>
 
                                         <margins>
                                             <right>5</right>
@@ -926,7 +902,7 @@
                                     </label>
 
                                     <label id="label:sort">
-                                        <text>§nAll</text>
+                                        <text translate="true">gui.phasoritenetworks.All</text>
 
                                         <color>#CBC0C1</color>
                                     </label>
@@ -1020,7 +996,7 @@
                             <flow-layout direction="horizontal">
                                 <children>
                                     <label>
-                                        <text>Throughput:</text>
+                                        <text translate="true">gui.phasoritenetworks.network.throughput</text>
 
                                         <margins>
                                             <right>2</right>
@@ -1063,8 +1039,7 @@
         <template name="tab:members">
             <flow-layout direction="vertical">
                 <children>
-                    <text-area id="text-area:search">
-                        <max-lines>1</max-lines>
+                    <text-box id="text-box:search">
                         <max-length>20</max-length>
 
                         <sizing>
@@ -1075,12 +1050,12 @@
                         <margins>
                             <bottom>5</bottom>
                         </margins>
-                    </text-area>
+                    </text-box>
 
                     <flow-layout direction="horizontal">
                         <children>
                             <label>
-                                <text>Sorted by:</text>
+                                <text translate="true">gui.phasoritenetworks.sorted</text>
 
                                 <margins>
                                     <right>5</right>
@@ -1088,7 +1063,7 @@
                             </label>
 
                             <label id="label:sort">
-                                <text>§nAll</text>
+                                <text translate="true">gui.phasoritenetworks.All</text>
 
                                 <color>#CBC0C1</color>
                             </label>
@@ -1244,7 +1219,7 @@
                             <flow-layout direction="horizontal">
                                 <children>
                                     <button id="button:kick">
-                                        <text>Kick</text>
+                                        <text translate="true">gui.phasoritenetworks.kick</text>
 
                                         <margins>
                                             <right>10</right>
@@ -1252,7 +1227,7 @@
                                     </button>
 
                                     <button id="button:ownership">
-                                        <text>Pass Ownership</text>
+                                        <text translate="true">gui.phasoritenetworks.ownership</text>
 
                                         <margins>
                                             <right>10</right>
@@ -1260,7 +1235,7 @@
                                     </button>
 
                                     <button id="button:access">
-                                        <text>Make {{nextAccess}}</text>
+                                        <text>{{nextAccess}}</text>
                                     </button>
                                 </children>
                             </flow-layout>
@@ -1351,7 +1326,7 @@
             </flow-layout>
         </template>
 
-        <!-- Popup with vanilla translucent background -->
+        <!-- Background for popups, blur -->
         <template name="background:vanilla-translucent">
             <flow-layout direction="vertical">
                 <children>

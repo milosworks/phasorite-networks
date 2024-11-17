@@ -1,11 +1,15 @@
 package vyrek.phasoritenetworks.datagen
 
+import appeng.core.AppEng
+import appeng.recipes.handlers.ChargerRecipeBuilder
 import net.minecraft.core.HolderLookup
 import net.minecraft.data.PackOutput
 import net.minecraft.data.recipes.*
+import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
 import net.neoforged.neoforge.common.Tags
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition
 import vyrek.phasoritenetworks.PhasoriteNetworks
 import vyrek.phasoritenetworks.init.PNBlocks
 import vyrek.phasoritenetworks.init.PNItems
@@ -80,6 +84,32 @@ class PNRecipeProvider(output: PackOutput, registries: CompletableFuture<HolderL
 			.unlockedBy("has_item", has(PNItems.PHASORITE_CRYSTAL))
 			.unlockedBy("has_item", has(PNItems.CHARGED_PHASORITE_CRYSTAL))
 			.save(out, PhasoriteNetworks.id("phasorite_importer"))
+
+		SimpleCookingRecipeBuilder.smelting(
+			Ingredient.of(PNItems.PHASORITE_CRYSTAL),
+			RecipeCategory.MISC,
+			PNItems.PHASORITE_DUST,
+			.15f,
+			200
+		)
+			.unlockedBy("has_item", has(PNItems.PHASORITE_CRYSTAL))
+			.save(out, PhasoriteNetworks.id("dust_from_crystals"))
+
+		SimpleCookingRecipeBuilder.blasting(
+			Ingredient.of(PNItems.PHASORITE_CRYSTAL),
+			RecipeCategory.MISC,
+			PNItems.PHASORITE_DUST,
+			.15f,
+			100
+		)
+			.unlockedBy("has_item", has(PNItems.PHASORITE_CRYSTAL))
+			.save(out, PhasoriteNetworks.id("blasting_dust_from_crystals"))
+
+		ChargerRecipeBuilder.charge(
+			out.withConditions(ModLoadedCondition(AppEng.MOD_ID)),
+			PhasoriteNetworks.id("charge_phasorite_crystal"),
+			PNItems.PHASORITE_CRYSTAL, PNItems.CHARGED_PHASORITE_CRYSTAL
+		)
 	}
 
 	private fun compactRecipe(out: RecipeOutput, big: ItemLike, small: ItemLike) {

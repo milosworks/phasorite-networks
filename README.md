@@ -81,7 +81,7 @@ Small Bud, Medium Bud, Large Bud, Phasorite Cluster and Charged Phasorite Cluste
 have an animation).
 
 Each bud will give you Phasorite Dust, the Phasorite Cluster gives you Phasorite Crystals, the Charged Phasorite Cluster
-gives Charged Phasorite Crystals, the clusters also give some Phasorite Dust.
+gives Charged Phasorite Crystals.
 
 To grow the Charged Phasorite Clusters, these will need to be on direct sunlight.
 
@@ -92,6 +92,10 @@ To grow the Charged Phasorite Clusters, these will need to be on direct sunlight
 #### Other Materials
 
 These materials are just craftable and needed to make components, etc.
+
+#### Phasorite Dust
+
+Phasorite dust can be obtained by smelting/blasting phasorite crystals or by breaking buds.
 
 #### Phasorite Core
 

@@ -63,7 +63,7 @@ object PNChannels {
 
 	fun init() {
 		CHANNEL.serverboundWithEntity(PNPackets.UpdateComponentData::class) { msg, access, entity ->
-			if (msg.name != entity.name) entity.name = msg.name
+			if (msg.name != entity.componentName) entity.componentName = msg.name
 			if (msg.priority != entity.priority) entity.priority = msg.priority
 			if (msg.overrideMode != entity.overrideMode) entity.overrideMode = msg.overrideMode
 			if (msg.limit != entity.rawLimit) entity.rawLimit = msg.limit

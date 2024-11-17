@@ -6,11 +6,13 @@ import net.minecraft.core.Direction
 import net.minecraft.core.GlobalPos
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.component.DataComponentMap
+import net.minecraft.core.component.DataComponents
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
+import net.minecraft.world.Nameable
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Block.UPDATE_CLIENTS
@@ -34,9 +36,9 @@ open class PhasoriteComponentEntity(
 	type: BlockEntityType<*>,
 	pos: BlockPos,
 	state: BlockState
-) : BlockEntity(type, pos, state), BlockEntityTicker<PhasoriteComponentEntity> {
+) : BlockEntity(type, pos, state), BlockEntityTicker<PhasoriteComponentEntity>, Nameable {
 	private var initialized = false
-	var name = ""
+	var componentName = ""
 	val defaultName: String
 		get() = when (componentType) {
 			ComponentType.IMPORTER -> Component.translatable("block.phasoritenetworks.phasorite_importer")
@@ -150,7 +152,7 @@ open class PhasoriteComponentEntity(
 	private fun saveTag(tag: CompoundTag) {
 		tag.putUUID(NetworkConstants.PN_OWNER, ownerUuid)
 		tag.put(UUID_KEY, networkId)
-		tag.putString(NetworkConstants.NAME, name)
+		tag.putString(NetworkConstants.COMPONENT_NAME, componentName)
 		tag.putInt(NetworkConstants.PRIORITY, priority)
 		tag.putBoolean(NetworkConstants.OVERRIDE_MODE, overrideMode)
 		tag.putInt(NetworkConstants.RAW_LIMIT, rawLimit)
@@ -167,7 +169,7 @@ open class PhasoriteComponentEntity(
 
 	private fun loadTag(tag: CompoundTag) {
 		ownerUuid = tag.getUUID(NetworkConstants.PN_OWNER)
-		name = tag.getString(NetworkConstants.NAME).takeIf { it.isNotEmpty() } ?: ""
+		componentName = tag.getString(NetworkConstants.COMPONENT_NAME).takeIf { it.isNotEmpty() } ?: ""
 		priority = tag.getInt(NetworkConstants.PRIORITY)
 		overrideMode = tag.getBoolean(NetworkConstants.OVERRIDE_MODE)
 		rawLimit = tag.getInt(NetworkConstants.RAW_LIMIT)
@@ -191,22 +193,25 @@ open class PhasoriteComponentEntity(
 
 	override fun collectImplicitComponents(components: DataComponentMap.Builder) {
 		components.set(
-			PNComponents.COMPONENT_DATA, PNEndecsData.ComponentData(
-				name,
+			PNComponents.COMPONENT_DATA, PNEndecsData.ItemComponentData(
+				componentName,
 				priority,
 				overrideMode,
 				rawLimit,
 				limitlessMode,
 				networkId,
+				network.name,
 				network.color
 			)
 		)
+
+		if (componentName.isNotEmpty()) components.set(DataComponents.CUSTOM_NAME, Component.literal(componentName))
 	}
 
 	override fun applyImplicitComponents(componentInput: DataComponentInput) {
 		val data = componentInput.get(PNComponents.COMPONENT_DATA) ?: return
 
-		name = data.name
+		componentName = data.name
 		priority = data.priority
 		overrideMode = data.overrideMode
 		rawLimit = data.rawLimit
@@ -219,7 +224,7 @@ open class PhasoriteComponentEntity(
 
 	override fun removeComponentsFromTag(tag: CompoundTag) {
 		tag.remove(UUID_KEY.key())
-		tag.remove(NetworkConstants.NAME)
+		tag.remove(NetworkConstants.COMPONENT_NAME)
 		tag.remove(NetworkConstants.PRIORITY)
 		tag.remove(NetworkConstants.OVERRIDE_MODE)
 		tag.remove(NetworkConstants.RAW_LIMIT)
@@ -230,6 +235,7 @@ open class PhasoriteComponentEntity(
 		return CompoundTag().also {
 			saveTag(it)
 			it.putInt(NetworkConstants.COLOR, network.color)
+			it.putString(NetworkConstants.NAME, network.name)
 		}
 	}
 
@@ -242,6 +248,7 @@ open class PhasoriteComponentEntity(
 
 		network.id = tag.get(UUID_KEY)
 		network.color = tag.getInt(NetworkConstants.COLOR)
+		network.name = tag.getString(NetworkConstants.NAME)
 
 		level?.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE)
 	}
@@ -257,17 +264,30 @@ open class PhasoriteComponentEntity(
 
 		network.id = tag.get(UUID_KEY)
 		network.color = tag.getInt(NetworkConstants.COLOR)
+		network.name = tag.getString(NetworkConstants.NAME)
 
 		level?.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE)
 	}
 
 	fun toRawData(): PNEndecsData.RawComponentData {
 		return PNEndecsData.RawComponentData(
-			name.takeIf { it.isNotEmpty() } ?: defaultName,
+			componentName.takeIf { it.isNotEmpty() } ?: defaultName,
 			ownerUuid,
 			globalPos,
 			componentType,
 			transferHandler.throughput
 		)
+	}
+
+	override fun getName(): Component {
+		return Component.literal(componentName.ifEmpty { defaultName })
+	}
+
+	override fun getCustomName(): Component? {
+		return Component.literal(componentName.ifEmpty { defaultName })
+	}
+
+	override fun getDisplayName(): Component {
+		return Component.literal(componentName.ifEmpty { defaultName })
 	}
 }

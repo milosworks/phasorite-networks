@@ -10,16 +10,21 @@ import net.neoforged.neoforge.registries.DeferredRegister
 import thedarkcolour.kotlinforforge.neoforge.forge.getValue
 import vyrek.phasoritenetworks.PhasoriteNetworks
 import vyrek.phasoritenetworks.block.*
+import vyrek.phasoritenetworks.common.components.PhasoriteComponentItem
 import net.minecraft.world.item.Item.Properties as ItemProperties
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties.of as props
 
 object PNBlocks {
 	private val BLOCKS: DeferredRegister<Block> = DeferredRegister.createBlocks(PhasoriteNetworks.ID)
 
-	val PHASORITE_EXPORTER
-			by block("phasorite_exporter") { PhasoriteExporterBlock(Properties.PHASORITE_COMPONENT) }
-	val PHASORITE_IMPORTER
-			by block("phasorite_importer") { PhasoriteImporterBlock(Properties.PHASORITE_COMPONENT) }
+	val PHASORITE_EXPORTER by block(
+		"phasorite_exporter",
+		{ block, props -> PhasoriteComponentItem(block, props) },
+	) { PhasoriteExporterBlock(Properties.PHASORITE_COMPONENT) }
+	val PHASORITE_IMPORTER by block(
+		"phasorite_importer",
+		{ block, props -> PhasoriteComponentItem(block, props) }
+	) { PhasoriteImporterBlock(Properties.PHASORITE_COMPONENT) }
 
 	val PHASORITE_BLOCK by block("phasorite_block") { PhasoriteBlock(Properties.PHASORITE_BLOCK) }
 	val BUDDING_PHASORITE_BLOCK by block("budding_phasorite") { BuddingPhasoriteBlock(Properties.PHASORITE_BLOCK.randomTicks()) }
@@ -56,23 +61,15 @@ object PNBlocks {
 
 	private fun <T : Block> block(
 		id: String,
-		supplier: () -> T,
-	) = block(id, supplier, null)
-
-	private fun <T : Block> block(
-		id: String,
-		supplier: () -> T,
-		itemSupplier: ((T, ItemProperties) -> BlockItem)?
+		itemSupplier: ((T, ItemProperties) -> BlockItem)? = { block, props -> BlockItem(block, props) },
+		supplier: () -> T
 	): DeferredHolder<Block, T> {
 		val blockHolder = BLOCKS.register(id, supplier)
 
 		PNItems.ITEMS.register(id) { ->
 			val block = blockHolder.get()
 
-			return@register if (itemSupplier != null) itemSupplier(block, ItemProperties()) else BlockItem(
-				block,
-				ItemProperties()
-			)
+			return@register itemSupplier?.invoke(block, ItemProperties()) ?: BlockItem(block, ItemProperties())
 		}
 
 		return blockHolder

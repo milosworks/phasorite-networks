@@ -1,13 +1,15 @@
 package vyrek.phasoritenetworks.datagen
 
+import net.minecraft.core.Holder
 import net.minecraft.core.HolderLookup
-import net.minecraft.core.component.DataComponentType
+import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.Registries
 import net.minecraft.data.PackOutput
 import net.minecraft.data.loot.BlockLootSubProvider
 import net.minecraft.data.loot.LootTableProvider
 import net.minecraft.resources.ResourceKey
 import net.minecraft.world.flag.FeatureFlags
+import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.block.Block
@@ -19,10 +21,9 @@ import net.minecraft.world.level.storage.loot.functions.ApplyExplosionDecay
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets
-import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator
-import net.neoforged.neoforge.registries.DeferredHolder
 import vyrek.phasoritenetworks.init.PNBlocks
 import vyrek.phasoritenetworks.init.PNComponents
 import vyrek.phasoritenetworks.init.PNItems
@@ -46,10 +47,10 @@ class PNLootTableProvider(output: PackOutput, provider: CompletableFuture<Holder
 		}
 
 		override fun generate() {
-			selfDropWithNbt(PNBlocks.PHASORITE_EXPORTER, PNComponents.COMPONENT_DATA)
-			selfDropWithNbt(PNBlocks.PHASORITE_IMPORTER, PNComponents.COMPONENT_DATA)
+			dropComponent(PNBlocks.PHASORITE_EXPORTER)
+			dropComponent(PNBlocks.PHASORITE_IMPORTER)
 
-			selfDrop(PNBlocks.PHASORITE_BLOCK)
+			createSingleItemTable(PNBlocks.PHASORITE_BLOCK)
 
 			phasoriteBud(PNBlocks.SMALL_PHASORITE_BUD)
 			phasoriteBud(PNBlocks.MEDIUM_PHASORITE_BUD)
@@ -59,15 +60,9 @@ class PNLootTableProvider(output: PackOutput, provider: CompletableFuture<Holder
 			clusterDrop(
 				PNBlocks.CHARGED_PHASORITE_CLUSTER,
 				PNItems.CHARGED_PHASORITE_CRYSTAL,
-				UniformGenerator.between(1f, 3f)
+				UniformGenerator.between(2f, 4f)
 			)
 
-//			add(PNBlocks.BUDDING_PHASORITE_BLOCK) { b ->
-//				createSingleItemTableWithSilkTouch(
-//					b,
-//					PNBlocks.PHASORITE_BLOCK
-//				)
-//			}
 			add(
 				PNBlocks.BUDDING_PHASORITE_BLOCK,
 				createSingleItemTableWithSilkTouch(PNBlocks.BUDDING_PHASORITE_BLOCK, PNBlocks.PHASORITE_BLOCK)
@@ -75,82 +70,41 @@ class PNLootTableProvider(output: PackOutput, provider: CompletableFuture<Holder
 		}
 
 		private fun phasoriteBud(block: Block) {
-			add(
+			clusterDrop(block, PNItems.PHASORITE_DUST, UniformGenerator.between(1f, 3f))
+		}
+
+		private fun clusterDrop(block: Block, item: ItemLike, quantity: NumberProvider) {
+			createSilkTouchDispatchTable(
 				block,
-				LootTable.lootTable().withPool(
-					LootPool.lootPool().setRolls(ConstantValue.exactly(1f))
-						.add(
-							LootItem.lootTableItem(PNItems.PHASORITE_DUST)
-								.apply(SetItemCountFunction.setCount(UniformGenerator.between(0f, 2f)))
-								.apply(
-									ApplyBonusCount.addUniformBonusCount(
-										registries.lookupOrThrow(Registries.ENCHANTMENT)
-											.getOrThrow(Enchantments.FORTUNE)
-									)
-								)
-								.apply(ApplyExplosionDecay.explosionDecay())
-						)
-				)
-			)
+				LootItem.lootTableItem(item)
+					.apply(SetItemCountFunction.setCount(quantity))
+					.apply(ApplyBonusCount.addUniformBonusCount(enchantment(Enchantments.FORTUNE)))
+					.apply(ApplyExplosionDecay.explosionDecay())
+			).also {
+				add(block, it)
+			}
 		}
 
-		private fun clusterDrop(block: Block, item: ItemLike, quantity: UniformGenerator) {
-			add(
-				block,
-				LootTable.lootTable().withPool(
-					LootPool.lootPool().setRolls(ConstantValue.exactly(1f))
-						.add(
-							LootItem.lootTableItem(item)
-								.apply(SetItemCountFunction.setCount(quantity))
-								.apply(
-									ApplyBonusCount.addUniformBonusCount(
-										registries.lookupOrThrow(Registries.ENCHANTMENT)
-											.getOrThrow(Enchantments.FORTUNE)
-									)
-								)
-								.apply(ApplyExplosionDecay.explosionDecay())
-						).add(
-							LootItem.lootTableItem(PNItems.PHASORITE_DUST)
-								.apply(SetItemCountFunction.setCount(UniformGenerator.between(0f, 2f)))
-								.apply(
-									ApplyBonusCount.addUniformBonusCount(
-										registries.lookupOrThrow(Registries.ENCHANTMENT)
-											.getOrThrow(Enchantments.FORTUNE)
-									)
-								)
-								.apply(ApplyExplosionDecay.explosionDecay())
-						)
-				)
-			)
-		}
-
-		private fun selfDrop(
-			block: Block
-		) {
-			add(
-				block, LootTable.lootTable().withPool(
-					LootPool.lootPool().setRolls(ConstantValue.exactly(1f))
-						.add(LootItem.lootTableItem(block).`when`(ExplosionCondition.survivesExplosion()))
-				)
-			)
-		}
-
-		private fun selfDropWithNbt(
+		private fun dropComponent(
 			block: Block,
-			componentData: DeferredHolder<DataComponentType<*>, out DataComponentType<*>>
 		) {
-			add(
-				block, LootTable.lootTable().withPool(
-					LootPool.lootPool().setRolls(ConstantValue.exactly(1f))
-						.add(
-							LootItem.lootTableItem(block).apply(
-								CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
-									.include(componentData.get())
-							)
+			LootTable.lootTable().withPool(
+				applyExplosionCondition(
+					block, LootPool.lootPool().setRolls(ConstantValue.exactly(1f)).add(
+						LootItem.lootTableItem(block).apply(
+							CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+								.include(PNComponents.COMPONENT_DATA.get())
+								.include(DataComponents.CUSTOM_NAME)
 						)
-						.`when`(ExplosionCondition.survivesExplosion())
+					)
 				)
-			)
+			).also {
+				add(block, it)
+			}
+		}
+
+		private fun enchantment(key: ResourceKey<Enchantment>): Holder.Reference<Enchantment> {
+			return registries.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(key)
 		}
 	}
 }

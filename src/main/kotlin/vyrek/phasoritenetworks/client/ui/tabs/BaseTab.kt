@@ -28,7 +28,6 @@ abstract class BaseTab(val screen: UIScreen) {
 		component.childById(LabelComponent::class, "label:error")
 			.text(Component.literal(txt))
 			.margins(Insets.top(5).withBottom(5))
-
 	}
 
 	fun clearError(component: FlowLayout) {

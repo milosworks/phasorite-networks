@@ -2,7 +2,6 @@ package vyrek.phasoritenetworks.common.components
 
 import com.mojang.serialization.MapCodec
 import dev.technici4n.grandpower.api.ILongEnergyStorage
-import net.minecraft.ChatFormatting
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -12,11 +11,14 @@ import net.minecraft.world.SimpleMenuProvider
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
 import net.minecraft.world.level.Level
+import net.minecraft.world.level.LevelAccessor
 import net.minecraft.world.level.block.BaseEntityBlock
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.EntityBlock
+import net.minecraft.world.level.block.SimpleWaterloggedBlock
 import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.entity.BlockEntityTicker
 import net.minecraft.world.level.block.entity.BlockEntityType
@@ -24,6 +26,8 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties.*
 import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.level.material.FluidState
+import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
@@ -32,14 +36,16 @@ import net.neoforged.neoforge.capabilities.Capabilities
 import vyrek.phasoritenetworks.block.PhasoriteExporterBlock
 import vyrek.phasoritenetworks.block.PhasoriteImporterBlock
 import vyrek.phasoritenetworks.client.ui.UIMenu
+import vyrek.phasoritenetworks.common.Translations
 import vyrek.phasoritenetworks.common.networks.ComponentType
 import vyrek.phasoritenetworks.common.networks.NetworksData
 import vyrek.phasoritenetworks.networking.PNEndecs
 import vyrek.phasoritenetworks.networking.PNEndecsData
 import kotlin.uuid.Uuid
 
+
 open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properties) :
-	Block(props), EntityBlock {
+	Block(props), EntityBlock, SimpleWaterloggedBlock {
 	protected open var registryEntity: BlockEntityType<T>? = null
 
 	private val shape = makeShape()
@@ -53,6 +59,7 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 				.setValue(SOUTH, false)
 				.setValue(WEST, false)
 				.setValue(EAST, false)
+				.setValue(WATERLOGGED, false)
 		)
 	}
 
@@ -63,6 +70,7 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 	override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
 		super.createBlockStateDefinition(builder)
 		builder.add(*SIDES)
+		builder.add(WATERLOGGED)
 	}
 
 	override fun setPlacedBy(
@@ -85,41 +93,32 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 		player: Player,
 		hitResult: BlockHitResult
 	): InteractionResult {
-		if (level.isClientSide || player !is ServerPlayer) return InteractionResult.PASS
+		if (level.isClientSide || player !is ServerPlayer) return InteractionResult.SUCCESS
 
 		val entity =
-			level.getBlockEntity(pos) as? PhasoriteComponentEntity ?: return InteractionResult.PASS
+			level.getBlockEntity(pos) as? PhasoriteComponentEntity ?: return InteractionResult.SUCCESS
+		if (entity.ownerUuid == Uuid.NIL) entity.ownerUuid = player.uuid
 		if (entity.isGuiOpen) {
-			player.displayClientMessage(
-				Component.literal("A player is already using this component.")
-					.withStyle(ChatFormatting.BOLD)
-					.withStyle(ChatFormatting.RED),
-				true
-			)
+			player.displayClientMessage(Translations.OCCUPIED, true)
 			return InteractionResult.SUCCESS
 		}
 		if (
 			(!entity.network.isValid && entity.ownerUuid != player.uuid) ||
-			(entity.network.isValid && entity.network.private == true && entity.network.members[player.uuid] == null && player.uuid != entity.network.owner)
+			(entity.network.isValid && entity.network.private && entity.network.members[player.uuid] == null && player.uuid != entity.network.owner)
 		) {
-			player.displayClientMessage(
-				Component.literal("You don't have access to this component.")
-					.withStyle(ChatFormatting.BOLD)
-					.withStyle(ChatFormatting.RED),
-				true
-			);
-			return InteractionResult.SUCCESS;
+			player.displayClientMessage(Translations.DENIED, true)
+			return InteractionResult.SUCCESS
 		}
 		val id = when (entity.componentType) {
 			ComponentType.IMPORTER -> "phasoritenetworks:phasorite_importer"
 			ComponentType.EXPORTER -> "phasoritenetworks:phasorite_exporter"
-			else -> return InteractionResult.SUCCESS_NO_ITEM_USED
+			else -> return InteractionResult.SUCCESS
 		}
 
 		val data = PNEndecsData.ComponentScreenData(
 			pos,
 			id,
-			entity.name,
+			entity.componentName,
 			entity.defaultName,
 			entity.rawLimit,
 			entity.limitlessMode,
@@ -143,7 +142,7 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 
 		entity.isGuiOpen = true
 
-		return InteractionResult.SUCCESS_NO_ITEM_USED
+		return InteractionResult.SUCCESS
 	}
 
 	override fun onRemove(
@@ -250,6 +249,32 @@ open class PhasoriteComponentBlock<T : PhasoriteComponentEntity>(props: Properti
 			state.setValue(SIDES[directionToNeighbor.get3DDataValue()], true),
 			UPDATE_CLIENTS
 		)
+	}
+
+	override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
+		return defaultBlockState().setValue(
+			WATERLOGGED,
+			context.level.getFluidState(context.clickedPos).type == Fluids.WATER
+		)
+	}
+
+	override fun updateShape(
+		state: BlockState,
+		direction: Direction,
+		neighborState: BlockState,
+		level: LevelAccessor,
+		pos: BlockPos,
+		neighborPos: BlockPos
+	): BlockState {
+		if (state.getValue(WATERLOGGED)) {
+			level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level))
+		}
+
+		return super.updateShape(state, direction, neighborState, level, pos, neighborPos)
+	}
+
+	override fun getFluidState(state: BlockState): FluidState {
+		return if (state.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(state)
 	}
 
 	override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
