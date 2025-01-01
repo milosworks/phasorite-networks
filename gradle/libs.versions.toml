@@ -4,52 +4,31 @@ kotlin = "2.0.21"
 kotlin-neoforge = "5.6.0"
 kotlin-neoforge-range = "5" # Used in META-INF/neoforge.mods.tml
 
-# Minecraft
 minecraft = { strictly = "1.21.1" }
 parchment-mc = "1.21"
 parchment = "2024.07.28"
-
-# NeoForge
 neoforge = "21.1.66"
 neoforge-range = "21.1.66" # Used in META-INF/neoforge.mods.tml
 mdg = "2.0.32-beta"
 
-# owo lib
-owolib = "0.12.15-beta.10+1.21"
+owolib = "0.12.15-beta.11+1.21"
 owolib-dev = "0.12.15-beta.5+1.21"
-
-# Grand power
 grandpower = "3.0.2"
-
-# AE2
 ae2 = "5662490"
-
-# Jade
 jade = "5884231"
 
 [libraries]
-# Kotlin
 kotlin = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-neoforge = { module = "thedarkcolour:kotlinforforge-neoforge", version.ref = "kotlin-neoforge" }
 
-# Minecraft
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 parchment = { module = "org.parchmentmc.data:parchment-1.21", version.ref = "parchment" }
-
-# owo lib
-owolib = { module = "io.wispforest:owo-lib-neoforge", version.ref = "owolib" }
-owolib-dev = { module = "io.wispforest:owo-lib-neoforge-dev", version.ref = "owolib-dev" }
-
-# NeoForge
 neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge" }
 
-# GrandPower
+owolib = { module = "io.wispforest:owo-lib-neoforge", version.ref = "owolib" }
+owolib-dev = { module = "io.wispforest:owo-lib-neoforge-dev", version.ref = "owolib-dev" }
 grandpower = { module = "dev.technici4n:GrandPower", version.ref = "grandpower" }
-
-# AE2
 ae2 = { module = "curse.maven:applied-energistics-2-223794", version.ref = "ae2" }
-
-# Jade
 jade = { module = "curse.maven:jade-324717", version.ref = "jade" }
 
 [plugins]

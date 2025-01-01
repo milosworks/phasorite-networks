@@ -9,7 +9,7 @@
     <a href="https://www.curseforge.com/minecraft/search?page=1&pageSize=20&sortBy=relevancy&class=mc-mods&search=phasorite+networks&version=1.21.1&gameVersionTypeId=6"><img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
     <br>    
     <a href="https://discord.gg/dVPqq2U4xy"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
-    <a href="https://ko-fi.com/milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
+    <a href="https://ko-fi.com/xyz.milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
 </div>
 
 ## Table of Contents
@@ -141,8 +141,8 @@ Converts Budding Amethyst into Budding Phasorite
 ## Issues
 
 - Found an bug or have a suggestion?
-  Go to [the issues page](https://github.com/milosworks/phasorite-networks/issues) and
-  click [new issue](https://github.com/milosworks/phasorite-networks/issues/new)
+  Go to [the issues page](https://github.com/xyz.milosworks/phasorite-networks/issues) and
+  click [new issue](https://github.com/xyz.milosworks/phasorite-networks/issues/new)
 
 ## Contribution
 

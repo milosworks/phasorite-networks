@@ -67,7 +67,7 @@ neoForge {
 
 	mods {
 		create(modId) {
-			sourceSet(sourceSets["main"])
+			sourceSet(sourceSets.main.get())
 		}
 	}
 
