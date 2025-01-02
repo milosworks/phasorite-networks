@@ -48,7 +48,7 @@ class ComponentTab(screen: UIScreen) : BaseTab(screen) {
 
 		root.textBox("text-box:component-limit").apply {
 			onChanged().subscribe {
-				if (menu.network != null && !canPlayerEdit()) {
+				if ((menu.network != null && !canPlayerEdit()) || !isBlockOwner()) {
 					text(formatStr(menu.limit))
 
 					return@subscribe
@@ -67,7 +67,7 @@ class ComponentTab(screen: UIScreen) : BaseTab(screen) {
 
 		root.textBox("text-box:component-priority").apply {
 			onChanged().subscribe { preValue ->
-				if (menu.network != null && !canPlayerEdit()) {
+				if ((menu.network != null && !canPlayerEdit()) || !isBlockOwner()) {
 					text(formatStr(menu.priority))
 
 					return@subscribe
