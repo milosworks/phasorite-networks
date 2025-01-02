@@ -1,3 +1,3 @@
 ## What's Changed
 
-* fixed crashing issue when trying to edit textbox
+* fixed issue when a component had no network editing any values would crash the game
