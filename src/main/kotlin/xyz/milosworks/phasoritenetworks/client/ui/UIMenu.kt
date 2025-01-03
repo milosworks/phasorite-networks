@@ -3,6 +3,7 @@ package xyz.milosworks.phasoritenetworks.client.ui
 import io.wispforest.owo.ui.core.Color
 import net.minecraft.core.GlobalPos
 import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.item.ItemStack
@@ -148,13 +149,12 @@ class UIMenu(containerId: Int, data: PNEndecsData.ComponentScreenData, val playe
 	}
 
 	override fun removed(player: Player) {
+		if (player is ServerPlayer) {
+			val ent = player.level().getBlockEntity(pos) as? PhasoriteComponentEntity ?: return
+			ent.isGuiOpen = false
+			ent.setChanged()
+		}
 
-		PNChannels.CHANNEL.clientHandle().send(
-			PNPackets.CommandPacket(
-				pos,
-				ActionType.CLOSE_MENU
-			)
-		)
 		super.removed(player)
 	}
 

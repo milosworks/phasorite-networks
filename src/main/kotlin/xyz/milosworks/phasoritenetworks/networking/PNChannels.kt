@@ -196,9 +196,7 @@ object PNChannels {
 					)
 				}
 
-				ActionType.CLOSE_MENU -> {
-					entity.isGuiOpen = false
-				}
+				else -> {}
 			}
 		}
 
