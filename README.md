@@ -5,8 +5,8 @@
 <div align="center">
     <!-- All in one line is actually a bug fix -->
     <img alt="Available For NeoForge" height="56" src="https://raw.githubusercontent.com/intergrav/devins-badges/8494ec1ac495cfb481dc7e458356325510933eb0/assets/cozy/supported/neoforge_vector.svg">
-    <a href="https://modrinth.com/mod/phasorite-networks"><img alt="Available For Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
-    <a href="https://www.curseforge.com/minecraft/search?page=1&pageSize=20&sortBy=relevancy&class=mc-mods&search=phasorite+networks&version=1.21.1&gameVersionTypeId=6"><img alt="curseforge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
+    <a href="https://modrinth.com/mod/phasorite-networks"><img alt="Available On Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
+    <a href="https://www.curseforge.com/minecraft/mc-mods/phasorite-networks"><img alt="Available On CurseForge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
     <br>    
     <a href="https://discord.gg/dVPqq2U4xy"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
     <a href="https://ko-fi.com/xyz.milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
@@ -32,12 +32,49 @@ Phasorite Networks is a modern (WIP, Alpha) mod for transferring energy wireless
 
 ### Networks
 
-**The base of phasorite networks are, well, networks!**
+**The base of Phasorite Networks are, well, networks!**
 
 Networks are fully customizable, with the ability to scale across various dimensions, you can manage and see the
 throughput of energy across the network.
 Using a network reduces the lag that a huge **cable** network could cause, also reducing the time for building the
 infrastructure for the cables.
+
+### Component Screen
+
+- C: Component Tab, shows information of the current component
+- N: Networks Tab, shows all accessible networks
+- S: Statistics Tab, shows statistics of the network
+- C: Component**s** Tab, shows all components in the network
+- M: Members Tab, shows all members (players) connected to the network
+
+<img height="256" src="https://i.imgur.com/UPeE3AO.png">
+
+- Set a custom name for your component (Importer/Exporter)
+- Set a limit of the energy
+- Set a priority
+    - Exporter: First energy out
+    - Importer: First energy in
+- Override mode ignores the others priority and prioritizes this one first
+- Limitless mode ignores the set limit of the component
+
+<img height="256" src="https://i.imgur.com/7ZxrHyA.png">
+
+**Create a network**
+
+- Use a color picker to choose the color of your network!
+- Set your network to a specific visibility!
+    - Private
+    - Public
+    - Public with Password (Only people with the password can join)
+
+<img height="256" src="https://i.imgur.com/DeETLrp.png">
+
+- DE: Delete current network
+- E: Edit current network
+- D: Disconnect from current network
+- C: Create a new network
+
+<img height="256" src="https://i.imgur.com/viBeKO9.png">
 
 #### Phasorite Importer
 

@@ -79,6 +79,14 @@ neoForge {
 			logLevel = org.slf4j.event.Level.DEBUG
 		}
 
+		create("client2") {
+			client()
+//			systemProperty("owo.debug", "false")
+//			systemProperty("owo.forceDisableDebug", "true")
+
+			programArguments.addAll("--username", "dev")
+		}
+
 		create("client") {
 			client()
 //			systemProperty("owo.debug", "false")

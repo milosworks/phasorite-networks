@@ -3,9 +3,11 @@ package xyz.milosworks.phasoritenetworks.client.ui.tabs
 import io.wispforest.owo.ui.component.Components
 import io.wispforest.owo.ui.container.FlowLayout
 import io.wispforest.owo.ui.core.Color
+import io.wispforest.owo.ui.core.Insets
 import io.wispforest.owo.ui.core.Sizing
 import io.wispforest.owo.ui.core.Surface
 import net.minecraft.network.chat.Component
+import xyz.milosworks.phasoritenetworks.PhasoriteNetworks
 import xyz.milosworks.phasoritenetworks.client.render.Highlight
 import xyz.milosworks.phasoritenetworks.client.ui.*
 import xyz.milosworks.phasoritenetworks.common.Translations
@@ -43,7 +45,9 @@ class ComponentsTab(screen: UIScreen) :
 		super.build(root)
 
 		val cancel = root.button("button:selection-cancel")
+			.renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/x.png"), 2134))
 		val disconnect = root.button("button:selection-disconnect")
+			.renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/exit.png"), 2134))
 		val containerButtons = root.flowLayout("flow-layout:container-buttons").apply {
 			removeChild(cancel)
 			removeChild(disconnect)
@@ -63,7 +67,10 @@ class ComponentsTab(screen: UIScreen) :
 					disconnect
 				)
 			)
-			emptyContainer.sizing(Sizing.content(), Sizing.fixed(16))
+			emptyContainer.apply {
+				sizing(Sizing.content(), Sizing.fixed(16))
+				padding(Insets.top(2))
+			}
 		}
 
 		cancel.onPress {

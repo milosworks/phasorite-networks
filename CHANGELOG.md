@@ -1,4 +1,7 @@
 ## What's Changed
 
-* fixed issue when a component has no network and someone that is not an owner could change limit and modes
-* fixed issue when closing the screen the server would crash
+* fixed some UI mistakes
+* made the budding phasorite block faster (it was x2 slower than the amethyst)
+* "fixed" crash when starting a server when a network member isnt connected
+* added icons for the UI
+* added all assets regarding the mod into /assets/

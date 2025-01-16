@@ -14,7 +14,7 @@ import xyz.milosworks.phasoritenetworks.init.PNBlocks
 
 class BuddingPhasoriteBlock(props: Properties) : PhasoriteBlock(props) {
 	companion object {
-		const val GROWTH_CHANCE = 10
+		const val GROWTH_CHANCE = 6
 		val SIDES = Direction.entries.toTypedArray()
 	}
 

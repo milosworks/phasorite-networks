@@ -16,6 +16,7 @@ class NetworksData : SavedData() {
 		val network = Network(name, owner, color, private, password)
 		network.id = Uuid.random()
 		networks[network.id] = network
+		network.isLoaded = true
 
 		setDirty()
 

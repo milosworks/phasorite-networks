@@ -13,7 +13,7 @@ fun parseStr(str: String): Int {
 fun filterStrToInt(str: String, allowNegative: Boolean) = str.filter { it.isDigit() || (allowNegative && it == '-') }
 
 class ComponentTab(screen: UIScreen) : BaseTab(screen) {
-	override var height = 201
+	override var height = 193
 
 	override fun build(root: FlowLayout) {
 		root.textBox("text-box:component-name")

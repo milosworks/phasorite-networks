@@ -5,6 +5,7 @@ import io.wispforest.owo.ui.component.ColorPickerComponent
 import io.wispforest.owo.ui.container.CollapsibleContainer
 import io.wispforest.owo.ui.container.FlowLayout
 import io.wispforest.owo.ui.core.Color
+import xyz.milosworks.phasoritenetworks.PhasoriteNetworks
 import xyz.milosworks.phasoritenetworks.client.ui.*
 import xyz.milosworks.phasoritenetworks.common.Translations
 import xyz.milosworks.phasoritenetworks.common.networks.NetworkUserAccess
@@ -26,19 +27,32 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 	override fun build(root: FlowLayout) {
 		super.build(root)
 
-		val create = root.button("button:network-create").onPress {
-			if (!activeTab.isNetworkSubtab()) buildFormTab(root, Tabs.NETWORK_CREATE)
-		}
-		val disconnect = root.button("button:network-disconnect").onPress {
-			if (menu.network == null) return@onPress
+		val create = root.button("button:network-create").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/plus.png"), 2134))
 
-			menu.disconnectNetwork()
+			onPress {
+				if (!activeTab.isNetworkSubtab()) buildFormTab(root, Tabs.NETWORK_CREATE)
+			}
+		}
+		val disconnect = root.button("button:network-disconnect").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/exit.png"), 2134))
+
+			onPress {
+				if (menu.network == null) return@onPress
+
+				menu.disconnectNetwork()
+			}
 		}
 		val edit = root.button("button:network-edit")
-		val delete = root.button("button:network-delete").onPress {
-			if (menu.network == null) return@onPress
+			.renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/edit.png"), 2134))
+		val delete = root.button("button:network-delete").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/delete.png"), 2134))
 
-			buildDeleteTab(root)
+			onPress {
+				if (menu.network == null) return@onPress
+
+				buildDeleteTab(root)
+			}
 		}
 		val container = root.flowLayout("flow-layout:container-buttons").apply {
 			removeChild(delete)
@@ -119,8 +133,12 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			}
 		)
 
-		component.button("button:close").onPress {
-			screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
+		component.button("button:close").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/x.png"), 2134))
+
+			onPress {
+				screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
+			}
 		}
 
 		val name = component.textBox("text-box:network-name").apply {
@@ -191,8 +209,12 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			)
 		)
 
-		component.button("button:close").onPress {
-			screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
+		component.button("button:close").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/x.png"), 2134))
+
+			onPress {
+				screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
+			}
 		}
 
 		component.button("button:network-delete").onPress {
@@ -211,8 +233,12 @@ class NetworkTab(screen: UIScreen) : BaseScrollTab<NetworkSortMethod, PNEndecsDa
 			)
 		)
 
-		component.button("button:close").onPress {
-			screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
+		component.button("button:close").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/x.png"), 2134))
+
+			onPress {
+				screen.buildTab(component, Tabs.NETWORK, ::NetworkTab)
+			}
 		}
 
 		val pwd = component.textBox("text-box:network-password")

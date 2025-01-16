@@ -9,10 +9,7 @@ import io.wispforest.owo.ui.component.LabelComponent
 import io.wispforest.owo.ui.component.TextBoxComponent
 import io.wispforest.owo.ui.container.Containers
 import io.wispforest.owo.ui.container.FlowLayout
-import io.wispforest.owo.ui.core.Color
-import io.wispforest.owo.ui.core.ParentComponent
-import io.wispforest.owo.ui.core.Sizing
-import io.wispforest.owo.ui.core.Surface
+import io.wispforest.owo.ui.core.*
 import io.wispforest.owo.ui.parsing.UIModel
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
@@ -100,6 +97,18 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 		val tabsWithoutNetwork = arrayOf(
 			Tabs.COMPONENT,
 			Tabs.NETWORK
+		)
+
+		/**
+		 * The sizes of the textures of each tab
+		 */
+		val textureSizes = mapOf(
+			ComponentType.EXPORTER.name to 1745,
+			ComponentType.IMPORTER.name to 1985,
+			Tabs.NETWORK.name to 709,
+			Tabs.STATISTICS.name to 2134,
+			Tabs.COMPONENTS.name to 2134,
+			Tabs.MEMBERS.name to 2134,
 		)
 	}
 
@@ -215,6 +224,21 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 
 		buttonMappings.forEach { (tab, tabClass) ->
 			root.button("button:${tab.name.lowercase()}").apply {
+				renderer(
+					SimpleButtonRenderer(
+						PhasoriteNetworks.id(
+							"textures/gui/icons/${
+								if (tab == Tabs.COMPONENT)
+									"phasorite_${menu.clientEntity.componentType.name.lowercase()}"
+								else tab.name.lowercase()
+							}.png"
+						),
+						textureSizes[
+							if (tab == Tabs.COMPONENT) menu.clientEntity.componentType.name else tab.name
+						]!!
+					)
+				)
+
 				onPress { if (!activeTab.isNetworkSubtab()) buildTab(root, tab, tabClass) }
 
 				if (menu.network == null && tab !in tabsWithoutNetwork)
@@ -227,7 +251,7 @@ class UIScreen(menu: UIMenu, inventory: Inventory, title: Component) :
 	 * Specific vertical height empty container to center the tab main panel.
 	 */
 	private fun buildEmptySideTabs(component: FlowLayout) {
-		component.child(Containers.verticalFlow(Sizing.fixed(20), Sizing.content()))
+		component.child(Containers.verticalFlow(Sizing.fixed(20), Sizing.content()).padding(Insets.left(2)))
 	}
 
 	/**

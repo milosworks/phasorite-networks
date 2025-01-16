@@ -144,7 +144,8 @@ object PNChannels {
 							network.toClientData(true).let { data ->
 								data.copy(
 									components = data.components.filterNot { it.globalPos == entity.globalPos || it.owner == msg.uuid },
-									members = data.members.filterNot { it.key == msg.uuid })
+									members = data.members.filterNot { it.key == msg.uuid }
+								)
 							},
 							NetworksData.get().networks
 								.filter { it.value.discoverable(access.player.uuid) }
@@ -154,10 +155,9 @@ object PNChannels {
 				}
 
 				ManageType.PASS_OWNERSHIP -> {
-					val player = access.player.server.playerList.getPlayer(msg.uuid)!!
-
 					network.owner = msg.uuid
-					network.members[msg.uuid] = NetworkUser(msg.uuid, player.gameProfile.name, NetworkUserAccess.ADMIN)
+					network.members[msg.uuid] =
+						NetworkUser(msg.uuid, access.player.gameProfile.name, NetworkUserAccess.ADMIN)
 
 					updateScreenData(entity, access.player, network, false)
 				}

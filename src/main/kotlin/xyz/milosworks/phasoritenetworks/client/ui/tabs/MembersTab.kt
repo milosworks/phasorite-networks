@@ -1,6 +1,7 @@
 package xyz.milosworks.phasoritenetworks.client.ui.tabs
 
 import io.wispforest.owo.ui.container.FlowLayout
+import xyz.milosworks.phasoritenetworks.PhasoriteNetworks
 import xyz.milosworks.phasoritenetworks.client.ui.*
 import xyz.milosworks.phasoritenetworks.common.Translations
 import xyz.milosworks.phasoritenetworks.common.networks.NetworkUserAccess
@@ -30,12 +31,12 @@ class MembersTab(screen: UIScreen) : BaseScrollTab<MembersSortMethod, PNEndecsDa
 					"i" to data.uuid.toString(),
 					"username" to data.name,
 					"uuid" to data.uuid.toString(),
-					"access" to Translations.MAKE(
+					"access" to (if (menu.network!!.owner == menu.player.uuid) Translations.MAKE(
 						Translations.relative(
-							NetworkUserAccess.entries[data.access].name.lowercase()
+							NetworkUserAccess.entries[data.access].next().name.lowercase()
 								.replaceFirstChar { it.uppercaseChar() }
 						)
-					).string,
+					).string else ""),
 					"accessColor" to when (NetworkUserAccess.entries[data.access]) {
 						NetworkUserAccess.ADMIN -> ADMIN_COLOR
 						NetworkUserAccess.MEMBER -> MEMBER_COLOR
@@ -82,8 +83,12 @@ class MembersTab(screen: UIScreen) : BaseScrollTab<MembersSortMethod, PNEndecsDa
 
 		val root = screen.rootComponent
 
-		root.button("button:close").onPress {
-			screen.buildTab(root, Tabs.MEMBERS, ::MembersTab)
+		root.button("button:close").apply {
+			renderer(SimpleButtonRenderer(PhasoriteNetworks.id("textures/gui/icons/x.png"), 2134))
+
+			onPress {
+				screen.buildTab(root, Tabs.MEMBERS, ::MembersTab)
+			}
 		}
 
 		root.button("button:kick").onPress {

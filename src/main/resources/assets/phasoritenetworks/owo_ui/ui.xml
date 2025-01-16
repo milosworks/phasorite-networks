@@ -191,10 +191,9 @@
                     <flow-layout direction="horizontal" id="flow-layout:container-buttons">
                         <children>
                             <button id="button:network-create">
-                                <text>C</text>
-
                                 <margins>
                                     <right>5</right>
+                                    <bottom>2</bottom>
                                 </margins>
 
                                 <sizing>
@@ -204,7 +203,6 @@
                             </button>
 
                             <button id="button:network-delete">
-                                <text>DE</text>
                                 <margins>
                                     <right>5</right>
                                 </margins>
@@ -216,7 +214,6 @@
                             </button>
 
                             <button id="button:network-edit">
-                                <text>E</text>
                                 <margins>
                                     <right>5</right>
                                 </margins>
@@ -228,7 +225,6 @@
                             </button>
 
                             <button id="button:network-disconnect">
-                                <text>D</text>
                                 <margins>
                                     <right>5</right>
                                 </margins>
@@ -366,10 +362,13 @@
                     </flow-layout>
 
                     <flow-layout direction="horizontal">
-                        <children></children>
+                        <children/>
                         <sizing>
                             <vertical method="fixed">16</vertical>
                         </sizing>
+                        <margins>
+                            <top>2</top>
+                        </margins>
                     </flow-layout>
                 </children>
 
@@ -414,8 +413,6 @@
             <flow-layout direction="vertical">
                 <children>
                     <button id="button:close">
-                        <text>X</text>
-
                         <sizing>
                             <vertical method="fixed">16</vertical>
                             <horizontal method="fixed">16</horizontal>
@@ -423,6 +420,7 @@
 
                         <margins>
                             <right>5</right>
+                            <bottom>2</bottom>
                         </margins>
                     </button>
 
@@ -497,8 +495,6 @@
             <flow-layout direction="vertical">
                 <children>
                     <button id="button:close">
-                        <text>X</text>
-
                         <sizing>
                             <vertical method="fixed">16</vertical>
                             <horizontal method="fixed">16</horizontal>
@@ -506,6 +502,7 @@
 
                         <margins>
                             <right>5</right>
+                            <bottom>2</bottom>
                         </margins>
                     </button>
 
@@ -572,8 +569,6 @@
             <flow-layout direction="vertical">
                 <children>
                     <button id="button:close">
-                        <text>X</text>
-
                         <sizing>
                             <vertical method="fixed">16</vertical>
                             <horizontal method="fixed">16</horizontal>
@@ -581,6 +576,7 @@
 
                         <margins>
                             <right>5</right>
+                            <bottom>2</bottom>
                         </margins>
                     </button>
 
@@ -598,6 +594,10 @@
                                             <vertical method="fixed">18</vertical>
                                         </sizing>
 
+                                        <margins>
+                                            <bottom>5</bottom>
+                                        </margins>
+
                                         <surface>
                                             <outline>#FF0000</outline>
                                         </surface>
@@ -606,6 +606,9 @@
                                     <checkbox id="checkbox:network-private">
                                         <text translate="true">gui.phasoritenetworks.private</text>
                                         <checked>{{private}}</checked>
+                                        <margins>
+                                            <left>1</left>
+                                        </margins>
                                     </checkbox>
 
                                     <flow-layout direction="vertical" id="flow-layout:container-password">
@@ -847,8 +850,6 @@
                     <flow-layout direction="horizontal" id="flow-layout:container-buttons">
                         <children>
                             <button id="button:selection-cancel">
-                                <text>X</text>
-
                                 <margins>
                                     <right>5</right>
                                 </margins>
@@ -860,8 +861,6 @@
                             </button>
 
                             <button id="button:selection-disconnect">
-                                <text>D</text>
-
                                 <sizing>
                                     <horizontal method="fixed">16</horizontal>
                                     <vertical method="fixed">16</vertical>
@@ -874,6 +873,10 @@
                         </children>
 
                         <horizontal-alignment>right</horizontal-alignment>
+
+                        <margins>
+                            <bottom>2</bottom>
+                        </margins>
                     </flow-layout>
 
                     <flow-layout direction="vertical">
@@ -961,7 +964,11 @@
                     </flow-layout>
 
                     <flow-layout direction="horizontal" id="flow-layout:container-empty">
-                        <children></children>
+                        <children/>
+
+                        <margins>
+                            <top>2</top>
+                        </margins>
                     </flow-layout>
                 </children>
 
@@ -1172,8 +1179,6 @@
             <flow-layout direction="vertical">
                 <children>
                     <button id="button:close">
-                        <text>X</text>
-
                         <sizing>
                             <vertical method="fixed">16</vertical>
                             <horizontal method="fixed">16</horizontal>
@@ -1181,6 +1186,7 @@
 
                         <margins>
                             <right>5</right>
+                            <bottom>2</bottom>
                         </margins>
                     </button>
 
@@ -1267,8 +1273,6 @@
             <flow-layout direction="vertical" id="flow-layout:side-tabs">
                 <children>
                     <button id="button:component">
-                        <text>C</text>
-
                         <sizing>
                             <horizontal method="fixed">20</horizontal>
                             <vertical method="fixed">20</vertical>
@@ -1279,8 +1283,6 @@
                         </margins>
                     </button>
                     <button id="button:network">
-                        <text>N</text>
-
                         <sizing>
                             <horizontal method="fixed">20</horizontal>
                             <vertical method="fixed">20</vertical>
@@ -1291,8 +1293,6 @@
                         </margins>
                     </button>
                     <button id="button:statistics">
-                        <text>S</text>
-
                         <sizing>
                             <horizontal method="fixed">20</horizontal>
                             <vertical method="fixed">20</vertical>
@@ -1303,8 +1303,6 @@
                         </margins>
                     </button>
                     <button id="button:components">
-                        <text>C</text>
-
                         <sizing>
                             <horizontal method="fixed">20</horizontal>
                             <vertical method="fixed">20</vertical>
@@ -1315,14 +1313,16 @@
                         </margins>
                     </button>
                     <button id="button:members">
-                        <text>M</text>
-
                         <sizing>
                             <horizontal method="fixed">20</horizontal>
                             <vertical method="fixed">20</vertical>
                         </sizing>
                     </button>
                 </children>
+
+                <padding>
+                    <right>2</right>
+                </padding>
             </flow-layout>
         </template>
 

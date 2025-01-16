@@ -28,6 +28,7 @@ class Network(
 	var id: Uuid = Uuid.NIL
 	val isValid: Boolean
 		get() = id != Uuid.NIL
+	var isLoaded: Boolean = false
 
 	val members: MutableMap<UUID, NetworkUser> = mutableMapOf()
 
@@ -47,6 +48,8 @@ class Network(
 	}
 
 	fun onPostTick(server: MinecraftServer) {
+		if (!isLoaded) return
+
 		handleConnections(server)
 
 		val importers = filterComponents<PhasoriteImporterEntity>(ComponentType.IMPORTER)
@@ -98,7 +101,7 @@ class Network(
 					conn.target.connect(this)
 
 					if (conn.target.ownerUuid != owner && !members.containsKey(conn.target.ownerUuid)) {
-						val player = server.playerList.getPlayer(conn.target.ownerUuid)!!
+						val player = server.playerList.getPlayer(conn.target.ownerUuid) ?: continue
 						members[conn.target.ownerUuid] = NetworkUser(conn.target.ownerUuid, player.gameProfile.name)
 					}
 
@@ -136,6 +139,8 @@ class Network(
 	}
 
 	fun loadAdditional(tag: CompoundTag) {
+		isLoaded = true
+		
 		id = tag.get(UUID_KEY)
 		name = tag.getString(NetworkConstants.NAME)
 		owner = tag.getUUID(NetworkConstants.PN_OWNER)
