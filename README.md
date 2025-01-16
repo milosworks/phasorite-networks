@@ -7,7 +7,8 @@
     <img alt="Available For NeoForge" height="56" src="https://raw.githubusercontent.com/intergrav/devins-badges/8494ec1ac495cfb481dc7e458356325510933eb0/assets/cozy/supported/neoforge_vector.svg">
     <a href="https://modrinth.com/mod/phasorite-networks"><img alt="Available On Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
     <a href="https://www.curseforge.com/minecraft/mc-mods/phasorite-networks"><img alt="Available On CurseForge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
-    <br>    
+    <br>
+    <a href="https://github.com/milosworks/phasorite-networks/wiki"><img alt="read-the-docs" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg"></a>
     <a href="https://discord.gg/dVPqq2U4xy"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
     <a href="https://ko-fi.com/xyz.milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
 </div>
@@ -16,12 +17,11 @@
 
 - [About](#about)
 - [Networks](#networks)
-    - [Importer](#phasorite-importer)
-    - [Exporter](#phasorite-exporter)
-- [Resources](#resources)
-    - [Budding Phasorite](#budding-phasorite)
-    - [Phasorite Clusters And Buds](#phasorite-clusters-and-buds)
-    - [Others](#other-materials)
+- [Screens](#component-screen)
+    - [Component](#component-screen)
+    - [Networks](#networks-screen)
+    - [Extras](#extra-screens)
+- [Tutorial](https://github.com/milosworks/phasorite-networks/wiki/Tutorial)
 - [License](#license)
 - [Issues](#issues)
 - [Contribution](#contribution)
@@ -41,25 +41,21 @@ infrastructure for the cables.
 
 ### Component Screen
 
-- C: Component Tab, shows information of the current component
-- N: Networks Tab, shows all accessible networks
-- S: Statistics Tab, shows statistics of the network
-- C: Component**s** Tab, shows all components in the network
-- M: Members Tab, shows all members (players) connected to the network
+In the component screen (component being an Exporter or Importer) you can configure its properties, this being:
 
-<img height="256" src="https://i.imgur.com/UPeE3AO.png">
+- Name
+- Energy Limit Per Tick
+- Priority
+- Override Mode (It will always be prioritized first)
+- Limitless Mode (Will ignore the set limit)
 
-- Set a custom name for your component (Importer/Exporter)
-- Set a limit of the energy
-- Set a priority
-    - Exporter: First energy out
-    - Importer: First energy in
-- Override mode ignores the others priority and prioritizes this one first
-- Limitless mode ignores the set limit of the component
+<img height="256" src="https://i.imgur.com/8mDd4mm.png">
 
-<img height="256" src="https://i.imgur.com/7ZxrHyA.png">
+### Networks Screen
 
-**Create a network**
+Create and manage your and others networks
+
+<img height="256" src="https://i.imgur.com/ajxoC0p.png">
 
 - Use a color picker to choose the color of your network!
 - Set your network to a specific visibility!
@@ -67,99 +63,18 @@ infrastructure for the cables.
     - Public
     - Public with Password (Only people with the password can join)
 
-<img height="256" src="https://i.imgur.com/DeETLrp.png">
+<img height="256" src="https://i.imgur.com/e3Q0bxU.png">
 
-- DE: Delete current network
-- E: Edit current network
-- D: Disconnect from current network
-- C: Create a new network
+### Extra Screens
 
-<img height="256" src="https://i.imgur.com/viBeKO9.png">
+When connected to a network you have access to extra "tabs"
 
-#### Phasorite Importer
+- Statistics Tab: See the global statistic of energy going into/out the network
+- Components Tab: See specifically what components are connected into your network and how much energy they are
+  importing/exporting into/from the network
+- Members Tab: See the players connected to your network
 
-The phasorite importer is probably the first component you'll need to craft, this component receives energy to transfer
-it to all the exporters in the network.
-
-<div align="center">
-    <img height="256" src="https://i.imgur.com/lSL0ff8.png">
-    <img height="128" src="https://i.imgur.com/df8TAbU.png">
-</div>
-
-#### Phasorite Exporter
-
-The phasorite exporter is the second component you'll craft, this component exports the energy that the importers
-received.
-
-<div align="center">
-    <img height="256" src="https://i.imgur.com/T37rarI.png">
-    <img height="128" src="https://i.imgur.com/wx7ySAP.png">
-</div>
-
-### Resources
-
-You need resources to make the components, these resources are craftable or obtainable in the world.
-
-#### Budding Phasorite
-
-The Budding Phasorite will be your best friend, its made by using a [Phasorite Seed](#phasorite-seed) on a Budding
-Amethyst.
-It produces [Phasorite Clusters](#phasorite-clusters-and-buds), these clusters when fully grown will give you Phasorite
-Crystals or Charged Phasorite Crystals
-
-<div align="center">
-  <img height="256" src="https://i.imgur.com/4rAG8M5.png">
-</div>
-
-#### Phasorite Clusters And Buds
-
-These are the phasorite clusters and buds.
-Small Bud, Medium Bud, Large Bud, Phasorite Cluster and Charged Phasorite Cluster (From left to right, charged clusters
-have an animation).
-
-Each bud will give you Phasorite Dust, the Phasorite Cluster gives you Phasorite Crystals, the Charged Phasorite Cluster
-gives Charged Phasorite Crystals.
-
-To grow the Charged Phasorite Clusters, these will need to be on direct sunlight.
-
-<div align="center">
-  <img height="128" src="https://i.imgur.com/2jRlzvs.png">
-</div>
-
-#### Other Materials
-
-These materials are just craftable and needed to make components, etc.
-
-#### Phasorite Dust
-
-Phasorite dust can be obtained by smelting/blasting phasorite crystals or by breaking buds.
-
-#### Phasorite Core
-
-Needed in every component.
-
-<div align="center">
-  <img height="128" src="https://i.imgur.com/BWqW1Lj.png">
-  <img height="128" src="https://i.imgur.com/N52GcJZ.png">
-</div>
-
-#### Phasorite Lens
-
-Needed in every component.
-
-<div align="center">
-  <img height="128" src="https://i.imgur.com/3xDPYsR.png">
-  <img height="128" src="https://i.imgur.com/Zp6OU2F.png">
-</div>
-
-#### Phasorite Seed
-
-Converts Budding Amethyst into Budding Phasorite
-
-<div align="center">
-  <img height="128" src="https://i.imgur.com/apafoOA.png">
-  <img height="128" src="https://i.imgur.com/3VhnoyF.png">
-</div>
+<img height="256" src="https://i.imgur.com/D6oX34a.png">
 
 ## License
 
