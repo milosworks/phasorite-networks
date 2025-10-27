@@ -60,7 +60,6 @@ class ComponentsTab(screen: UIScreen) :
 
 				return@handler
 			}
-
 			containerButtons.children(
 				mutableListOf(
 					cancel,

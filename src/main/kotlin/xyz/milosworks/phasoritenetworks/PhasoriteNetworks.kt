@@ -10,21 +10,21 @@ import xyz.milosworks.phasoritenetworks.networking.PNChannels
 
 @Mod(PhasoriteNetworks.ID)
 object PhasoriteNetworks {
-	const val ID = "phasoritenetworks"
-	val LOGGER: Logger = LogManager.getLogger(ID)
+    const val ID = "phasoritenetworks"
+    val LOGGER: Logger = LogManager.getLogger(ID)
 
-	init {
-		PNBlocks.init(MOD_BUS)
-		PNEntities.init(MOD_BUS)
-		PNItems.init(MOD_BUS)
-		PNCreativeTabs.init(MOD_BUS)
-		PNMenus.init(MOD_BUS)
-		PNComponents.init(MOD_BUS)
+    init {
+        PNBlocks.init(MOD_BUS)
+        PNEntities.init(MOD_BUS)
+        PNItems.init(MOD_BUS)
+        PNCreativeTabs.init(MOD_BUS)
+        PNMenus.init(MOD_BUS)
+        PNComponents.init(MOD_BUS)
 
-		PNChannels.init()
-	}
+        PNChannels.init()
+    }
 
-	fun id(path: String): ResourceLocation {
-		return ResourceLocation.fromNamespaceAndPath(ID, path)
-	}
+    fun id(path: String): ResourceLocation {
+        return ResourceLocation.fromNamespaceAndPath(ID, path)
+    }
 }

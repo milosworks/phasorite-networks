@@ -10,7 +10,7 @@
     <br>
     <a href="https://github.com/milosworks/phasorite-networks/wiki"><img alt="read-the-docs" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/ghpages_vector.svg"></a>
     <a href="https://discord.gg/dVPqq2U4xy"><img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg"></a>
-    <a href="https://ko-fi.com/xyz.milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
+    <a href="https://ko-fi.com/milosworks"><img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
 </div>
 
 ## Table of Contents
@@ -80,10 +80,10 @@ When connected to a network you have access to extra "tabs"
 
 - Phasorite Networks
     - (c) 2024 Milosworks
-    - [![License: LGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+    - [![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-- [Textures](src/main/resources/assets/phasoritenetworks/textures)
-  and [Models](src/main/resources/assets/phasoritenetworks/models)
+- Assets (Not limited to but including [Textures](src/main/resources/assets/phasoritenetworks/textures)
+  and [Models](src/main/resources/assets/phasoritenetworks/models))
 
     - (c) 2024 Milosworks
     - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-yellow.svg?style=flat-square)](https://creativecommons.org/licenses/by-nc-sa/4.0)
